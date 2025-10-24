@@ -8,9 +8,9 @@ export default function Navigation() {
 
   const navItems = [
     { href: '/', label: 'Dashboard' },
-    { href: '/products', label: 'Products' },
-    { href: '/transactions', label: 'Transactions' },
-    { href: '/reports', label: 'Reports' },
+    { href: '/products', label: 'Produk' },
+    { href: '/transactions', label: 'Transaksi' },
+    { href: '/reports', label: 'Laporan' },
   ];
 
   return (

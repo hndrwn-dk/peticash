@@ -54,15 +54,15 @@ export default function ProductsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Products</h1>
-            <p className="text-gray-600">Manage your product catalog</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Produk</h1>
+            <p className="text-gray-600">Kelola katalog produk Anda</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-0">
             <Link href="/products/import" className="btn-secondary flex items-center justify-center">
               Import CSV
             </Link>
             <Link href="/products/new" className="btn-primary flex items-center justify-center">
-              Add Product
+              Tambah Produk
             </Link>
           </div>
         </div>
@@ -73,14 +73,14 @@ export default function ProductsPage() {
             <div className="flex-1">
               <input
                 type="text"
-                placeholder="Search by SKU, name, category, or barcode..."
+                placeholder="Cari berdasarkan SKU, nama, kategori, atau barcode..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="input-field"
               />
             </div>
             <button className="btn-secondary flex items-center justify-center">
-              Scan Barcode
+              Pindai Barcode
             </button>
           </div>
         </div>

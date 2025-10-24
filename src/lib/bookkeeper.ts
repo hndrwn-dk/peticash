@@ -8,10 +8,11 @@ export class BookkeeperService {
   private ledgerDir: string;
   private productsFile: string;
 
-  constructor(dataDir: string = './data') {
-    this.dataDir = dataDir;
-    this.masterDir = path.join(dataDir, 'master');
-    this.ledgerDir = path.join(dataDir, 'pembukuan');
+  constructor(dataDir?: string) {
+    // Use /tmp on Vercel production, ./data locally
+    this.dataDir = dataDir || (process.env.NODE_ENV === 'production' ? '/tmp/bookkeeper-data' : './data');
+    this.masterDir = path.join(this.dataDir, 'master');
+    this.ledgerDir = path.join(this.dataDir, 'pembukuan');
     this.productsFile = path.join(this.masterDir, 'products.json');
   }
 
