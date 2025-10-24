@@ -1,0 +1,107 @@
+// Product Types
+export interface Product {
+  sku: string;
+  nama: string;
+  default_modal_satuan_IDR?: number;
+  default_harga_jual_SGD?: number;
+  kategori?: string;
+  barcode?: string;
+}
+
+// Transaction Types
+export interface Transaction {
+  tanggal: string; // YYYY-MM-DD
+  sku: string;
+  qty: number;
+  modal_satuan_IDR?: number;
+  modal_total_IDR?: number;
+  harga_jual_SGD: number;
+  pendapatan_SGD?: number;
+  fee_rate?: number;
+  fee_flat_SGD?: number;
+  biaya_transaksi_SGD?: number;
+  biaya_lain_SGD?: number;
+  apply_gst?: boolean;
+  gst_rate?: number;
+  GST_SGD?: number;
+  pelanggan?: string;
+  metode_bayar?: string;
+  catatan?: string;
+  status?: 'complete' | 'incomplete' | 'invalid';
+}
+
+// Monthly Summary Types
+export interface MonthlyReport {
+  periode: string; // YYYY-MM
+  total_modal_IDR: number;
+  total_penjualan_SGD: number;
+  total_biaya_transaksi_SGD: number;
+  total_biaya_lain_SGD: number;
+  total_GST_SGD: number;
+  transaksi_lengkap: number;
+  transaksi_incomplete: number;
+  top_sku_by_revenue: string;
+}
+
+// API Response Types
+export interface ApiResponse<T = any> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+}
+
+// Search and Filter Types
+export interface ProductSearchParams {
+  q?: string;
+  barcode?: string;
+  kategori?: string;
+}
+
+export interface TransactionSearchParams {
+  periode?: string; // YYYY-MM
+  sku?: string;
+  tanggal_dari?: string;
+  tanggal_sampai?: string;
+}
+
+// UI State Types
+export interface ProductFormData {
+  sku: string;
+  nama: string;
+  default_modal_satuan_IDR: string;
+  default_harga_jual_SGD: string;
+  kategori: string;
+  barcode: string;
+}
+
+export interface TransactionFormData {
+  tanggal: string;
+  sku: string;
+  qty: string;
+  modal_satuan_IDR: string;
+  harga_jual_SGD: string;
+  fee_rate: string;
+  fee_flat_SGD: string;
+  biaya_lain_SGD: string;
+  apply_gst: boolean;
+  gst_rate: string;
+  pelanggan: string;
+  metode_bayar: string;
+  catatan: string;
+}
+
+// Dashboard Stats
+export interface DashboardStats {
+  total_products: number;
+  current_month_transactions: number;
+  current_month_revenue_sgd: number;
+  current_month_modal_idr: number;
+  recent_transactions: Transaction[];
+  top_products: Array<{
+    sku: string;
+    nama: string;
+    revenue: number;
+    qty_sold: number;
+  }>;
+}
