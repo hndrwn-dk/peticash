@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Server Actions are enabled by default in Next.js 14
+  output: 'standalone',
+  poweredByHeader: false,
+  reactStrictMode: true,
 }
 
 module.exports = nextConfig
