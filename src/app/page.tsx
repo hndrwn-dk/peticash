@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-// Icons removed for clean production build
 import { DashboardStats, Transaction, Product } from '@/types';
 
 export default function HomePage() {
@@ -94,20 +93,20 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header className="bg-white border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h1 className="text-xl font-semibold text-gray-900">Bookkeeper</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Bookkeeper</h1>
             </div>
-            <nav className="hidden md:flex space-x-8">
-              <Link href="/products" className="text-gray-600 hover:text-gray-900 font-medium">
+            <nav className="hidden md:flex space-x-1">
+              <Link href="/products" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
                 Products
               </Link>
-              <Link href="/transactions" className="text-gray-600 hover:text-gray-900 font-medium">
+              <Link href="/transactions" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
                 Transactions
               </Link>
-              <Link href="/reports" className="text-gray-600 hover:text-gray-900 font-medium">
+              <Link href="/reports" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
                 Reports
               </Link>
             </nav>
@@ -116,62 +115,82 @@ export default function HomePage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
         {/* Welcome Section */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Dashboard</h2>
-          <p className="text-gray-600">
+        <div className="mb-10">
+          <h2 className="text-3xl font-bold text-gray-900 mb-3">Dashboard</h2>
+          <p className="text-lg text-gray-600">
             Retail sales bookkeeping with IDR cost and SGD sales tracking
           </p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="card">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Products</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.total_products || 0}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          <div className="bg-white rounded-xl border border-gray-100 p-6 hover:shadow-sm transition-shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500 mb-1">Total Products</p>
+                <p className="text-3xl font-bold text-gray-900">{stats?.total_products || 0}</p>
+              </div>
+              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
+                <div className="w-6 h-6 bg-blue-500 rounded"></div>
+              </div>
             </div>
           </div>
 
-          <div className="card">
-            <div>
-              <p className="text-sm font-medium text-gray-600">This Month Transactions</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.current_month_transactions || 0}</p>
+          <div className="bg-white rounded-xl border border-gray-100 p-6 hover:shadow-sm transition-shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500 mb-1">Transactions</p>
+                <p className="text-3xl font-bold text-gray-900">{stats?.current_month_transactions || 0}</p>
+              </div>
+              <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
+                <div className="w-6 h-6 bg-green-500 rounded"></div>
+              </div>
             </div>
           </div>
 
-          <div className="card">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Revenue (SGD)</p>
-              <p className="text-2xl font-bold text-gray-900">
-                ${(stats?.current_month_revenue_sgd || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-              </p>
+          <div className="bg-white rounded-xl border border-gray-100 p-6 hover:shadow-sm transition-shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500 mb-1">Revenue (SGD)</p>
+                <p className="text-3xl font-bold text-gray-900">
+                  ${(stats?.current_month_revenue_sgd || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center">
+                <div className="w-6 h-6 bg-emerald-500 rounded"></div>
+              </div>
             </div>
           </div>
 
-          <div className="card">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Cost (IDR)</p>
-              <p className="text-2xl font-bold text-gray-900">
-                Rp {(stats?.current_month_modal_idr || 0).toLocaleString('id-ID')}
-              </p>
+          <div className="bg-white rounded-xl border border-gray-100 p-6 hover:shadow-sm transition-shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500 mb-1">Cost (IDR)</p>
+                <p className="text-3xl font-bold text-gray-900">
+                  Rp {(stats?.current_month_modal_idr || 0).toLocaleString('id-ID')}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center">
+                <div className="w-6 h-6 bg-orange-500 rounded"></div>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <Link href="/transactions/new" className="btn-primary flex items-center justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+          <Link href="/transactions/new" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-colors text-center">
             New Transaction
           </Link>
-          <Link href="/products/new" className="btn-secondary flex items-center justify-center">
+          <Link href="/products/new" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border border-gray-200 transition-colors text-center">
             Add Product
           </Link>
-          <Link href="/products" className="btn-secondary flex items-center justify-center">
+          <Link href="/products" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border border-gray-200 transition-colors text-center">
             Search Products
           </Link>
-          <Link href="/reports" className="btn-secondary flex items-center justify-center">
+          <Link href="/reports" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border border-gray-200 transition-colors text-center">
             Monthly Report
           </Link>
         </div>
