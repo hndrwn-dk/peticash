@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { bookkeeper } from '@/lib/bookkeeper';
+import { database } from '@/lib/database';
 import { Transaction } from '@/types';
 
 // GET /api/transactions - Get transactions for a period
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     }
 
     const limitNum = limit ? parseInt(limit) : undefined;
-    const transactions = await bookkeeper.getTransactions(periode, limitNum);
+    const transactions = await database.getTransactions(periode, limitNum);
     
     return NextResponse.json({
       success: true,
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
   try {
     const transaction: Transaction = await request.json();
     
-    const result = await bookkeeper.addTransaction(transaction);
+    const result = await database.addTransaction(transaction);
     
     if (result.success) {
       return NextResponse.json(result);

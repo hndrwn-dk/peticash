@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { bookkeeper } from '@/lib/bookkeeper';
+import { database } from '@/lib/database';
 
 // GET /api/reports/[periode] - Generate monthly report
 export async function GET(
@@ -18,7 +18,7 @@ export async function GET(
       );
     }
 
-    const result = await bookkeeper.generateMonthlyReport(periode);
+    const result = await database.generateMonthlyReport(periode);
     
     if (result.success) {
       return NextResponse.json(result);

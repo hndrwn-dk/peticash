@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:init": "node -r ts-node/register -e \"require('./src/lib/init-db').seedDatabase()\""
   },
   "dependencies": {
     "@types/better-sqlite3": "^7.6.13",
