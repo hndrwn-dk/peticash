@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
-import { TrendingUp, Plus, Calendar, Filter } from 'lucide-react';
+// Icons removed for clean production build
 import { Transaction } from '@/types';
 
 export default function TransactionsPage() {
@@ -73,7 +73,6 @@ export default function TransactionsPage() {
             <p className="text-gray-600">View and manage your sales transactions</p>
           </div>
           <Link href="/transactions/new" className="btn-primary flex items-center justify-center mt-4 sm:mt-0">
-            <Plus className="h-4 w-4 mr-2" />
             New Transaction
           </Link>
         </div>
@@ -85,23 +84,19 @@ export default function TransactionsPage() {
               <label htmlFor="period" className="block text-sm font-medium text-gray-700 mb-2">
                 Period (YYYY-MM)
               </label>
-              <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <input
-                  type="month"
-                  id="period"
-                  value={selectedPeriod}
-                  onChange={(e) => setSelectedPeriod(e.target.value)}
-                  className="input-field pl-10"
-                />
-              </div>
+              <input
+                type="month"
+                id="period"
+                value={selectedPeriod}
+                onChange={(e) => setSelectedPeriod(e.target.value)}
+                className="input-field"
+              />
             </div>
             <div className="flex items-end">
               <button 
                 onClick={loadTransactions}
                 className="btn-secondary flex items-center justify-center"
               >
-                <Filter className="h-4 w-4 mr-2" />
                 Refresh
               </button>
             </div>
@@ -117,7 +112,6 @@ export default function TransactionsPage() {
             </div>
           ) : transactions.length === 0 ? (
             <div className="text-center py-8">
-              <TrendingUp className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No transactions found</h3>
               <p className="text-gray-600 mb-4">
                 {selectedPeriod 
@@ -126,7 +120,6 @@ export default function TransactionsPage() {
                 }
               </p>
               <Link href="/transactions/new" className="btn-primary">
-                <Plus className="h-4 w-4 mr-2" />
                 New Transaction
               </Link>
             </div>

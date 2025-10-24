@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
-import { Package, Plus, Search, Upload, Scan } from 'lucide-react';
+// Icons removed for clean production build
 import { Product } from '@/types';
 
 export default function ProductsPage() {
@@ -59,11 +59,9 @@ export default function ProductsPage() {
           </div>
           <div className="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-0">
             <Link href="/products/import" className="btn-secondary flex items-center justify-center">
-              <Upload className="h-4 w-4 mr-2" />
               Import CSV
             </Link>
             <Link href="/products/new" className="btn-primary flex items-center justify-center">
-              <Plus className="h-4 w-4 mr-2" />
               Add Product
             </Link>
           </div>
@@ -72,18 +70,16 @@ export default function ProductsPage() {
         {/* Search */}
         <div className="card mb-6">
           <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <div className="flex-1">
               <input
                 type="text"
                 placeholder="Search by SKU, name, category, or barcode..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="input-field pl-10"
+                className="input-field"
               />
             </div>
             <button className="btn-secondary flex items-center justify-center">
-              <Scan className="h-4 w-4 mr-2" />
               Scan Barcode
             </button>
           </div>
@@ -98,7 +94,6 @@ export default function ProductsPage() {
             </div>
           ) : filteredProducts.length === 0 ? (
             <div className="text-center py-8">
-              <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
                 {searchQuery ? 'No products found' : 'No products yet'}
               </h3>
@@ -110,7 +105,6 @@ export default function ProductsPage() {
               </p>
               {!searchQuery && (
                 <Link href="/products/new" className="btn-primary">
-                  <Plus className="h-4 w-4 mr-2" />
                   Add Product
                 </Link>
               )}
