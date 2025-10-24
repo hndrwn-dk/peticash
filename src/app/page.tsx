@@ -163,19 +163,15 @@ export default function HomePage() {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <Link href="/transactions/new" className="btn-primary flex items-center justify-center">
-            <Plus className="h-5 w-5 mr-2" />
             New Transaction
           </Link>
           <Link href="/products/new" className="btn-secondary flex items-center justify-center">
-            <Package className="h-5 w-5 mr-2" />
             Add Product
           </Link>
           <Link href="/products" className="btn-secondary flex items-center justify-center">
-            <Search className="h-5 w-5 mr-2" />
             Search Products
           </Link>
           <Link href="/reports" className="btn-secondary flex items-center justify-center">
-            <Calendar className="h-5 w-5 mr-2" />
             Monthly Report
           </Link>
         </div>

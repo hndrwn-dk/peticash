@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navigation from '@/components/Navigation';
-import { ArrowLeft, Save } from 'lucide-react';
+// Icons removed for clean production build
 import Link from 'next/link';
 import { ProductFormData } from '@/types';
 
@@ -82,8 +82,7 @@ export default function NewProductPage() {
             href="/products" 
             className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-4"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Products
+            ← Back to Products
           </Link>
           <h1 className="text-2xl font-bold text-gray-900">Add New Product</h1>
           <p className="text-gray-600 mt-2">Create a new product in your catalog</p>
@@ -225,10 +224,7 @@ export default function NewProductPage() {
                     Saving...
                   </>
                 ) : (
-                  <>
-                    <Save className="h-4 w-4 mr-2" />
-                    Save Product
-                  </>
+                  'Save Product'
                 )}
               </button>
               <Link href="/products" className="btn-secondary flex items-center justify-center">
