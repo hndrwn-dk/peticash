@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { bookkeeper } from '@/lib/bookkeeper';
+import { database } from '@/lib/database';
 import { Product } from '@/types';
 
 // GET /api/products - List/search products
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const q = searchParams.get('q') || undefined;
     const barcode = searchParams.get('barcode') || undefined;
 
-    const products = await bookkeeper.getProducts(q, barcode);
+    const products = await database.getProducts(q, barcode);
     
     return NextResponse.json({
       success: true,
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
   try {
     const product: Product = await request.json();
     
-    const result = await bookkeeper.upsertProduct(product);
+    const result = await database.upsertProduct(product);
     
     if (result.success) {
       return NextResponse.json(result);

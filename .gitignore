@@ -38,3 +38,8 @@ next-env.d.ts
 /data
 *.csv
 /data/**/*.json
+
+# database files
+*.db
+*.sqlite
+*.sqlite3

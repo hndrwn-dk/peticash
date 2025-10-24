@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { bookkeeper } from '@/lib/bookkeeper';
+import { database } from '@/lib/database';
 
 // POST /api/products/bulk-import - Bulk import products from CSV
 export async function POST(request: NextRequest) {
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await bookkeeper.bulkImportProducts(csvText);
+    const result = await database.bulkImportProducts(csvText);
     
     if (result.success) {
       return NextResponse.json(result);

@@ -10,13 +10,13 @@ A modern web application for retail bookkeeping with IDR cost and SGD sales trac
 - Dual Currency - IDR costs and SGD sales without conversion
 - Mobile Responsive - Works on desktop, tablet, and mobile
 - Real-time Dashboard - Live stats and recent activity
-- CSV Import/Export - Bulk product import and data export
+- CSV Import/Export - Bulk product import with SQLite storage
 
 ## Tech Stack
 
 - Frontend: Next.js 14, React 18, TypeScript
 - Styling: Tailwind CSS
-- Storage: File-based (CSV/JSON)
+- Storage: SQLite Database
 - Deployment: Vercel
 
 ## Installation
@@ -153,16 +153,15 @@ Monthly Summary
 
 ### Data Storage
 
-By default, data is stored in the ./data directory as CSV and JSON files:
+Data is stored in a SQLite database:
 
 ```
 data/
-├── master/
-│   └── products.json          # Product catalog
-└── pembukuan/
-    ├── ledger_2025-01.csv     # January 2025 transactions
-    ├── rekap_2025-01.csv      # January 2025 summary
-    └── ...
+└── bookkeeper.db              # SQLite database file
+
+Database Tables:
+├── products                   # Product catalog with indexes
+└── transactions              # All transactions with relationships
 ```
 
 ### Vercel Considerations
