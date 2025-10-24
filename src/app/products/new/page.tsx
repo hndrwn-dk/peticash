@@ -23,7 +23,7 @@ export default function NewProductPage() {
     e.preventDefault();
     
     if (!formData.sku || !formData.nama) {
-      alert('SKU and Product Name are required');
+      alert('SKU dan Nama Produk wajib diisi');
       return;
     }
 
@@ -56,11 +56,11 @@ export default function NewProductPage() {
       if (result.success) {
         router.push('/products');
       } else {
-        alert(result.error || 'Failed to save product');
+        alert(result.error || 'Gagal menyimpan produk');
       }
     } catch (error) {
       console.error('Error saving product:', error);
-      alert('Failed to save product');
+      alert('Gagal menyimpan produk');
     } finally {
       setLoading(false);
     }
@@ -82,10 +82,10 @@ export default function NewProductPage() {
             href="/products" 
             className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-4"
           >
-            ← Back to Products
+            ← Kembali ke Produk
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">Add New Product</h1>
-          <p className="text-gray-600 mt-2">Create a new product in your catalog</p>
+          <h1 className="text-2xl font-bold text-gray-900">Tambah Produk Baru</h1>
+          <p className="text-gray-600 mt-2">Buat produk baru dalam katalog Anda</p>
         </div>
 
         {/* Form */}

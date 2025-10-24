@@ -101,13 +101,13 @@ export default function HomePage() {
             </div>
             <nav className="hidden md:flex space-x-1">
               <Link href="/products" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
-                Products
+                Produk
               </Link>
               <Link href="/transactions" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
-                Transactions
+                Transaksi
               </Link>
               <Link href="/reports" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
-                Reports
+                Laporan
               </Link>
             </nav>
           </div>
@@ -120,7 +120,7 @@ export default function HomePage() {
         <div className="mb-10">
           <h2 className="text-3xl font-bold text-gray-900 mb-3">Dashboard</h2>
           <p className="text-lg text-gray-600">
-            Retail sales bookkeeping with IDR cost and SGD sales tracking
+            Pembukuan penjualan retail dengan modal IDR dan penjualan SGD
           </p>
         </div>
 
@@ -129,7 +129,7 @@ export default function HomePage() {
           <div className="bg-white rounded-xl border border-gray-100 p-6 hover:shadow-sm transition-shadow">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">Total Products</p>
+                <p className="text-sm font-medium text-gray-500 mb-1">Total Produk</p>
                 <p className="text-3xl font-bold text-gray-900">{stats?.total_products || 0}</p>
               </div>
               <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
@@ -141,7 +141,7 @@ export default function HomePage() {
           <div className="bg-white rounded-xl border border-gray-100 p-6 hover:shadow-sm transition-shadow">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">Transactions</p>
+                <p className="text-sm font-medium text-gray-500 mb-1">Transaksi</p>
                 <p className="text-3xl font-bold text-gray-900">{stats?.current_month_transactions || 0}</p>
               </div>
               <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
@@ -153,7 +153,7 @@ export default function HomePage() {
           <div className="bg-white rounded-xl border border-gray-100 p-6 hover:shadow-sm transition-shadow">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">Revenue (SGD)</p>
+                <p className="text-sm font-medium text-gray-500 mb-1">Pendapatan (SGD)</p>
                 <p className="text-3xl font-bold text-gray-900">
                   ${(stats?.current_month_revenue_sgd || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                 </p>
@@ -167,7 +167,7 @@ export default function HomePage() {
           <div className="bg-white rounded-xl border border-gray-100 p-6 hover:shadow-sm transition-shadow">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">Cost (IDR)</p>
+                <p className="text-sm font-medium text-gray-500 mb-1">Modal (IDR)</p>
                 <p className="text-3xl font-bold text-gray-900">
                   Rp {(stats?.current_month_modal_idr || 0).toLocaleString('id-ID')}
                 </p>
@@ -182,16 +182,16 @@ export default function HomePage() {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
           <Link href="/transactions/new" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-colors text-center">
-            New Transaction
+            Transaksi Baru
           </Link>
           <Link href="/products/new" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border border-gray-200 transition-colors text-center">
-            Add Product
+            Tambah Produk
           </Link>
           <Link href="/products" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border border-gray-200 transition-colors text-center">
-            Search Products
+            Cari Produk
           </Link>
           <Link href="/reports" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border border-gray-200 transition-colors text-center">
-            Monthly Report
+            Laporan Bulanan
           </Link>
         </div>
 

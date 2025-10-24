@@ -69,11 +69,11 @@ export default function TransactionsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Transactions</h1>
-            <p className="text-gray-600">View and manage your sales transactions</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Transaksi</h1>
+            <p className="text-gray-600">Lihat dan kelola transaksi penjualan Anda</p>
           </div>
           <Link href="/transactions/new" className="btn-primary flex items-center justify-center mt-4 sm:mt-0">
-            New Transaction
+            Transaksi Baru
           </Link>
         </div>
 
@@ -82,7 +82,7 @@ export default function TransactionsPage() {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <label htmlFor="period" className="block text-sm font-medium text-gray-700 mb-2">
-                Period (YYYY-MM)
+                Periode (YYYY-MM)
               </label>
               <input
                 type="month"
@@ -97,7 +97,7 @@ export default function TransactionsPage() {
                 onClick={loadTransactions}
                 className="btn-secondary flex items-center justify-center"
               >
-                Refresh
+                Muat Ulang
               </button>
             </div>
           </div>
