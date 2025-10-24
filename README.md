@@ -1,192 +1,251 @@
-# Bookkeeper Agent - Pembukuan Penjualan Retail
+# 🏪 Bookkeeper Web - Retail Sales Management
 
-Sistem pembukuan sederhana untuk bisnis retail kecil dengan modal dalam IDR dan penjualan dalam SGD, tanpa konversi mata uang.
+A modern web application for retail bookkeeping with IDR cost and SGD sales tracking, built with Next.js and deployed on Vercel.
 
-## Fitur Utama
+## 🚀 Features
 
-- ✅ **Master Barang**: Kelola produk dengan SKU, nama, modal default, harga jual, kategori, dan barcode
-- ✅ **Pencatatan Transaksi**: Catat penjualan harian ke ledger bulanan (CSV)
-- ✅ **Rekap Bulanan**: Generate ringkasan dengan total IDR (modal) dan SGD (penjualan) terpisah
-- ✅ **Input Cepat**: Autocomplete, recent items, dan dukungan barcode
-- ✅ **Validasi**: Status transaksi (complete/incomplete/invalid)
-- ✅ **Natural Language**: Interface perintah bahasa alami
+- ✅ **Product Management** - Add, edit, and search products with barcode support
+- ✅ **Transaction Recording** - Fast transaction entry with autocomplete
+- ✅ **Monthly Reports** - Comprehensive sales and cost analysis
+- ✅ **Dual Currency** - IDR costs and SGD sales without conversion
+- ✅ **Mobile Responsive** - Works on desktop, tablet, and mobile
+- ✅ **Real-time Dashboard** - Live stats and recent activity
+- ✅ **CSV Import/Export** - Bulk product import and data export
 
-## Struktur File
+## 🛠 Tech Stack
+
+- **Frontend**: Next.js 14, React 18, TypeScript
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React
+- **Storage**: File-based (CSV/JSON)
+- **Deployment**: Vercel
+
+## 📦 Installation
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+
+### Local Development
+
+1. **Clone and install dependencies**
+```bash
+git clone <repository-url>
+cd bookkeeper-web
+npm install
+```
+
+2. **Set up environment variables**
+```bash
+cp .env.example .env.local
+# Edit .env.local as needed
+```
+
+3. **Run development server**
+```bash
+npm run dev
+```
+
+4. **Open in browser**
+```
+http://localhost:3000
+```
+
+## 🚀 Deployment to Vercel
+
+### Option 1: Deploy from GitHub (Recommended)
+
+1. **Push to GitHub**
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin <your-github-repo>
+git push -u origin main
+```
+
+2. **Deploy on Vercel**
+- Go to [vercel.com](https://vercel.com)
+- Click "New Project"
+- Import your GitHub repository
+- Configure build settings (auto-detected)
+- Deploy!
+
+### Option 2: Deploy with Vercel CLI
+
+1. **Install Vercel CLI**
+```bash
+npm i -g vercel
+```
+
+2. **Deploy**
+```bash
+vercel
+# Follow the prompts
+```
+
+### Environment Variables for Production
+
+In your Vercel dashboard, add these environment variables:
+
+```
+DATA_DIR=./data
+NODE_ENV=production
+```
+
+## 📁 Project Structure
+
+```
+bookkeeper-web/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── api/               # API routes
+│   │   │   ├── products/      # Product management APIs
+│   │   │   ├── transactions/  # Transaction APIs
+│   │   │   └── reports/       # Report generation APIs
+│   │   ├── products/          # Product pages
+│   │   ├── transactions/      # Transaction pages
+│   │   ├── reports/           # Report pages
+│   │   ├── globals.css        # Global styles
+│   │   ├── layout.tsx         # Root layout
+│   │   └── page.tsx           # Homepage/Dashboard
+│   ├── components/            # Reusable components
+│   ├── lib/                   # Utilities and services
+│   │   └── bookkeeper.ts      # Core business logic
+│   └── types/                 # TypeScript type definitions
+├── public/                    # Static assets
+├── data/                      # Data storage (created automatically)
+│   ├── master/
+│   │   └── products.json      # Product catalog
+│   └── pembukuan/
+│       ├── ledger_YYYY-MM.csv # Monthly transactions
+│       └── rekap_YYYY-MM.csv  # Monthly reports
+├── vercel.json               # Vercel configuration
+├── tailwind.config.js        # Tailwind CSS config
+├── tsconfig.json            # TypeScript config
+└── package.json             # Dependencies
+```
+
+## 🎯 Usage Guide
+
+### 1. Product Management
+
+**Add Products**
+- Navigate to Products → Add Product
+- Fill in SKU, name, and optional pricing
+- Save to add to catalog
+
+**Bulk Import**
+- Prepare CSV with headers: `sku,nama,default_modal_satuan_IDR,default_harga_jual_SGD,kategori,barcode`
+- Go to Products → Import CSV
+- Paste CSV content and import
+
+### 2. Transaction Recording
+
+**New Transaction**
+- Go to Transactions → New Transaction
+- Select product (with autocomplete)
+- Enter quantity and pricing
+- Add customer and payment details
+- Save transaction
+
+### 3. Reports
+
+**Monthly Summary**
+- Navigate to Reports
+- Select month/year
+- View comprehensive breakdown:
+  - Total costs (IDR)
+  - Total sales (SGD) 
+  - Transaction fees and GST
+  - Top-selling products
+
+## 📊 API Endpoints
+
+### Products
+- `GET /api/products` - List/search products
+- `POST /api/products` - Create/update product
+- `POST /api/products/bulk-import` - Bulk import from CSV
+
+### Transactions  
+- `GET /api/transactions?periode=YYYY-MM` - Get transactions
+- `POST /api/transactions` - Add new transaction
+
+### Reports
+- `GET /api/reports/[periode]` - Generate monthly report
+
+## 🔧 Configuration
+
+### Data Storage
+
+By default, data is stored in the `./data` directory as CSV and JSON files:
 
 ```
 data/
 ├── master/
-│   └── products.json          # Master barang
+│   └── products.json          # Product catalog
 └── pembukuan/
-    ├── ledger_YYYY-MM.csv     # Ledger bulanan
-    └── rekap_YYYY-MM.csv      # Rekap bulanan
+    ├── ledger_2025-01.csv     # January 2025 transactions
+    ├── rekap_2025-01.csv      # January 2025 summary
+    └── ...
 ```
 
-## Instalasi & Penggunaan
+### Vercel Considerations
 
-### 1. Setup
-```bash
-# Clone atau download files
-mkdir bookkeeper-retail
-cd bookkeeper-retail
+- **File Storage**: Vercel's filesystem is read-only in production except for `/tmp`
+- **Persistence**: For production use, consider external storage (AWS S3, Database)
+- **Serverless Functions**: API routes run as serverless functions with 30s timeout
 
-# Buat struktur direktori
-mkdir -p data/master data/pembukuan
-```
+### Future Enhancements
 
-### 2. Import Master Barang
-```bash
-# Jalankan dan import sample data
-python3 bookkeeper.py
+- [ ] Database integration (PostgreSQL/MongoDB)
+- [ ] External file storage (AWS S3)
+- [ ] Real-time barcode scanning
+- [ ] Multi-user support with authentication
+- [ ] Advanced analytics and charts
+- [ ] Mobile app (React Native)
 
-> impor master barang dari CSV
-# Kemudian paste isi sample_products.csv
-```
+## 🐛 Troubleshooting
 
-### 3. Penggunaan CLI
+### Common Issues
 
-#### Interface Utama
-```bash
-python3 bookkeeper.py
-```
+1. **Data not persisting on Vercel**
+   - Vercel's filesystem is ephemeral
+   - Use external storage for production
 
-#### Helper Transaksi Interaktif
-```bash
-python3 transaction_helper.py
-```
+2. **API timeout errors**
+   - Large CSV imports may timeout
+   - Break into smaller batches
 
-## Perintah Natural Language
+3. **Build errors**
+   - Check TypeScript types
+   - Ensure all dependencies are installed
 
-### Manajemen Produk
-```bash
-# Tambah produk baru
-> tambah barang SKU KOPI-ROBUSTA-250G nama Robusta 250g modal 38k harga 7.5 kategori Kopi
+### Development Tips
 
-# Cari produk
-> cari 'kopi'
-> cari arabica
+- Use `npm run dev` for hot reloading
+- Check browser console for client-side errors
+- Use Vercel logs for server-side debugging
 
-# Scan barcode
-> scan barcode 8991234567890
-```
+## 📄 License
 
-### Pencatatan Transaksi
-```bash
-# Gunakan transaction helper untuk input interaktif
-python3 transaction_helper.py
-```
+MIT License - Free for commercial and personal use.
 
-### Laporan
-```bash
-# Generate rekap bulanan
-> rekap Oktober 2025
-> rekap 2025-10
+## 🤝 Contributing
 
-# Preview data
-> preview 2025-10
-```
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
 
-## Format Data
+## 📞 Support
 
-### Master Barang (JSON)
-```json
-[
-  {
-    "sku": "KOPI-ARABICA-250G",
-    "nama": "Kopi Arabica 250g",
-    "default_modal_satuan_IDR": 45000,
-    "default_harga_jual_SGD": 7.9,
-    "kategori": "Kopi",
-    "barcode": "8991234567890"
-  }
-]
-```
+For issues and questions:
+- Create GitHub issue
+- Check documentation
+- Review API endpoints
 
-### Ledger Transaksi (CSV)
-```csv
-tanggal,sku,qty,modal_satuan_IDR,modal_total_IDR,harga_jual_SGD,pendapatan_SGD,fee_rate,fee_flat_SGD,biaya_transaksi_SGD,biaya_lain_SGD,apply_gst,gst_rate,GST_SGD,pelanggan,metode_bayar,catatan,status
-2025-10-24,KOPI-ARABICA-250G,3,45000,135000,7.9,23.7,2.9,0.5,1.19,0.0,False,0.09,0,Walk-in,Cash,promo,complete
-```
+---
 
-### Rekap Bulanan (CSV)
-```csv
-periode,total_modal_IDR,total_penjualan_SGD,total_biaya_transaksi_SGD,total_biaya_lain_SGD,total_GST_SGD,transaksi_lengkap,transaksi_incomplete,top_sku_by_revenue
-2025-10,229000,47.2,2.87,0.0,1.53,3,0,"KOPI-ARABICA-250G, TEH-MATCHA-100G, COKLAT-DARK-200G"
-```
-
-## Contoh Penggunaan
-
-### 1. Import Produk dari CSV
-```csv
-sku,nama,default_modal_satuan_IDR,default_harga_jual_SGD,kategori,barcode
-KOPI-ARABICA-250G,Kopi Arabica 250g,45000,7.9,Kopi,8991234567890
-TEH-MATCHA-100G,Teh Matcha 100g,33000,8.5,Teh,8991234567891
-```
-
-### 2. Catat Transaksi
-```python
-transaksi = {
-    "tanggal": "2025-10-24",
-    "sku": "KOPI-ARABICA-250G",
-    "qty": 3,
-    "modal_satuan_IDR": 45000,
-    "harga_jual_SGD": 7.9,
-    "fee_rate": 2.9,
-    "fee_flat_SGD": 0.5,
-    "pelanggan": "Walk-in",
-    "metode_bayar": "Cash"
-}
-```
-
-### 3. Rekap Bulanan
-```
-Periode: 2025-10
-Total modal: IDR 229,000
-Total penjualan: SGD 47.20
-Biaya transaksi: SGD 2.87 | Biaya lain: SGD 0.00 | GST: SGD 1.53
-Transaksi lengkap: 3 | Incomplete/invalid: 0
-Top SKU (revenue): 1) KOPI-ARABICA-250G 2) TEH-MATCHA-100G 3) COKLAT-DARK-200G
-```
-
-## Testing
-
-```bash
-# Jalankan test lengkap
-python3 test_bookkeeper.py
-```
-
-## Aturan & Batasan
-
-- ❌ **Tidak ada konversi kurs** - IDR dan SGD tetap terpisah
-- ✅ **Pembulatan**: IDR ke integer, SGD ke 2 desimal
-- ✅ **Persistensi**: File CSV/JSON, bukan database
-- ✅ **Validasi**: Status incomplete/invalid untuk data tidak lengkap
-- ✅ **Performance**: Optimized untuk input barang cepat
-
-## API Methods
-
-### Products
-- `products_list(q="", barcode="")` - List/search products
-- `products_upsert(item)` - Add/update product
-- `products_bulk_import(csv_text)` - Bulk import from CSV
-
-### Ledger
-- `ledger_append(transaksi)` - Add transaction
-- `rekap_generate(ym)` - Generate monthly summary
-- `preview_head(ym, n=5)` - Preview data
-
-### Natural Language
-- `process_command(command)` - Process natural language commands
-
-## Roadmap
-
-- [ ] Web interface (Next.js)
-- [ ] Barcode scanner integration
-- [ ] Export to Excel
-- [ ] Multi-currency support (optional)
-- [ ] Inventory tracking
-- [ ] Customer management
-
-## License
-
-MIT License - Bebas digunakan untuk keperluan komersial dan non-komersial.
+**Built with ❤️ for retail businesses**

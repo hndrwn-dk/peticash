@@ -2,16 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { 
-  ShoppingCart, 
-  Package, 
-  TrendingUp, 
-  DollarSign,
-  Plus,
-  Search,
-  BarChart3,
-  Calendar
-} from 'lucide-react';
+// Icons removed for clean production build
 import { DashboardStats, Transaction, Product } from '@/types';
 
 export default function HomePage() {
@@ -107,7 +98,6 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <ShoppingCart className="h-8 w-8 text-primary-500 mr-3" />
               <h1 className="text-xl font-semibold text-gray-900">Bookkeeper</h1>
             </div>
             <nav className="hidden md:flex space-x-8">
@@ -138,46 +128,34 @@ export default function HomePage() {
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="card">
-            <div className="flex items-center">
-              <Package className="h-8 w-8 text-primary-500 mr-3" />
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total Products</p>
-                <p className="text-2xl font-bold text-gray-900">{stats?.total_products || 0}</p>
-              </div>
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Products</p>
+              <p className="text-2xl font-bold text-gray-900">{stats?.total_products || 0}</p>
             </div>
           </div>
 
           <div className="card">
-            <div className="flex items-center">
-              <TrendingUp className="h-8 w-8 text-success-500 mr-3" />
-              <div>
-                <p className="text-sm font-medium text-gray-600">This Month Transactions</p>
-                <p className="text-2xl font-bold text-gray-900">{stats?.current_month_transactions || 0}</p>
-              </div>
+            <div>
+              <p className="text-sm font-medium text-gray-600">This Month Transactions</p>
+              <p className="text-2xl font-bold text-gray-900">{stats?.current_month_transactions || 0}</p>
             </div>
           </div>
 
           <div className="card">
-            <div className="flex items-center">
-              <DollarSign className="h-8 w-8 text-success-500 mr-3" />
-              <div>
-                <p className="text-sm font-medium text-gray-600">Revenue (SGD)</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  ${(stats?.current_month_revenue_sgd || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                </p>
-              </div>
+            <div>
+              <p className="text-sm font-medium text-gray-600">Revenue (SGD)</p>
+              <p className="text-2xl font-bold text-gray-900">
+                ${(stats?.current_month_revenue_sgd || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+              </p>
             </div>
           </div>
 
           <div className="card">
-            <div className="flex items-center">
-              <BarChart3 className="h-8 w-8 text-warning-500 mr-3" />
-              <div>
-                <p className="text-sm font-medium text-gray-600">Cost (IDR)</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  Rp {(stats?.current_month_modal_idr || 0).toLocaleString('id-ID')}
-                </p>
-              </div>
+            <div>
+              <p className="text-sm font-medium text-gray-600">Cost (IDR)</p>
+              <p className="text-2xl font-bold text-gray-900">
+                Rp {(stats?.current_month_modal_idr || 0).toLocaleString('id-ID')}
+              </p>
             </div>
           </div>
         </div>
