@@ -37,4 +37,4 @@ next-env.d.ts
 # data files (for local development)
 /data
 *.csv
-*.json
+/data/**/*.json
