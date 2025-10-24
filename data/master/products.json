@@ -1,0 +1,82 @@
+[
+  {
+    "sku": "BISKUIT-MARIE-300G",
+    "nama": "Biskuit Marie 300g",
+    "default_modal_satuan_IDR": 15000,
+    "default_harga_jual_SGD": 3.5,
+    "kategori": "Biskuit",
+    "barcode": "8991234567895"
+  },
+  {
+    "sku": "COKLAT-DARK-200G",
+    "nama": "Coklat Dark 200g",
+    "default_modal_satuan_IDR": 28000,
+    "default_harga_jual_SGD": 6.5,
+    "kategori": "Coklat",
+    "barcode": "8991234567892"
+  },
+  {
+    "sku": "KOPI-ARABICA-250G",
+    "nama": "Kopi Arabica 250g",
+    "default_modal_satuan_IDR": 45000,
+    "default_harga_jual_SGD": 7.9,
+    "kategori": "Kopi",
+    "barcode": "8991234567890"
+  },
+  {
+    "sku": "KOPI-ROBUSTA-250G",
+    "nama": "Kopi Robusta 250g",
+    "default_modal_satuan_IDR": 38000,
+    "default_harga_jual_SGD": 7.2,
+    "kategori": "Kopi",
+    "barcode": "8991234567893"
+  },
+  {
+    "sku": "TEH-EARL-GREY-100G",
+    "nama": "Teh Earl Grey 100g",
+    "default_modal_satuan_IDR": 25000,
+    "default_harga_jual_SGD": 5.9,
+    "kategori": "Teh",
+    "barcode": "8991234567894"
+  },
+  {
+    "sku": "TEH-MATCHA-100G",
+    "nama": "Teh Matcha 100g",
+    "default_modal_satuan_IDR": 33000,
+    "default_harga_jual_SGD": 8.5,
+    "kategori": "Teh",
+    "barcode": "8991234567891"
+  },
+  {
+    "sku": "gula-pasir-1kg",
+    "nama": "gula pasir 1kg",
+    "default_modal_satuan_IDR": 12000,
+    "default_harga_jual_SGD": 2.8,
+    "kategori": "bumbu",
+    "barcode": ""
+  },
+  {
+    "sku": "kopi-latte-300ml",
+    "nama": "kopi latte 300ml",
+    "default_modal_satuan_IDR": 15000,
+    "default_harga_jual_SGD": 4.5,
+    "kategori": "minuman",
+    "barcode": ""
+  },
+  {
+    "sku": "roti-tawar-400g",
+    "nama": "roti tawar 400g",
+    "default_modal_satuan_IDR": 8000,
+    "default_harga_jual_SGD": 2.8,
+    "kategori": "makanan",
+    "barcode": ""
+  },
+  {
+    "sku": "susu-uht-1l",
+    "nama": "susu uht 1l",
+    "default_modal_satuan_IDR": 12000,
+    "default_harga_jual_SGD": 3.2,
+    "kategori": "minuman",
+    "barcode": ""
+  }
+]
