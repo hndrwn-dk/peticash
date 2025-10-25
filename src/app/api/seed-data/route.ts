@@ -34,11 +34,11 @@ export async function POST(request: NextRequest) {
     // First, add more products
     console.log('📦 Adding additional products...');
     const additionalProducts = [
-      { sku: 'BISKUIT-MARIE-200G', nama: 'Biskuit Marie 200g', default_modal_satuan_IDR: 15000, default_harga_jual_SGD: 3.5, kategori: 'Snack' },
-      { sku: 'KERIPIK-SINGKONG-150G', nama: 'Keripik Singkong 150g', default_modal_satuan_IDR: 12000, default_harga_jual_SGD: 2.8, kategori: 'Snack' },
-      { sku: 'MINYAK-KELAPA-500ML', nama: 'Minyak Kelapa 500ml', default_modal_satuan_IDR: 35000, default_harga_jual_SGD: 8.0, kategori: 'Minyak' },
-      { sku: 'GULA-AREN-250G', nama: 'Gula Aren 250g', default_modal_satuan_IDR: 22000, default_harga_jual_SGD: 5.2, kategori: 'Pemanis' },
-      { sku: 'KACANG-METE-100G', nama: 'Kacang Mete 100g', default_modal_satuan_IDR: 45000, default_harga_jual_SGD: 9.8, kategori: 'Kacang' }
+      { sku: 'BISKUIT-MARIE-200G', nama: 'Biskuit Marie 200g', default_modal_satuan_idr: 15000, default_harga_jual_sgd: 3.5, kategori: 'Snack' },
+      { sku: 'KERIPIK-SINGKONG-150G', nama: 'Keripik Singkong 150g', default_modal_satuan_idr: 12000, default_harga_jual_sgd: 2.8, kategori: 'Snack' },
+      { sku: 'MINYAK-KELAPA-500ML', nama: 'Minyak Kelapa 500ml', default_modal_satuan_idr: 35000, default_harga_jual_sgd: 8.0, kategori: 'Minyak' },
+      { sku: 'GULA-AREN-250G', nama: 'Gula Aren 250g', default_modal_satuan_idr: 22000, default_harga_jual_sgd: 5.2, kategori: 'Pemanis' },
+      { sku: 'KACANG-METE-100G', nama: 'Kacang Mete 100g', default_modal_satuan_idr: 45000, default_harga_jual_sgd: 9.8, kategori: 'Kacang' }
     ];
 
     let productsAdded = 0;

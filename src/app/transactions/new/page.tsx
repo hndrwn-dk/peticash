@@ -87,8 +87,8 @@ export default function NewTransactionPage() {
     setFormData(prev => ({
       ...prev,
       sku: product.sku,
-      modal_satuan_IDR: product.default_modal_satuan_IDR?.toString() || '',
-      harga_jual_SGD: product.default_harga_jual_SGD?.toString() || ''
+      modal_satuan_IDR: product.default_modal_satuan_idr?.toString() || '',
+      harga_jual_SGD: product.default_harga_jual_sgd?.toString() || ''
     }));
   };
 
@@ -105,8 +105,8 @@ export default function NewTransactionPage() {
       setFormData(prev => ({
         ...prev,
         sku: directProduct.sku,
-        modal_satuan_IDR: directProduct.default_modal_satuan_IDR?.toString() || '',
-        harga_jual_SGD: directProduct.default_harga_jual_SGD?.toString() || ''
+        modal_satuan_IDR: directProduct.default_modal_satuan_idr?.toString() || '',
+        harga_jual_SGD: directProduct.default_harga_jual_sgd?.toString() || ''
       }));
     } else {
       // Clear selection if no direct match
@@ -270,8 +270,8 @@ export default function NewTransactionPage() {
                         >
                           <div className="font-medium text-gray-900">{product.nama}</div>
                           <div className="text-sm text-gray-500">{product.sku}</div>
-                          {product.default_harga_jual_SGD && (
-                            <div className="text-sm text-gray-600">SGD {product.default_harga_jual_SGD}</div>
+                          {product.default_harga_jual_sgd && (
+                            <div className="text-sm text-gray-600">SGD {product.default_harga_jual_sgd}</div>
                           )}
                         </div>
                       ))}

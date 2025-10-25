@@ -94,7 +94,7 @@ export class PostgresDatabaseService {
       
       // Insert sample products
       await sql`
-        INSERT INTO products (sku, nama, default_modal_satuan_IDR, default_harga_jual_SGD, kategori) VALUES
+        INSERT INTO products (sku, nama, default_modal_satuan_idr, default_harga_jual_sgd, kategori) VALUES
         ('KOPI-ARABICA-250G', 'Kopi Arabica Premium 250g', 45000, 7.90, 'Minuman'),
         ('TEH-MATCHA-100G', 'Teh Matcha Organik 100g', 33000, 8.50, 'Minuman'),
         ('COKLAT-DARK-200G', 'Dark Chocolate 70% 200g', 28000, 6.50, 'Makanan'),
@@ -135,9 +135,9 @@ export class PostgresDatabaseService {
         query = sql`SELECT sku, nama, default_modal_satuan_IDR, default_harga_jual_SGD, kategori, barcode FROM products WHERE barcode = ${barcode}`;
       } else if (q) {
         const searchTerm = `%${q}%`;
-        query = sql`SELECT sku, nama, default_modal_satuan_IDR, default_harga_jual_SGD, kategori, barcode FROM products WHERE LOWER(nama) LIKE LOWER(${searchTerm}) OR LOWER(sku) LIKE LOWER(${searchTerm}) ORDER BY nama`;
+        query = sql`SELECT sku, nama, default_modal_satuan_idr, default_harga_jual_sgd, kategori, barcode FROM products WHERE LOWER(nama) LIKE LOWER(${searchTerm}) OR LOWER(sku) LIKE LOWER(${searchTerm}) ORDER BY nama`;
       } else {
-        query = sql`SELECT sku, nama, default_modal_satuan_IDR, default_harga_jual_SGD, kategori, barcode FROM products ORDER BY nama`;
+        query = sql`SELECT sku, nama, default_modal_satuan_idr, default_harga_jual_sgd, kategori, barcode FROM products ORDER BY nama`;
       }
 
       const result = await query;
@@ -155,8 +155,8 @@ export class PostgresDatabaseService {
       }
 
       await sql`
-        INSERT INTO products (sku, nama, default_modal_satuan_IDR, default_harga_jual_SGD, kategori, barcode, updated_at)
-        VALUES (${product.sku}, ${product.nama}, ${product.default_modal_satuan_IDR || null}, ${product.default_harga_jual_SGD || null}, ${product.kategori || ''}, ${product.barcode || ''}, CURRENT_TIMESTAMP)
+        INSERT INTO products (sku, nama, default_modal_satuan_idr, default_harga_jual_sgd, kategori, barcode, updated_at)
+        VALUES (${product.sku}, ${product.nama}, ${product.default_modal_satuan_idr || null}, ${product.default_harga_jual_sgd || null}, ${product.kategori || ''}, ${product.barcode || ''}, CURRENT_TIMESTAMP)
       `;
 
       return { 
@@ -182,8 +182,8 @@ export class PostgresDatabaseService {
       const result = await sql`
         UPDATE products 
         SET nama = ${product.nama || ''}, 
-            default_modal_satuan_IDR = ${product.default_modal_satuan_IDR || null},
-            default_harga_jual_SGD = ${product.default_harga_jual_SGD || null},
+            default_modal_satuan_idr = ${product.default_modal_satuan_idr || null},
+            default_harga_jual_sgd = ${product.default_harga_jual_sgd || null},
             kategori = ${product.kategori || ''},
             barcode = ${product.barcode || ''},
             updated_at = CURRENT_TIMESTAMP
@@ -253,12 +253,12 @@ export class PostgresDatabaseService {
       }
 
       await sql`
-        INSERT INTO products (sku, nama, default_modal_satuan_IDR, default_harga_jual_SGD, kategori, barcode, updated_at)
-        VALUES (${product.sku}, ${product.nama}, ${product.default_modal_satuan_IDR || null}, ${product.default_harga_jual_SGD || null}, ${product.kategori || ''}, ${product.barcode || ''}, CURRENT_TIMESTAMP)
+        INSERT INTO products (sku, nama, default_modal_satuan_idr, default_harga_jual_sgd, kategori, barcode, updated_at)
+        VALUES (${product.sku}, ${product.nama}, ${product.default_modal_satuan_idr || null}, ${product.default_harga_jual_sgd || null}, ${product.kategori || ''}, ${product.barcode || ''}, CURRENT_TIMESTAMP)
         ON CONFLICT (sku) DO UPDATE SET
           nama = EXCLUDED.nama,
-          default_modal_satuan_IDR = EXCLUDED.default_modal_satuan_IDR,
-          default_harga_jual_SGD = EXCLUDED.default_harga_jual_SGD,
+          default_modal_satuan_idr = EXCLUDED.default_modal_satuan_idr,
+          default_harga_jual_sgd = EXCLUDED.default_harga_jual_sgd,
           kategori = EXCLUDED.kategori,
           barcode = EXCLUDED.barcode,
           updated_at = EXCLUDED.updated_at
@@ -301,12 +301,12 @@ export class PostgresDatabaseService {
 
         try {
           await sql`
-            INSERT INTO products (sku, nama, default_modal_satuan_IDR, default_harga_jual_SGD, kategori, barcode, updated_at)
+            INSERT INTO products (sku, nama, default_modal_satuan_idr, default_harga_jual_sgd, kategori, barcode, updated_at)
             VALUES (${row.sku}, ${row.nama}, ${parseInt(row.modal) || null}, ${parseFloat(row.harga) || null}, ${row.kategori || ''}, ${row.barcode || ''}, CURRENT_TIMESTAMP)
             ON CONFLICT (sku) DO UPDATE SET
               nama = EXCLUDED.nama,
-              default_modal_satuan_IDR = EXCLUDED.default_modal_satuan_IDR,
-              default_harga_jual_SGD = EXCLUDED.default_harga_jual_SGD,
+              default_modal_satuan_idr = EXCLUDED.default_modal_satuan_idr,
+              default_harga_jual_sgd = EXCLUDED.default_harga_jual_sgd,
               kategori = EXCLUDED.kategori,
               barcode = EXCLUDED.barcode,
               updated_at = EXCLUDED.updated_at

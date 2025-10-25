@@ -140,14 +140,14 @@ export default function ProductsPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {product.default_modal_satuan_IDR 
-                          ? `Rp ${product.default_modal_satuan_IDR.toLocaleString('id-ID')}`
+                        {product.default_modal_satuan_idr 
+                          ? `Rp ${product.default_modal_satuan_idr.toLocaleString('id-ID')}`
                           : '-'
                         }
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {product.default_harga_jual_SGD 
-                          ? `$${product.default_harga_jual_SGD.toFixed(2)}`
+                        {product.default_harga_jual_sgd 
+                          ? `$${product.default_harga_jual_sgd.toFixed(2)}`
                           : '-'
                         }
                       </td>
