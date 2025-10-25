@@ -141,7 +141,6 @@ export class PostgresDatabaseService {
       }
 
       const result = await query;
-      console.log('📦 Products from DB:', JSON.stringify(result.rows, null, 2));
       return result.rows as Product[];
     } catch (error) {
       console.error('Error getting products:', error);
