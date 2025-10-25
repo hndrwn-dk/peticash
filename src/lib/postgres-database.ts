@@ -69,7 +69,7 @@ export class PostgresDatabaseService {
       // Create indexes for better performance
       await sql`CREATE INDEX IF NOT EXISTS idx_transactions_tanggal ON transactions(tanggal)`;
       await sql`CREATE INDEX IF NOT EXISTS idx_transactions_sku ON transactions(sku)`;
-      await sql`CREATE INDEX IF NOT EXISTS idx_transactions_periode ON transactions(DATE_TRUNC('month', tanggal))`;
+      // Remove the problematic DATE_TRUNC index - we'll use a simpler approach
 
       await this.seedSampleData();
       console.log('✅ PostgreSQL database initialized successfully');
