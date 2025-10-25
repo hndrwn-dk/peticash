@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { database } from '@/lib/database';
+import { database } from '@/lib/database-factory';
 
 // DELETE /api/products/[sku] - Delete a product
 export async function DELETE(

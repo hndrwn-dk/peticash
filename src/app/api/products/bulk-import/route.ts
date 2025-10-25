@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { database } from '@/lib/database';
+import { database } from '@/lib/database-factory';
 
 // POST /api/products/bulk-import - Bulk import products from CSV
 export async function POST(request: NextRequest) {
