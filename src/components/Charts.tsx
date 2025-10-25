@@ -33,6 +33,8 @@ interface ChartData {
     backgroundColor?: string;
     tension?: number;
     fill?: boolean;
+    borderWidth?: number;
+    borderRadius?: number;
   }[];
 }
 
@@ -110,22 +112,30 @@ export function DashboardChart({ data, title, type = 'line', height = 280 }: Cha
   const ChartComponent = type === 'bar' ? Bar : Line;
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-all duration-200">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-        <div className="flex items-center space-x-2">
+    <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-lg hover:shadow-xl transition-all duration-300 backdrop-blur-sm">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-1">{title}</h3>
+          <p className="text-xs text-gray-500">Data from last 6 months</p>
+        </div>
+        <div className="flex items-center space-x-3">
           {data.datasets.map((dataset, index) => (
-            <div key={index} className="flex items-center space-x-1">
+            <div key={index} className="flex items-center space-x-1.5">
               <div 
-                className="w-3 h-3 rounded-full" 
+                className="w-3 h-3 rounded-full shadow-sm" 
                 style={{ backgroundColor: dataset.borderColor || dataset.backgroundColor }}
               />
-              <span className="text-xs text-gray-600">{dataset.label}</span>
+              <span className="text-xs font-medium text-gray-600">{dataset.label}</span>
             </div>
           ))}
+          <button className="text-gray-400 hover:text-gray-600 transition-colors">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+            </svg>
+          </button>
         </div>
       </div>
-      <div style={{ height: height }}>
+      <div style={{ height: height }} className="relative">
         <ChartComponent options={options} data={data} />
       </div>
     </div>
