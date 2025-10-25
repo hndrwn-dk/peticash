@@ -27,6 +27,13 @@ export async function GET(request: NextRequest) {
         total_products: products.length,
         total_transactions: transactions.length,
         current_month_transactions: currentMonthTransactions.length,
+        sample_products: products.slice(0, 3).map((product: any) => ({
+          sku: product.sku,
+          nama: product.nama,
+          default_modal_satuan_IDR: product.default_modal_satuan_IDR,
+          default_harga_jual_SGD: product.default_harga_jual_SGD,
+          kategori: product.kategori
+        })),
         recent_transactions: transactions.slice(0, 5).map((tx: any) => ({
           date: tx.tanggal,
           sku: tx.sku,
