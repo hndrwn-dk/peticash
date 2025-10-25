@@ -6,10 +6,16 @@ export async function POST(request: NextRequest) {
   try {
     console.log('🚀 Quick seeding for testing...');
 
-    // Add just 5 simple transactions for immediate testing
+    // Get current date for testing
+    const now = new Date();
+    const today = now.toISOString().split('T')[0]; // YYYY-MM-DD
+    const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const dayBefore = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+    // Add just 3 simple transactions for immediate testing with current dates
     const quickTransactions = [
       {
-        tanggal: '2024-10-25', // Today
+        tanggal: today, // Today
         sku: 'KOPI-ARABICA-250G',
         qty: 2,
         modal_satuan_IDR: 45000,
@@ -24,7 +30,7 @@ export async function POST(request: NextRequest) {
         catatan: 'Test transaction 1'
       },
       {
-        tanggal: '2024-10-24',
+        tanggal: yesterday,
         sku: 'TEH-MATCHA-100G',
         qty: 1,
         modal_satuan_IDR: 33000,
@@ -39,7 +45,7 @@ export async function POST(request: NextRequest) {
         catatan: 'Test transaction 2'
       },
       {
-        tanggal: '2024-10-23',
+        tanggal: dayBefore,
         sku: 'COKLAT-DARK-200G',
         qty: 3,
         modal_satuan_IDR: 28000,
