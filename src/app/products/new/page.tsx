@@ -20,8 +20,8 @@ export default function NewProductPage() {
   const [formData, setFormData] = useState<ProductFormData>({
     sku: '',
     nama: '',
-    default_modal_satuan_IDR: '',
-    default_harga_jual_SGD: '',
+    default_modal_satuan_idr: '',
+    default_harga_jual_sgd: '',
     kategori: '',
     barcode: ''
   });
@@ -164,14 +164,14 @@ export default function NewProductPage() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="default_modal_satuan_IDR" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="default_modal_satuan_idr" className="block text-sm font-medium text-gray-700 mb-2">
                     Default Cost per Unit (IDR)
                   </label>
                   <input
                     type="number"
-                    id="default_modal_satuan_IDR"
-                    name="default_modal_satuan_IDR"
-                    value={formData.default_modal_satuan_IDR}
+                    id="default_modal_satuan_idr"
+                    name="default_modal_satuan_idr"
+                    value={formData.default_modal_satuan_idr}
                     onChange={handleInputChange}
                     className="input-field"
                     placeholder="45000"

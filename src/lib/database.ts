@@ -44,8 +44,8 @@ export class DatabaseService {
       CREATE TABLE IF NOT EXISTS products (
         sku TEXT PRIMARY KEY,
         nama TEXT NOT NULL,
-        default_modal_satuan_IDR INTEGER,
-        default_harga_jual_SGD REAL,
+        default_modal_satuan_idr INTEGER,
+        default_harga_jual_sgd REAL,
         kategori TEXT,
         barcode TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -102,40 +102,40 @@ export class DatabaseService {
           {
             sku: 'KOPI-ARABICA-250G',
             nama: 'Kopi Arabica 250g',
-            default_modal_satuan_IDR: 45000,
-            default_harga_jual_SGD: 7.9,
+            default_modal_satuan_idr: 45000,
+            default_harga_jual_sgd: 7.9,
             kategori: 'Kopi',
             barcode: '8991234567890'
           },
           {
             sku: 'TEH-MATCHA-100G',
             nama: 'Teh Matcha 100g',
-            default_modal_satuan_IDR: 33000,
-            default_harga_jual_SGD: 8.5,
+            default_modal_satuan_idr: 33000,
+            default_harga_jual_sgd: 8.5,
             kategori: 'Teh',
             barcode: '8991234567891'
           },
           {
             sku: 'COKLAT-DARK-200G',
             nama: 'Coklat Dark 200g',
-            default_modal_satuan_IDR: 28000,
-            default_harga_jual_SGD: 6.5,
+            default_modal_satuan_idr: 28000,
+            default_harga_jual_sgd: 6.5,
             kategori: 'Coklat',
             barcode: '8991234567892'
           },
           {
             sku: 'KOPI-ROBUSTA-250G',
             nama: 'Kopi Robusta 250g',
-            default_modal_satuan_IDR: 38000,
-            default_harga_jual_SGD: 7.2,
+            default_modal_satuan_idr: 38000,
+            default_harga_jual_sgd: 7.2,
             kategori: 'Kopi',
             barcode: '8991234567893'
           },
           {
             sku: 'TEH-EARL-GREY-100G',
             nama: 'Teh Earl Grey 100g',
-            default_modal_satuan_IDR: 25000,
-            default_harga_jual_SGD: 5.9,
+            default_modal_satuan_idr: 25000,
+            default_harga_jual_sgd: 5.9,
             kategori: 'Teh',
             barcode: '8991234567894'
           }
@@ -143,7 +143,7 @@ export class DatabaseService {
 
         const stmt = this.db.prepare(`
           INSERT INTO products 
-          (sku, nama, default_modal_satuan_IDR, default_harga_jual_SGD, kategori, barcode)
+          (sku, nama, default_modal_satuan_idr, default_harga_jual_sgd, kategori, barcode)
           VALUES (?, ?, ?, ?, ?, ?)
         `);
 
@@ -152,8 +152,8 @@ export class DatabaseService {
             stmt.run(
               product.sku,
               product.nama,
-              product.default_modal_satuan_IDR,
-              product.default_harga_jual_SGD,
+              product.default_modal_satuan_idr,
+              product.default_harga_jual_sgd,
               product.kategori,
               product.barcode
             );
@@ -296,7 +296,7 @@ export class DatabaseService {
   async getProducts(q?: string, barcode?: string): Promise<Product[]> {
     try {
       console.log('🔍 SQLite: Getting products with query:', q, 'barcode:', barcode);
-      let query = 'SELECT sku, nama, default_modal_satuan_IDR, default_harga_jual_SGD, kategori, barcode FROM products';
+      let query = 'SELECT sku, nama, default_modal_satuan_idr, default_harga_jual_sgd, kategori, barcode FROM products';
       const params: any[] = [];
 
       if (barcode) {
@@ -328,15 +328,15 @@ export class DatabaseService {
 
       const stmt = this.db.prepare(`
         INSERT OR REPLACE INTO products 
-        (sku, nama, default_modal_satuan_IDR, default_harga_jual_SGD, kategori, barcode, updated_at)
+        (sku, nama, default_modal_satuan_idr, default_harga_jual_sgd, kategori, barcode, updated_at)
         VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
       `);
 
       const result = stmt.run(
         product.sku,
         product.nama,
-        product.default_modal_satuan_IDR || null,
-        product.default_harga_jual_SGD || null,
+        product.default_modal_satuan_idr || null,
+        product.default_harga_jual_sgd || null,
         product.kategori || '',
         product.barcode || ''
       );
@@ -411,7 +411,7 @@ export class DatabaseService {
 
       const stmt = this.db.prepare(`
         INSERT OR REPLACE INTO products 
-        (sku, nama, default_modal_satuan_IDR, default_harga_jual_SGD, kategori, barcode, updated_at)
+        (sku, nama, default_modal_satuan_idr, default_harga_jual_sgd, kategori, barcode, updated_at)
         VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
       `);
 
@@ -440,8 +440,8 @@ export class DatabaseService {
         const productRow = {
           sku: row.sku,
           nama: row.nama,
-          modal: row.default_modal_satuan_IDR ? parseInt(row.default_modal_satuan_IDR) : null,
-          harga: row.default_harga_jual_SGD ? parseFloat(row.default_harga_jual_SGD) : null,
+          modal: row.default_modal_satuan_idr ? parseInt(row.default_modal_satuan_idr) : null,
+          harga: row.default_harga_jual_sgd ? parseFloat(row.default_harga_jual_sgd) : null,
           kategori: row.kategori || '',
           barcode: row.barcode || ''
         };
