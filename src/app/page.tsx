@@ -207,21 +207,21 @@ export default function HomePage() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-10">
-          <Link href="/transactions/new" className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-1.5 px-2.5 rounded-md transition-colors flex items-center justify-center space-x-1 shadow-sm hover:shadow-md text-xs">
-            <AddIcon className="w-3 h-3" />
-            <span>Transaksi</span>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
+          <Link href="/transactions/new" className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-3 rounded-lg transition-colors flex items-center justify-center space-x-1.5 shadow-sm hover:shadow-md text-sm">
+            <AddIcon className="w-4 h-4" />
+            <span>Transaksi Baru</span>
           </Link>
-          <Link href="/products/new" className="bg-white hover:bg-gray-50 text-gray-700 font-medium py-1.5 px-2.5 rounded-md border border-gray-200 transition-colors flex items-center justify-center space-x-1 shadow-sm hover:shadow-md text-xs">
-            <AddIcon className="w-3 h-3" />
-            <span>Produk</span>
+          <Link href="/products/new" className="bg-white hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-3 rounded-lg border border-gray-200 transition-colors flex items-center justify-center space-x-1.5 shadow-sm hover:shadow-md text-sm">
+            <AddIcon className="w-4 h-4" />
+            <span>Tambah Produk</span>
           </Link>
-          <Link href="/products" className="bg-white hover:bg-gray-50 text-gray-700 font-medium py-1.5 px-2.5 rounded-md border border-gray-200 transition-colors flex items-center justify-center space-x-1 shadow-sm hover:shadow-md text-xs">
-            <ProductIcon className="w-3 h-3" />
-            <span>Cari</span>
+          <Link href="/products" className="bg-white hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-3 rounded-lg border border-gray-200 transition-colors flex items-center justify-center space-x-1.5 shadow-sm hover:shadow-md text-sm">
+            <ProductIcon className="w-4 h-4" />
+            <span>Cari Produk</span>
           </Link>
-          <Link href="/reports" className="bg-white hover:bg-gray-50 text-gray-700 font-medium py-1.5 px-2.5 rounded-md border border-gray-200 transition-colors flex items-center justify-center space-x-1 shadow-sm hover:shadow-md text-xs">
-            <ReportIcon className="w-3 h-3" />
+          <Link href="/reports" className="bg-white hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-3 rounded-lg border border-gray-200 transition-colors flex items-center justify-center space-x-1.5 shadow-sm hover:shadow-md text-sm">
+            <ReportIcon className="w-4 h-4" />
             <span>Laporan</span>
           </Link>
         </div>
