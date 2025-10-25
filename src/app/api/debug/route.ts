@@ -30,8 +30,8 @@ export async function GET(request: NextRequest) {
         sample_products: products.slice(0, 3).map((product: any) => ({
           sku: product.sku,
           nama: product.nama,
-          default_modal_satuan_IDR: product.default_modal_satuan_IDR,
-          default_harga_jual_SGD: product.default_harga_jual_SGD,
+          default_modal_satuan_idr: product.default_modal_satuan_idr,
+          default_harga_jual_sgd: product.default_harga_jual_sgd,
           kategori: product.kategori
         })),
         recent_transactions: transactions.slice(0, 5).map((tx: any) => ({
