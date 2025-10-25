@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/database';
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
 // GET /api/dashboard/stats - Get dashboard statistics and chart data
 export async function GET(request: NextRequest) {
   try {
