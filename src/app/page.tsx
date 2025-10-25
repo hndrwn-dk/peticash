@@ -12,7 +12,6 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState<any>(null);
   const [chartsLoading, setChartsLoading] = useState(true);
-  const [seeding, setSeeding] = useState(false);
   const [chartTimeRange, setChartTimeRange] = useState<1 | 3 | 6>(6);
   const [dbStatus, setDbStatus] = useState<any>(null);
   const [alert, setAlert] = useState<{
@@ -61,90 +60,6 @@ export default function HomePage() {
     loadChartData(months);
   };
 
-  const seedDummyData = async () => {
-    try {
-      setSeeding(true);
-      const response = await fetch('/api/seed-data', {
-        method: 'POST',
-      });
-      const result = await response.json();
-      
-      if (result.success) {
-        setAlert({
-          isOpen: true,
-          title: 'Data Seeded Successfully!',
-          message: `✅ Added ${result.data.successful} transactions\n📦 ${result.data.products_added} new products added\n🗓️ Date range: ${result.data.summary.date_range}\n📊 Total products: ${result.data.summary.total_products}\n🏷️ Categories: ${result.data.summary.categories.join(', ')}`,
-          type: 'success'
-        });
-        // Reload data
-        setTimeout(() => {
-          loadDashboardData();
-          loadChartData();
-        }, 1500);
-      } else {
-        setAlert({
-          isOpen: true,
-          title: 'Seeding Failed',
-          message: `❌ Failed to seed data: ${result.error}`,
-          type: 'error'
-        });
-      }
-    } catch (error) {
-      console.error('Error seeding dummy data:', error);
-      setAlert({
-        isOpen: true,
-        title: 'Seeding Error',
-        message: '❌ Error seeding dummy data. Please try again.',
-        type: 'error'
-      });
-    } finally {
-      setSeeding(false);
-    }
-  };
-
-  const quickSeed = async () => {
-    try {
-      setSeeding(true);
-      const response = await fetch('/api/quick-seed', {
-        method: 'POST',
-      });
-      const result = await response.json();
-      
-      if (result.success) {
-        setAlert({
-          isOpen: true,
-          title: 'Quick Test Data Added!',
-          message: `✅ Added ${result.data.successful} test transactions\n📊 You can now see data in dashboard\n🧪 Perfect for testing all functions`,
-          type: 'success'
-        });
-        // Reload data immediately
-        // Immediate refresh + delayed refresh to ensure data is loaded
-        loadDashboardData();
-        loadChartData();
-        setTimeout(() => {
-          loadDashboardData();
-          loadChartData();
-        }, 1500);
-      } else {
-        setAlert({
-          isOpen: true,
-          title: 'Quick Seed Failed',
-          message: `❌ ${result.error}\nErrors: ${result.data?.errors?.join(', ') || 'Unknown'}`,
-          type: 'error'
-        });
-      }
-    } catch (error) {
-      console.error('Error with quick seed:', error);
-      setAlert({
-        isOpen: true,
-        title: 'Quick Seed Error',
-        message: '❌ Network error. Please check console.',
-        type: 'error'
-      });
-    } finally {
-      setSeeding(false);
-    }
-  };
 
   const loadDashboardData = async () => {
     try {
@@ -279,29 +194,11 @@ export default function HomePage() {
       <main className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="mb-10">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-3">Dashboard</h2>
-              <p className="text-lg text-gray-600">
-                Pembukuan penjualan retail dengan modal IDR dan penjualan SGD
-              </p>
-            </div>
-            <div className="flex space-x-2">
-              <button
-                onClick={quickSeed}
-                disabled={seeding}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-3 rounded-lg transition-colors shadow-sm hover:shadow-md text-sm disabled:opacity-50"
-              >
-                {seeding ? 'Adding...' : '⚡ Quick Test Data'}
-              </button>
-              <button
-                onClick={seedDummyData}
-                disabled={seeding}
-                className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-3 rounded-lg transition-colors shadow-sm hover:shadow-md text-sm disabled:opacity-50"
-              >
-                {seeding ? 'Seeding...' : '🌱 Full Dummy Data'}
-              </button>
-            </div>
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">Dashboard</h2>
+            <p className="text-lg text-gray-600">
+              Pembukuan penjualan retail dengan modal IDR dan penjualan SGD
+            </p>
           </div>
         </div>
 
