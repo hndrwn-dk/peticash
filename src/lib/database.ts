@@ -11,6 +11,12 @@ export class DatabaseService {
     const dataDir = process.env.NODE_ENV === 'production' ? '/tmp' : './data';
     this.dbPath = dbPath || path.join(dataDir, 'bookkeeper.db');
     
+    // Warning about ephemeral storage
+    if (process.env.NODE_ENV === 'production') {
+      console.warn('⚠️  WARNING: Using ephemeral storage (/tmp) on Vercel. Data will be lost on deployment/restart.');
+      console.warn('💡 For production, consider using Vercel Postgres, PlanetScale, or another persistent database.');
+    }
+    
     try {
       // Ensure directory exists
       const fs = require('fs');
@@ -21,6 +27,8 @@ export class DatabaseService {
       this.db = new Database(this.dbPath);
       this.initializeDatabase();
       this.seedSampleData();
+      
+      console.log(`📁 Database initialized at: ${this.dbPath}`);
     } catch (error) {
       console.error('Database initialization error:', error);
       throw error;

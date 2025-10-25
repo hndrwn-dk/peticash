@@ -13,6 +13,8 @@ export default function HomePage() {
   const [chartData, setChartData] = useState<any>(null);
   const [chartsLoading, setChartsLoading] = useState(true);
   const [seeding, setSeeding] = useState(false);
+  const [chartTimeRange, setChartTimeRange] = useState<1 | 3 | 6>(6);
+  const [dbStatus, setDbStatus] = useState<any>(null);
   const [alert, setAlert] = useState<{
     isOpen: boolean;
     title: string;
@@ -23,12 +25,25 @@ export default function HomePage() {
   useEffect(() => {
     loadDashboardData();
     loadChartData();
+    checkDbStatus();
   }, []);
 
-  const loadChartData = async () => {
+  const checkDbStatus = async () => {
+    try {
+      const response = await fetch('/api/db-status');
+      const data = await response.json();
+      if (data.success) {
+        setDbStatus(data.data);
+      }
+    } catch (error) {
+      console.error('Error checking DB status:', error);
+    }
+  };
+
+  const loadChartData = async (months: number = chartTimeRange) => {
     try {
       setChartsLoading(true);
-      const response = await fetch('/api/dashboard/stats?months=6');
+      const response = await fetch(`/api/dashboard/stats?months=${months}`);
       const data = await response.json();
       
       if (data.success) {
@@ -39,6 +54,11 @@ export default function HomePage() {
     } finally {
       setChartsLoading(false);
     }
+  };
+
+  const handleTimeRangeChange = (months: 1 | 3 | 6) => {
+    setChartTimeRange(months);
+    loadChartData(months);
   };
 
   const seedDummyData = async () => {
@@ -203,6 +223,27 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Database Warning Banner */}
+      {dbStatus?.is_ephemeral && (
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-yellow-700">
+                <strong>⚠️ Data Persistence Warning:</strong> {dbStatus.warning} 
+                <span className="ml-2 text-xs">
+                  For production use, consider upgrading to a persistent database solution.
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -338,7 +379,43 @@ export default function HomePage() {
 
         {/* Charts Section */}
         <div className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Tren Bisnis</h2>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4 sm:mb-0">Tren Bisnis</h2>
+            
+            {/* Time Range Selector */}
+            <div className="flex bg-gray-100 rounded-lg p-1">
+              <button
+                onClick={() => handleTimeRangeChange(1)}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                  chartTimeRange === 1
+                    ? 'bg-white text-blue-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                1 Bulan
+              </button>
+              <button
+                onClick={() => handleTimeRangeChange(3)}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                  chartTimeRange === 3
+                    ? 'bg-white text-blue-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                3 Bulan
+              </button>
+              <button
+                onClick={() => handleTimeRangeChange(6)}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                  chartTimeRange === 6
+                    ? 'bg-white text-blue-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                6 Bulan
+              </button>
+            </div>
+          </div>
           {chartsLoading ? (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
