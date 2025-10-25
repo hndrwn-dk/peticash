@@ -34,13 +34,34 @@
   .btn-compact-secondary {
     @apply bg-white hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 text-gray-700 font-medium py-1.5 px-3 rounded-lg border border-gray-200 transition-all duration-200 shadow-sm hover:shadow-md text-xs;
   }
+
+  /* Modern button styles matching reference */
+  .btn-modern {
+    @apply bg-white hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 rounded-2xl border border-gray-200 transition-all duration-200 shadow-lg hover:shadow-xl backdrop-blur-sm;
+  }
+
+  .btn-modern-primary {
+    @apply bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl backdrop-blur-sm;
+  }
+
+  .btn-status-success {
+    @apply bg-green-100 hover:bg-green-200 text-green-700 font-medium py-2.5 px-4 rounded-xl border border-green-200 transition-all duration-200 shadow-sm hover:shadow-md;
+  }
+
+  .btn-status-warning {
+    @apply bg-orange-100 hover:bg-orange-200 text-orange-700 font-medium py-2.5 px-4 rounded-xl border border-orange-200 transition-all duration-200 shadow-sm hover:shadow-md;
+  }
+
+  .btn-status-info {
+    @apply bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium py-2.5 px-4 rounded-xl border border-blue-200 transition-all duration-200 shadow-sm hover:shadow-md;
+  }
   
   .input-field {
     @apply w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white placeholder-gray-400;
   }
   
   .card {
-    @apply bg-white rounded-xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-all duration-200;
+    @apply bg-white rounded-2xl border border-gray-100 p-6 shadow-lg hover:shadow-xl transition-all duration-300 backdrop-blur-sm;
   }
 
   .stats-card {

@@ -159,7 +159,7 @@ export default function HomePage() {
                 <p className="text-sm font-medium text-gray-500 mb-1">Total Produk</p>
                 <p className="text-3xl font-bold text-gray-900">{stats?.total_products || 0}</p>
               </div>
-              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl flex items-center justify-center shadow-sm">
                 <ProductIcon className="w-6 h-6 text-blue-600" />
               </div>
             </div>
@@ -171,7 +171,7 @@ export default function HomePage() {
                 <p className="text-sm font-medium text-gray-500 mb-1">Transaksi</p>
                 <p className="text-3xl font-bold text-gray-900">{stats?.current_month_transactions || 0}</p>
               </div>
-              <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-50 to-green-100 rounded-2xl flex items-center justify-center shadow-sm">
                 <TransactionIcon className="w-6 h-6 text-green-600" />
               </div>
             </div>
@@ -185,7 +185,7 @@ export default function HomePage() {
                   ${(stats?.current_month_revenue_sgd || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl flex items-center justify-center shadow-sm">
                 <CashIcon className="w-6 h-6 text-emerald-600" />
               </div>
             </div>
@@ -199,7 +199,7 @@ export default function HomePage() {
                   Rp {(stats?.current_month_modal_idr || 0).toLocaleString('id-ID')}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl flex items-center justify-center shadow-sm">
                 <CashIcon className="w-6 h-6 text-orange-600" />
               </div>
             </div>
@@ -207,20 +207,20 @@ export default function HomePage() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
-          <Link href="/transactions/new" className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-3 rounded-lg transition-colors flex items-center justify-center space-x-1.5 shadow-sm hover:shadow-md text-sm">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+          <Link href="/transactions/new" className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-2xl transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl backdrop-blur-sm transform hover:scale-105">
             <AddIcon className="w-4 h-4" />
             <span>Transaksi Baru</span>
           </Link>
-          <Link href="/products/new" className="bg-white hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-3 rounded-lg border border-gray-200 transition-colors flex items-center justify-center space-x-1.5 shadow-sm hover:shadow-md text-sm">
+          <Link href="/products/new" className="bg-white hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 rounded-2xl border border-gray-200 transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl backdrop-blur-sm transform hover:scale-105">
             <AddIcon className="w-4 h-4" />
             <span>Tambah Produk</span>
           </Link>
-          <Link href="/products" className="bg-white hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-3 rounded-lg border border-gray-200 transition-colors flex items-center justify-center space-x-1.5 shadow-sm hover:shadow-md text-sm">
+          <Link href="/products" className="bg-white hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 rounded-2xl border border-gray-200 transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl backdrop-blur-sm transform hover:scale-105">
             <ProductIcon className="w-4 h-4" />
             <span>Cari Produk</span>
           </Link>
-          <Link href="/reports" className="bg-white hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-3 rounded-lg border border-gray-200 transition-colors flex items-center justify-center space-x-1.5 shadow-sm hover:shadow-md text-sm">
+          <Link href="/reports" className="bg-white hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 rounded-2xl border border-gray-200 transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl backdrop-blur-sm transform hover:scale-105">
             <ReportIcon className="w-4 h-4" />
             <span>Laporan</span>
           </Link>
@@ -243,9 +243,10 @@ export default function HomePage() {
                     datasets: [{
                       label: 'Pendapatan',
                       data: chartData.revenue,
-                      borderColor: '#06b6d4',
-                      backgroundColor: 'rgba(6, 182, 212, 0.05)',
+                      borderColor: '#10b981',
+                      backgroundColor: 'rgba(16, 185, 129, 0.1)',
                       fill: true,
+                      tension: 0.4,
                     }]
                   }}
                   title="Pendapatan Bulanan (SGD)"
@@ -257,9 +258,10 @@ export default function HomePage() {
                     datasets: [{
                       label: 'Modal',
                       data: chartData.modal,
-                      borderColor: '#8b5cf6',
-                      backgroundColor: 'rgba(139, 92, 246, 0.05)',
+                      borderColor: '#f59e0b',
+                      backgroundColor: 'rgba(245, 158, 11, 0.1)',
                       fill: true,
+                      tension: 0.4,
                     }]
                   }}
                   title="Modal Bulanan (Ribu IDR)"
@@ -273,8 +275,10 @@ export default function HomePage() {
                     datasets: [{
                       label: 'Transaksi',
                       data: chartData.transactions,
-                      backgroundColor: '#10b981',
-                      borderColor: '#10b981',
+                      backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                      borderColor: '#3b82f6',
+                      borderWidth: 0,
+                      borderRadius: 8,
                     }]
                   }}
                   title="Jumlah Transaksi per Bulan"
