@@ -36,12 +36,15 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const transaction: Transaction = await request.json();
+    console.log('Received transaction data:', transaction);
     
     const result = await database.addTransaction(transaction);
+    console.log('Database result:', result);
     
     if (result.success) {
       return NextResponse.json(result);
     } else {
+      console.error('Transaction validation failed:', result.error);
       return NextResponse.json(result, { status: 400 });
     }
   } catch (error) {

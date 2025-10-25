@@ -382,9 +382,10 @@ export class DatabaseService {
         return { success: false, error: 'Harga jual SGD wajib diisi dan > 0' };
       }
 
-      if (!transaction.modal_satuan_IDR && !transaction.modal_total_IDR) {
-        return { success: false, error: 'Modal satuan IDR atau modal total IDR wajib diisi', data: { status: 'incomplete' } };
-      }
+      // Modal is optional - if not provided, transaction will be marked as incomplete
+      // if (!transaction.modal_satuan_IDR && !transaction.modal_total_IDR) {
+      //   return { success: false, error: 'Modal satuan IDR atau modal total IDR wajib diisi', data: { status: 'incomplete' } };
+      // }
 
       // Calculate derived fields
       let status: 'complete' | 'incomplete' | 'invalid' = 'complete';

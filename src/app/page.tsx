@@ -208,20 +208,20 @@ export default function HomePage() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-          <Link href="/transactions/new" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-colors flex items-center justify-center space-x-2">
-            <AddIcon className="w-5 h-5" />
+          <Link href="/transactions/new" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2 shadow-sm hover:shadow-md">
+            <AddIcon className="w-4 h-4" />
             <span>Transaksi Baru</span>
           </Link>
-          <Link href="/products/new" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border border-gray-200 transition-colors flex items-center justify-center space-x-2">
-            <AddIcon className="w-5 h-5" />
+          <Link href="/products/new" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-4 rounded-lg border border-gray-200 transition-colors flex items-center justify-center space-x-2 shadow-sm hover:shadow-md">
+            <AddIcon className="w-4 h-4" />
             <span>Tambah Produk</span>
           </Link>
-          <Link href="/products" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border border-gray-200 transition-colors flex items-center justify-center space-x-2">
-            <ProductIcon className="w-5 h-5" />
+          <Link href="/products" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-4 rounded-lg border border-gray-200 transition-colors flex items-center justify-center space-x-2 shadow-sm hover:shadow-md">
+            <ProductIcon className="w-4 h-4" />
             <span>Cari Produk</span>
           </Link>
-          <Link href="/reports" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border border-gray-200 transition-colors flex items-center justify-center space-x-2">
-            <ReportIcon className="w-5 h-5" />
+          <Link href="/reports" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-4 rounded-lg border border-gray-200 transition-colors flex items-center justify-center space-x-2 shadow-sm hover:shadow-md">
+            <ReportIcon className="w-4 h-4" />
             <span>Laporan Bulanan</span>
           </Link>
         </div>
@@ -241,11 +241,11 @@ export default function HomePage() {
                   data={{
                     labels: chartData.labels,
                     datasets: [{
-                      label: 'Pendapatan (SGD)',
+                      label: 'Pendapatan',
                       data: chartData.revenue,
-                      borderColor: '#10b981',
-                      backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                      tension: 0.4,
+                      borderColor: '#06b6d4',
+                      backgroundColor: 'rgba(6, 182, 212, 0.05)',
+                      fill: true,
                     }]
                   }}
                   title="Pendapatan Bulanan (SGD)"
@@ -255,11 +255,11 @@ export default function HomePage() {
                   data={{
                     labels: chartData.labels,
                     datasets: [{
-                      label: 'Modal (Ribu IDR)',
+                      label: 'Modal',
                       data: chartData.modal,
-                      borderColor: '#f59e0b',
-                      backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                      tension: 0.4,
+                      borderColor: '#8b5cf6',
+                      backgroundColor: 'rgba(139, 92, 246, 0.05)',
+                      fill: true,
                     }]
                   }}
                   title="Modal Bulanan (Ribu IDR)"
@@ -271,10 +271,10 @@ export default function HomePage() {
                   data={{
                     labels: chartData.labels,
                     datasets: [{
-                      label: 'Jumlah Transaksi',
+                      label: 'Transaksi',
                       data: chartData.transactions,
-                      backgroundColor: '#3b82f6',
-                      borderColor: '#3b82f6',
+                      backgroundColor: '#10b981',
+                      borderColor: '#10b981',
                     }]
                   }}
                   title="Jumlah Transaksi per Bulan"
