@@ -1,6 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/database';
 
+// GET /api/seed-data - Check current data status
+export async function GET(request: NextRequest) {
+  try {
+    const products = await database.getProducts();
+    const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+    const transactions = await database.getTransactions(currentMonth);
+    
+    return NextResponse.json({
+      success: true,
+      data: {
+        total_products: products.length,
+        current_month_transactions: transactions.length,
+        products: products.map(p => ({ sku: p.sku, nama: p.nama })),
+        sample_transactions: transactions.slice(0, 3)
+      }
+    });
+  } catch (error) {
+    console.error('GET /api/seed-data error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to check data status' },
+      { status: 500 }
+    );
+  }
+}
+
 // POST /api/seed-data - Seed dummy transaction data
 export async function POST(request: NextRequest) {
   try {

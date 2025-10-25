@@ -82,6 +82,47 @@ export default function HomePage() {
     }
   };
 
+  const quickSeed = async () => {
+    try {
+      setSeeding(true);
+      const response = await fetch('/api/quick-seed', {
+        method: 'POST',
+      });
+      const result = await response.json();
+      
+      if (result.success) {
+        setAlert({
+          isOpen: true,
+          title: 'Quick Test Data Added!',
+          message: `✅ Added ${result.data.successful} test transactions\n📊 You can now see data in dashboard\n🧪 Perfect for testing all functions`,
+          type: 'success'
+        });
+        // Reload data immediately
+        setTimeout(() => {
+          loadDashboardData();
+          loadChartData();
+        }, 1000);
+      } else {
+        setAlert({
+          isOpen: true,
+          title: 'Quick Seed Failed',
+          message: `❌ ${result.error}\nErrors: ${result.data?.errors?.join(', ') || 'Unknown'}`,
+          type: 'error'
+        });
+      }
+    } catch (error) {
+      console.error('Error with quick seed:', error);
+      setAlert({
+        isOpen: true,
+        title: 'Quick Seed Error',
+        message: '❌ Network error. Please check console.',
+        type: 'error'
+      });
+    } finally {
+      setSeeding(false);
+    }
+  };
+
   const loadDashboardData = async () => {
     try {
       setLoading(true);
@@ -201,13 +242,22 @@ export default function HomePage() {
                 Pembukuan penjualan retail dengan modal IDR dan penjualan SGD
               </p>
             </div>
-            <button
-              onClick={seedDummyData}
-              disabled={seeding}
-              className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors shadow-sm hover:shadow-md text-sm disabled:opacity-50"
-            >
-              {seeding ? 'Seeding...' : '🌱 Seed Dummy Data'}
-            </button>
+            <div className="flex space-x-2">
+              <button
+                onClick={quickSeed}
+                disabled={seeding}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-3 rounded-lg transition-colors shadow-sm hover:shadow-md text-sm disabled:opacity-50"
+              >
+                {seeding ? 'Adding...' : '⚡ Quick Test Data'}
+              </button>
+              <button
+                onClick={seedDummyData}
+                disabled={seeding}
+                className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-3 rounded-lg transition-colors shadow-sm hover:shadow-md text-sm disabled:opacity-50"
+              >
+                {seeding ? 'Seeding...' : '🌱 Full Dummy Data'}
+              </button>
+            </div>
           </div>
         </div>
 
