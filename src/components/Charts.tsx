@@ -42,34 +42,66 @@ interface ChartProps {
   height?: number;
 }
 
-export function DashboardChart({ data, title, type = 'line', height = 300 }: ChartProps) {
+export function DashboardChart({ data, title, type = 'line', height = 280 }: ChartProps) {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'top' as const,
+        display: false, // Hide legend for cleaner look
       },
       title: {
-        display: true,
-        text: title,
-        font: {
-          size: 16,
-          weight: 'bold' as const,
-        },
+        display: false, // We'll add title outside the chart
       },
     },
     scales: {
       y: {
         beginAtZero: true,
+        border: {
+          display: false,
+        },
         grid: {
-          color: '#f3f4f6',
+          color: '#f1f5f9',
+          drawBorder: false,
+        },
+        ticks: {
+          color: '#64748b',
+          font: {
+            size: 11,
+          },
+          padding: 8,
         },
       },
       x: {
-        grid: {
-          color: '#f3f4f6',
+        border: {
+          display: false,
         },
+        grid: {
+          display: false,
+        },
+        ticks: {
+          color: '#64748b',
+          font: {
+            size: 11,
+          },
+          padding: 8,
+        },
+      },
+    },
+    elements: {
+      point: {
+        radius: 4,
+        hoverRadius: 6,
+        borderWidth: 2,
+        backgroundColor: '#ffffff',
+      },
+      line: {
+        tension: 0.4,
+        borderWidth: 2,
+      },
+      bar: {
+        borderRadius: 6,
+        borderSkipped: false,
       },
     },
   };
@@ -77,8 +109,24 @@ export function DashboardChart({ data, title, type = 'line', height = 300 }: Cha
   const ChartComponent = type === 'bar' ? Bar : Line;
 
   return (
-    <div className="card" style={{ height: height + 60 }}>
-      <ChartComponent options={options} data={data} height={height} />
+    <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-all duration-200">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+        <div className="flex items-center space-x-2">
+          {data.datasets.map((dataset, index) => (
+            <div key={index} className="flex items-center space-x-1">
+              <div 
+                className="w-3 h-3 rounded-full" 
+                style={{ backgroundColor: dataset.borderColor || dataset.backgroundColor }}
+              />
+              <span className="text-xs text-gray-600">{dataset.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{ height: height }}>
+        <ChartComponent options={options} data={data} />
+      </div>
     </div>
   );
 }
@@ -87,17 +135,16 @@ export function DashboardChart({ data, title, type = 'line', height = 300 }: Cha
 export function generateSampleRevenueData() {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
   const revenueData = [1200, 1900, 1500, 2200, 1800, 2400];
-  const modalData = [800000, 1200000, 950000, 1400000, 1100000, 1500000];
 
   return {
     labels: months,
     datasets: [
       {
-        label: 'Revenue (SGD)',
+        label: 'Pendapatan',
         data: revenueData,
-        borderColor: '#10b981',
-        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-        tension: 0.4,
+        borderColor: '#06b6d4',
+        backgroundColor: 'rgba(6, 182, 212, 0.05)',
+        fill: true,
       },
     ],
   };
@@ -111,11 +158,11 @@ export function generateSampleModalData() {
     labels: months,
     datasets: [
       {
-        label: 'Modal (Ribu IDR)',
+        label: 'Modal',
         data: modalData,
-        borderColor: '#f59e0b',
-        backgroundColor: 'rgba(245, 158, 11, 0.1)',
-        tension: 0.4,
+        borderColor: '#8b5cf6',
+        backgroundColor: 'rgba(139, 92, 246, 0.05)',
+        fill: true,
       },
     ],
   };
@@ -129,10 +176,10 @@ export function generateSampleTransactionData() {
     labels: months,
     datasets: [
       {
-        label: 'Jumlah Transaksi',
+        label: 'Transaksi',
         data: transactionData,
-        backgroundColor: '#3b82f6',
-        borderColor: '#3b82f6',
+        backgroundColor: '#10b981',
+        borderColor: '#10b981',
       },
     ],
   };
