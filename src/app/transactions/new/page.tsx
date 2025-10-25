@@ -34,10 +34,17 @@ export default function NewTransactionPage() {
     biaya_lain_SGD: '0',
     apply_gst: false,
     gst_rate: '0.09',
-    pelanggan: 'Walk-in',
+    pelanggan: '',
     metode_bayar: 'Tunai',
     catatan: ''
   });
+
+  // Calculate total price
+  const calculateTotalPrice = () => {
+    const qty = parseFloat(formData.qty) || 0;
+    const price = parseFloat(formData.harga_jual_SGD) || 0;
+    return (qty * price).toFixed(2);
+  };
 
   useEffect(() => {
     loadProducts();
@@ -296,21 +303,6 @@ export default function NewTransactionPage() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="modal_satuan_IDR" className="block text-sm font-medium text-gray-700 mb-2">
-                    Modal Satuan (IDR)
-                  </label>
-                  <input
-                    type="number"
-                    id="modal_satuan_IDR"
-                    name="modal_satuan_IDR"
-                    value={formData.modal_satuan_IDR}
-                    onChange={handleInputChange}
-                    className="input-field"
-                    placeholder="45000"
-                  />
-                </div>
-
-                <div>
                   <label htmlFor="harga_jual_SGD" className="block text-sm font-medium text-gray-700 mb-2">
                     Harga Jual (SGD) *
                   </label>
@@ -325,89 +317,21 @@ export default function NewTransactionPage() {
                     placeholder="7.90"
                     required
                   />
-                </div>
-              </div>
-            </div>
-
-            {/* Fees and GST */}
-            <div className="border-b border-gray-100 pb-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">Biaya & Pajak</h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <label htmlFor="fee_rate" className="block text-sm font-medium text-gray-700 mb-2">
-                    Fee Rate (%)
-                  </label>
-                  <input
-                    type="number"
-                    id="fee_rate"
-                    name="fee_rate"
-                    value={formData.fee_rate}
-                    onChange={handleInputChange}
-                    className="input-field"
-                    step="0.1"
-                  />
+                  <p className="text-xs text-gray-500 mt-1">Otomatis terisi dari produk</p>
                 </div>
 
                 <div>
-                  <label htmlFor="fee_flat_SGD" className="block text-sm font-medium text-gray-700 mb-2">
-                    Fee Tetap (SGD)
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Harga Total (SGD)
                   </label>
-                  <input
-                    type="number"
-                    id="fee_flat_SGD"
-                    name="fee_flat_SGD"
-                    value={formData.fee_flat_SGD}
-                    onChange={handleInputChange}
-                    className="input-field"
-                    step="0.01"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="biaya_lain_SGD" className="block text-sm font-medium text-gray-700 mb-2">
-                    Biaya Lain (SGD)
-                  </label>
-                  <input
-                    type="number"
-                    id="biaya_lain_SGD"
-                    name="biaya_lain_SGD"
-                    value={formData.biaya_lain_SGD}
-                    onChange={handleInputChange}
-                    className="input-field"
-                    step="0.01"
-                  />
-                </div>
-              </div>
-
-              <div className="mt-6 flex items-center space-x-4">
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    name="apply_gst"
-                    checked={formData.apply_gst}
-                    onChange={handleInputChange}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="ml-2 text-sm font-medium text-gray-700">Kenakan GST</span>
-                </label>
-                
-                {formData.apply_gst && (
-                  <div className="flex items-center space-x-2">
-                    <label htmlFor="gst_rate" className="text-sm font-medium text-gray-700">Rate:</label>
-                    <input
-                      type="number"
-                      id="gst_rate"
-                      name="gst_rate"
-                      value={formData.gst_rate}
-                      onChange={handleInputChange}
-                      className="w-20 px-2 py-1 border border-gray-300 rounded text-sm"
-                      step="0.01"
-                    />
+                  <div className="input-field bg-gray-50 text-gray-600 font-medium">
+                    {calculateTotalPrice()}
                   </div>
-                )}
+                  <p className="text-xs text-gray-500 mt-1">Kuantitas × Harga Jual</p>
+                </div>
               </div>
             </div>
+
 
             {/* Customer Information */}
             <div>
@@ -425,7 +349,7 @@ export default function NewTransactionPage() {
                     value={formData.pelanggan}
                     onChange={handleInputChange}
                     className="input-field"
-                    placeholder="Walk-in"
+                    placeholder="Customer name"
                   />
                 </div>
 
