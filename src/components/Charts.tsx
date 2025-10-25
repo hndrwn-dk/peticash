@@ -32,6 +32,7 @@ interface ChartData {
     borderColor?: string;
     backgroundColor?: string;
     tension?: number;
+    fill?: boolean;
   }[];
 }
 
