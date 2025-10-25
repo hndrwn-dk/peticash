@@ -245,6 +245,8 @@ export class PostgresDatabaseService {
 
   async upsertProduct(product: Product): Promise<ApiResponse> {
     try {
+      console.log('🔍 Upserting product:', JSON.stringify(product, null, 2));
+      
       if (!product.sku || !product.nama) {
         return { success: false, error: 'SKU dan nama wajib diisi' };
       }
