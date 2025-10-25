@@ -2,13 +2,28 @@ import { sql } from '@vercel/postgres';
 import { Product, Transaction, MonthlyReport, ApiResponse } from '@/types';
 
 export class PostgresDatabaseService {
+  private initialized = false;
+
   constructor() {
-    this.initializeDatabase();
+    // Don't initialize immediately, wait for first use
+    console.log('🐘 PostgreSQL database service created');
+  }
+
+  private async ensureInitialized(): Promise<void> {
+    if (!this.initialized) {
+      await this.initializeDatabase();
+      this.initialized = true;
+    }
   }
 
   private async initializeDatabase(): Promise<void> {
     try {
       console.log('🐘 Initializing PostgreSQL database...');
+      
+      // Check if we have a connection string
+      if (!process.env.POSTGRES_URL && !process.env.POSTGRES_PRISMA_URL) {
+        throw new Error('No PostgreSQL connection string found');
+      }
       
       // Create products table
       await sql`
@@ -58,6 +73,7 @@ export class PostgresDatabaseService {
 
       await this.seedSampleData();
       console.log('✅ PostgreSQL database initialized successfully');
+      this.initialized = true;
       
     } catch (error) {
       console.error('❌ PostgreSQL initialization error:', error);
@@ -111,6 +127,7 @@ export class PostgresDatabaseService {
   // PRODUCT MANAGEMENT
   async getProducts(q?: string, barcode?: string): Promise<Product[]> {
     try {
+      await this.ensureInitialized();
       let query;
       
       if (barcode) {
@@ -311,6 +328,7 @@ export class PostgresDatabaseService {
   // TRANSACTION MANAGEMENT
   async addTransaction(transaction: Transaction): Promise<ApiResponse> {
     try {
+      await this.ensureInitialized();
       console.log('🔍 Adding transaction:', JSON.stringify(transaction, null, 2));
       
       // Validate required fields
