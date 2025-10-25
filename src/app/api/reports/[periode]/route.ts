@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { database } from '@/lib/database';
+import { database } from '@/lib/database-factory';
 
 // GET /api/reports/[periode] - Generate monthly report
 export async function GET(

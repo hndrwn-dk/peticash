@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { database } from '@/lib/database';
+import { database } from '@/lib/database-factory';
 
 // GET /api/db-status - Check database status and persistence warning
 export async function GET(request: NextRequest) {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { database } from '@/lib/database';
+import { database } from '@/lib/database-factory';
 import { Product } from '@/types';
 
 // GET /api/products - List/search products

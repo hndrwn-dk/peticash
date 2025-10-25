@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { database } from '@/lib/database';
+import { database } from '@/lib/database-factory';
 
 // POST /api/quick-seed - Quick seed with just a few transactions for testing
 export async function POST(request: NextRequest) {
