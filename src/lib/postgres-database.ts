@@ -128,6 +128,7 @@ export class PostgresDatabaseService {
   async getProducts(q?: string, barcode?: string): Promise<Product[]> {
     try {
       await this.ensureInitialized();
+      console.log('🔍 Getting products with query:', q, 'barcode:', barcode);
       let query;
       
       if (barcode) {
@@ -140,6 +141,7 @@ export class PostgresDatabaseService {
       }
 
       const result = await query;
+      console.log('📦 Products from DB:', JSON.stringify(result.rows, null, 2));
       return result.rows as Product[];
     } catch (error) {
       console.error('Error getting products:', error);

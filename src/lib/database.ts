@@ -295,6 +295,7 @@ export class DatabaseService {
   // PRODUCT MANAGEMENT
   async getProducts(q?: string, barcode?: string): Promise<Product[]> {
     try {
+      console.log('🔍 SQLite: Getting products with query:', q, 'barcode:', barcode);
       let query = 'SELECT sku, nama, default_modal_satuan_IDR, default_harga_jual_SGD, kategori, barcode FROM products';
       const params: any[] = [];
 
