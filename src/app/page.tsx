@@ -118,10 +118,13 @@ export default function HomePage() {
           type: 'success'
         });
         // Reload data immediately
+        // Immediate refresh + delayed refresh to ensure data is loaded
+        loadDashboardData();
+        loadChartData();
         setTimeout(() => {
           loadDashboardData();
           loadChartData();
-        }, 1000);
+        }, 1500);
       } else {
         setAlert({
           isOpen: true,
