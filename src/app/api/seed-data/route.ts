@@ -4,8 +4,33 @@ import { database } from '@/lib/database';
 // POST /api/seed-data - Seed dummy transaction data
 export async function POST(request: NextRequest) {
   try {
-    console.log('🌱 Seeding dummy transaction data...');
+    console.log('🌱 Starting comprehensive data seeding...');
 
+    // First, add more products
+    console.log('📦 Adding additional products...');
+    const additionalProducts = [
+      { sku: 'BISKUIT-MARIE-200G', nama: 'Biskuit Marie 200g', default_modal_satuan_IDR: 15000, default_harga_jual_SGD: 3.5, kategori: 'Snack' },
+      { sku: 'KERIPIK-SINGKONG-150G', nama: 'Keripik Singkong 150g', default_modal_satuan_IDR: 12000, default_harga_jual_SGD: 2.8, kategori: 'Snack' },
+      { sku: 'MINYAK-KELAPA-500ML', nama: 'Minyak Kelapa 500ml', default_modal_satuan_IDR: 35000, default_harga_jual_SGD: 8.0, kategori: 'Minyak' },
+      { sku: 'GULA-AREN-250G', nama: 'Gula Aren 250g', default_modal_satuan_IDR: 22000, default_harga_jual_SGD: 5.2, kategori: 'Pemanis' },
+      { sku: 'KACANG-METE-100G', nama: 'Kacang Mete 100g', default_modal_satuan_IDR: 45000, default_harga_jual_SGD: 9.8, kategori: 'Kacang' }
+    ];
+
+    let productsAdded = 0;
+    for (const product of additionalProducts) {
+      try {
+        const result = await database.upsertProduct(product);
+        if (result.success) {
+          productsAdded++;
+        }
+      } catch (error) {
+        console.error('Error adding product:', product.sku, error);
+      }
+    }
+
+    console.log(`✅ Added ${productsAdded} additional products`);
+
+    // Now add comprehensive transaction data
     const sampleTransactions = [
       // October 2024 transactions
       { tanggal: '2024-10-01', sku: 'KOPI-ARABICA-250G', qty: 2, modal_satuan_IDR: 45000, harga_jual_SGD: 7.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
@@ -54,16 +79,35 @@ export async function POST(request: NextRequest) {
       { tanggal: '2024-05-13', sku: 'TEH-MATCHA-100G', qty: 1, modal_satuan_IDR: 33000, harga_jual_SGD: 8.5, pelanggan: 'Helen Yap', metode_bayar: 'E-Wallet' },
       { tanggal: '2024-05-19', sku: 'COKLAT-DARK-200G', qty: 3, modal_satuan_IDR: 28000, harga_jual_SGD: 6.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
       { tanggal: '2024-05-25', sku: 'KOPI-ROBUSTA-250G', qty: 1, modal_satuan_IDR: 38000, harga_jual_SGD: 7.2, pelanggan: 'Steven Lim', metode_bayar: 'Kartu' },
-      { tanggal: '2024-05-30', sku: 'TEH-EARL-GREY-100G', qty: 2, modal_satuan_IDR: 25000, harga_jual_SGD: 5.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' }
+      { tanggal: '2024-05-30', sku: 'TEH-EARL-GREY-100G', qty: 2, modal_satuan_IDR: 25000, harga_jual_SGD: 5.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      
+      // Additional transactions with new products
+      { tanggal: '2024-10-16', sku: 'BISKUIT-MARIE-200G', qty: 4, modal_satuan_IDR: 15000, harga_jual_SGD: 3.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-10-17', sku: 'KERIPIK-SINGKONG-150G', qty: 2, modal_satuan_IDR: 12000, harga_jual_SGD: 2.8, pelanggan: 'Ahmad Rizki', metode_bayar: 'E-Wallet' },
+      { tanggal: '2024-10-18', sku: 'MINYAK-KELAPA-500ML', qty: 1, modal_satuan_IDR: 35000, harga_jual_SGD: 8.0, pelanggan: 'Siti Nurhaliza', metode_bayar: 'Transfer' },
+      { tanggal: '2024-10-19', sku: 'GULA-AREN-250G', qty: 3, modal_satuan_IDR: 22000, harga_jual_SGD: 5.2, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-10-20', sku: 'KACANG-METE-100G', qty: 1, modal_satuan_IDR: 45000, harga_jual_SGD: 9.8, pelanggan: 'Budi Santoso', metode_bayar: 'Kartu' },
+      
+      // More transactions for better charts
+      { tanggal: '2024-09-28', sku: 'BISKUIT-MARIE-200G', qty: 2, modal_satuan_IDR: 15000, harga_jual_SGD: 3.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-08-30', sku: 'KERIPIK-SINGKONG-150G', qty: 3, modal_satuan_IDR: 12000, harga_jual_SGD: 2.8, pelanggan: 'Rina Sari', metode_bayar: 'E-Wallet' },
+      { tanggal: '2024-07-31', sku: 'MINYAK-KELAPA-500ML', qty: 2, modal_satuan_IDR: 35000, harga_jual_SGD: 8.0, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-06-30', sku: 'GULA-AREN-250G', qty: 1, modal_satuan_IDR: 22000, harga_jual_SGD: 5.2, pelanggan: 'Indra Wijaya', metode_bayar: 'Transfer' },
+      { tanggal: '2024-05-31', sku: 'KACANG-METE-100G', qty: 2, modal_satuan_IDR: 45000, harga_jual_SGD: 9.8, pelanggan: 'Walk-in', metode_bayar: 'Kartu' }
     ];
 
     let successCount = 0;
     let errorCount = 0;
     const errors: string[] = [];
 
+    console.log(`📊 Processing ${sampleTransactions.length} transactions...`);
+
     // Add each transaction
-    for (const tx of sampleTransactions) {
+    for (let i = 0; i < sampleTransactions.length; i++) {
+      const tx = sampleTransactions[i];
       try {
+        console.log(`Processing transaction ${i + 1}/${sampleTransactions.length}: ${tx.tanggal} ${tx.sku}`);
+        
         const result = await database.addTransaction({
           tanggal: tx.tanggal,
           sku: tx.sku,
@@ -82,28 +126,40 @@ export async function POST(request: NextRequest) {
 
         if (result.success) {
           successCount++;
+          console.log(`✅ Success: ${tx.tanggal} ${tx.sku}`);
         } else {
           errorCount++;
+          console.error(`❌ Failed: ${tx.tanggal} ${tx.sku} - ${result.error}`);
           errors.push(`${tx.tanggal} ${tx.sku}: ${result.error}`);
         }
       } catch (error) {
         errorCount++;
+        console.error(`❌ Exception: ${tx.tanggal} ${tx.sku} - ${error}`);
         errors.push(`${tx.tanggal} ${tx.sku}: ${error}`);
       }
     }
 
+    console.log(`🎉 Seeding completed! Success: ${successCount}, Failed: ${errorCount}`);
+
     return NextResponse.json({
       success: true,
-      message: `Dummy data seeded successfully!`,
+      message: `Comprehensive dummy data seeded successfully!`,
       data: {
+        products_added: productsAdded,
         total_transactions: sampleTransactions.length,
         successful: successCount,
         failed: errorCount,
         errors: errors.slice(0, 5), // Show first 5 errors only
         summary: {
-          products_covered: ['KOPI-ARABICA-250G', 'TEH-MATCHA-100G', 'COKLAT-DARK-200G', 'KOPI-ROBUSTA-250G', 'TEH-EARL-GREY-100G'],
-          date_range: '2024-05-07 to 2024-10-15',
-          months_covered: 6
+          total_products: 10, // 5 original + 5 new
+          products_covered: [
+            'KOPI-ARABICA-250G', 'TEH-MATCHA-100G', 'COKLAT-DARK-200G', 
+            'KOPI-ROBUSTA-250G', 'TEH-EARL-GREY-100G', 'BISKUIT-MARIE-200G',
+            'KERIPIK-SINGKONG-150G', 'MINYAK-KELAPA-500ML', 'GULA-AREN-250G', 'KACANG-METE-100G'
+          ],
+          date_range: '2024-05-07 to 2024-10-20',
+          months_covered: 6,
+          categories: ['Kopi', 'Teh', 'Coklat', 'Snack', 'Minyak', 'Pemanis', 'Kacang']
         }
       }
     });
