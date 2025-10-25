@@ -4,7 +4,8 @@ import { database } from '@/lib/database';
 // GET /api/dashboard/stats - Get dashboard statistics and chart data
 export async function GET(request: NextRequest) {
   try {
-    const months = 6; // Fixed to 6 months for now
+    // Get months parameter from URL, default to 6
+    const months = parseInt(request.nextUrl.searchParams.get('months') || '6');
     
     // Get current date and calculate months back
     const now = new Date();
