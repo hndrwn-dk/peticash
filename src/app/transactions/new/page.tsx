@@ -85,6 +85,34 @@ export default function NewTransactionPage() {
     }));
   };
 
+  const handleProductSearch = (value: string) => {
+    setSearchQuery(value);
+    
+    // If user types an SKU directly, try to find and select the product
+    const directProduct = products.find(p => 
+      p.sku.toLowerCase() === value.toLowerCase()
+    );
+    
+    if (directProduct) {
+      setSelectedProduct(directProduct);
+      setFormData(prev => ({
+        ...prev,
+        sku: directProduct.sku,
+        modal_satuan_IDR: directProduct.default_modal_satuan_IDR?.toString() || '',
+        harga_jual_SGD: directProduct.default_harga_jual_SGD?.toString() || ''
+      }));
+    } else {
+      // Clear selection if no direct match
+      setSelectedProduct(null);
+      setFormData(prev => ({
+        ...prev,
+        sku: value, // Allow manual SKU entry
+        modal_satuan_IDR: '',
+        harga_jual_SGD: ''
+      }));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -218,7 +246,7 @@ export default function NewTransactionPage() {
                     id="product"
                     placeholder="Cari produk berdasarkan nama atau SKU..."
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e) => handleProductSearch(e.target.value)}
                     onFocus={() => setShowProductList(true)}
                     className="input-field"
                     required

@@ -29,9 +29,10 @@ export default function ReportsPage() {
         setReport(data.data.report);
         setSummary(data.data.summary);
       } else {
-        // Don't show popup for "no data" - just set empty state
+        // Handle no data case
         setReport(null);
         setSummary('');
+        console.log('No data for period:', selectedPeriod, data.error);
       }
     } catch (error) {
       console.error('Error generating report:', error);
@@ -42,11 +43,12 @@ export default function ReportsPage() {
     }
   };
 
-  useEffect(() => {
-    if (selectedPeriod) {
-      generateReport();
-    }
-  }, [selectedPeriod]);
+  // Remove auto-generation, let user click the button
+  // useEffect(() => {
+  //   if (selectedPeriod) {
+  //     generateReport();
+  //   }
+  // }, [selectedPeriod]);
 
   const formatCurrency = (amount: number, currency: 'IDR' | 'SGD') => {
     if (currency === 'IDR') {
