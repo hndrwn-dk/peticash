@@ -47,8 +47,8 @@ export default function NewProductPage() {
         nama: formData.nama,
         kategori: formData.kategori,
         barcode: formData.barcode,
-        default_modal_satuan_IDR: formData.default_modal_satuan_IDR ? parseInt(formData.default_modal_satuan_IDR) : null,
-        default_harga_jual_SGD: formData.default_harga_jual_SGD ? parseFloat(formData.default_harga_jual_SGD) : null
+        default_modal_satuan_idr: formData.default_modal_satuan_idr ? parseInt(formData.default_modal_satuan_idr) : null,
+        default_harga_jual_sgd: formData.default_harga_jual_sgd ? parseFloat(formData.default_harga_jual_sgd) : null
       };
 
       const response = await fetch('/api/products', {
@@ -181,14 +181,14 @@ export default function NewProductPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="default_harga_jual_SGD" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="default_harga_jual_sgd" className="block text-sm font-medium text-gray-700 mb-2">
                     Default Selling Price (SGD)
                   </label>
                   <input
                     type="number"
-                    id="default_harga_jual_SGD"
-                    name="default_harga_jual_SGD"
-                    value={formData.default_harga_jual_SGD}
+                    id="default_harga_jual_sgd"
+                    name="default_harga_jual_sgd"
+                    value={formData.default_harga_jual_sgd}
                     onChange={handleInputChange}
                     className="input-field"
                     placeholder="7.90"
