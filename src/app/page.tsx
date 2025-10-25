@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { DashboardStats, Transaction, Product } from '@/types';
+import { CashIcon, ProductIcon, TransactionIcon, ReportIcon, AddIcon } from '@/components/Icons';
 
 export default function HomePage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -97,17 +98,23 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">Bookkeeper</h1>
+              <div className="flex items-center space-x-2">
+                <CashIcon className="w-8 h-8 text-blue-600" />
+                <h1 className="text-2xl font-bold text-gray-900">Peti Cash</h1>
+              </div>
             </div>
             <nav className="hidden md:flex space-x-1">
-              <Link href="/products" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
-                Produk
+              <Link href="/products" className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+                <ProductIcon className="w-4 h-4" />
+                <span>Produk</span>
               </Link>
-              <Link href="/transactions" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
-                Transaksi
+              <Link href="/transactions" className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+                <TransactionIcon className="w-4 h-4" />
+                <span>Transaksi</span>
               </Link>
-              <Link href="/reports" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
-                Laporan
+              <Link href="/reports" className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+                <ReportIcon className="w-4 h-4" />
+                <span>Laporan</span>
               </Link>
             </nav>
           </div>
@@ -126,31 +133,31 @@ export default function HomePage() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          <div className="bg-white rounded-xl border border-gray-100 p-6 hover:shadow-sm transition-shadow">
+          <div className="stats-card">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 mb-1">Total Produk</p>
                 <p className="text-3xl font-bold text-gray-900">{stats?.total_products || 0}</p>
               </div>
               <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
-                <div className="w-6 h-6 bg-blue-500 rounded"></div>
+                <ProductIcon className="w-6 h-6 text-blue-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-100 p-6 hover:shadow-sm transition-shadow">
+          <div className="stats-card">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 mb-1">Transaksi</p>
                 <p className="text-3xl font-bold text-gray-900">{stats?.current_month_transactions || 0}</p>
               </div>
               <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
-                <div className="w-6 h-6 bg-green-500 rounded"></div>
+                <TransactionIcon className="w-6 h-6 text-green-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-100 p-6 hover:shadow-sm transition-shadow">
+          <div className="stats-card">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 mb-1">Pendapatan (SGD)</p>
@@ -159,12 +166,12 @@ export default function HomePage() {
                 </p>
               </div>
               <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center">
-                <div className="w-6 h-6 bg-emerald-500 rounded"></div>
+                <CashIcon className="w-6 h-6 text-emerald-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-100 p-6 hover:shadow-sm transition-shadow">
+          <div className="stats-card">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 mb-1">Modal (IDR)</p>
@@ -173,7 +180,7 @@ export default function HomePage() {
                 </p>
               </div>
               <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center">
-                <div className="w-6 h-6 bg-orange-500 rounded"></div>
+                <CashIcon className="w-6 h-6 text-orange-600" />
               </div>
             </div>
           </div>
@@ -181,17 +188,21 @@ export default function HomePage() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-          <Link href="/transactions/new" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-colors text-center">
-            Transaksi Baru
+          <Link href="/transactions/new" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-colors flex items-center justify-center space-x-2">
+            <AddIcon className="w-5 h-5" />
+            <span>Transaksi Baru</span>
           </Link>
-          <Link href="/products/new" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border border-gray-200 transition-colors text-center">
-            Tambah Produk
+          <Link href="/products/new" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border border-gray-200 transition-colors flex items-center justify-center space-x-2">
+            <AddIcon className="w-5 h-5" />
+            <span>Tambah Produk</span>
           </Link>
-          <Link href="/products" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border border-gray-200 transition-colors text-center">
-            Cari Produk
+          <Link href="/products" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border border-gray-200 transition-colors flex items-center justify-center space-x-2">
+            <ProductIcon className="w-5 h-5" />
+            <span>Cari Produk</span>
           </Link>
-          <Link href="/reports" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border border-gray-200 transition-colors text-center">
-            Laporan Bulanan
+          <Link href="/reports" className="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-xl border border-gray-200 transition-colors flex items-center justify-center space-x-2">
+            <ReportIcon className="w-5 h-5" />
+            <span>Laporan Bulanan</span>
           </Link>
         </div>
 

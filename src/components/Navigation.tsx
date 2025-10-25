@@ -2,23 +2,25 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { DashboardIcon, ProductIcon, TransactionIcon, ReportIcon, CashIcon } from './Icons';
 
 export default function Navigation() {
   const pathname = usePathname();
 
   const navItems = [
-    { href: '/', label: 'Dashboard' },
-    { href: '/products', label: 'Produk' },
-    { href: '/transactions', label: 'Transaksi' },
-    { href: '/reports', label: 'Laporan' },
+    { href: '/', label: 'Dashboard', icon: DashboardIcon },
+    { href: '/products', label: 'Produk', icon: ProductIcon },
+    { href: '/transactions', label: 'Transaksi', icon: TransactionIcon },
+    { href: '/reports', label: 'Laporan', icon: ReportIcon },
   ];
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="flex items-center">
-            <h1 className="text-xl font-semibold text-gray-900">Bookkeeper</h1>
+          <Link href="/" className="flex items-center space-x-2">
+            <CashIcon className="w-8 h-8 text-blue-600" />
+            <h1 className="text-xl font-semibold text-gray-900">Peti Cash</h1>
           </Link>
           
           <nav className="hidden md:flex space-x-8">
@@ -30,13 +32,12 @@ export default function Navigation() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                    isActive
-                      ? 'bg-primary-50 text-primary-700'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  className={`nav-link ${
+                    isActive ? 'nav-link-active' : 'nav-link-inactive'
                   }`}
                 >
-                  {item.label}
+                  <item.icon className="w-4 h-4" />
+                  <span>{item.label}</span>
                 </Link>
               );
             })}
@@ -64,13 +65,12 @@ export default function Navigation() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center px-3 py-2 text-base font-medium rounded-lg transition-colors ${
-                  isActive
-                    ? 'bg-primary-50 text-primary-700'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                className={`nav-link text-base ${
+                  isActive ? 'nav-link-active' : 'nav-link-inactive'
                 }`}
               >
-                {item.label}
+                <item.icon className="w-4 h-4" />
+                <span>{item.label}</span>
               </Link>
             );
           })}

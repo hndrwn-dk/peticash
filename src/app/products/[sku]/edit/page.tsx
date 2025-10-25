@@ -1,22 +1,27 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import Navigation from '@/components/Navigation';
 import Alert from '@/components/Alert';
 import Link from 'next/link';
-import { ProductFormData } from '@/types';
-import { ArrowLeftIcon } from '@/components/Icons';
+import { ProductFormData, Product } from '@/types';
 
-export default function NewProductPage() {
+export default function EditProductPage() {
   const router = useRouter();
+  const params = useParams();
+  const sku = params.sku as string;
+  
   const [loading, setLoading] = useState(false);
+  const [loadingProduct, setLoadingProduct] = useState(true);
+  const [product, setProduct] = useState<Product | null>(null);
   const [alert, setAlert] = useState<{
     isOpen: boolean;
     title: string;
     message: string;
     type: 'success' | 'error' | 'warning' | 'info';
   }>({ isOpen: false, title: '', message: '', type: 'info' });
+  
   const [formData, setFormData] = useState<ProductFormData>({
     sku: '',
     nama: '',
@@ -25,6 +30,59 @@ export default function NewProductPage() {
     kategori: '',
     barcode: ''
   });
+
+  useEffect(() => {
+    if (sku) {
+      loadProduct();
+    }
+  }, [sku]);
+
+  const loadProduct = async () => {
+    try {
+      setLoadingProduct(true);
+      const response = await fetch(`/api/products?q=${encodeURIComponent(sku)}`);
+      const data = await response.json();
+      
+      if (data.success && data.data.length > 0) {
+        const foundProduct = data.data.find((p: Product) => p.sku === sku);
+        if (foundProduct) {
+          setProduct(foundProduct);
+          setFormData({
+            sku: foundProduct.sku,
+            nama: foundProduct.nama,
+            default_modal_satuan_IDR: foundProduct.default_modal_satuan_IDR?.toString() || '',
+            default_harga_jual_SGD: foundProduct.default_harga_jual_SGD?.toString() || '',
+            kategori: foundProduct.kategori || '',
+            barcode: foundProduct.barcode || ''
+          });
+        } else {
+          setAlert({
+            isOpen: true,
+            title: 'Produk Tidak Ditemukan',
+            message: 'Produk dengan SKU tersebut tidak ditemukan.',
+            type: 'error'
+          });
+        }
+      } else {
+        setAlert({
+          isOpen: true,
+          title: 'Produk Tidak Ditemukan',
+          message: 'Produk dengan SKU tersebut tidak ditemukan.',
+          type: 'error'
+        });
+      }
+    } catch (error) {
+      console.error('Error loading product:', error);
+      setAlert({
+        isOpen: true,
+        title: 'Error',
+        message: 'Gagal memuat data produk.',
+        type: 'error'
+      });
+    } finally {
+      setLoadingProduct(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,7 +127,7 @@ export default function NewProductPage() {
         setAlert({
           isOpen: true,
           title: 'Berhasil',
-          message: 'Produk berhasil disimpan!',
+          message: 'Produk berhasil diperbarui!',
           type: 'success'
         });
         setTimeout(() => {
@@ -96,10 +154,90 @@ export default function NewProductPage() {
     }
   };
 
+  const handleDelete = async () => {
+    if (!product) return;
+
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/products/${product.sku}`, {
+        method: 'DELETE',
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setAlert({
+          isOpen: true,
+          title: 'Berhasil',
+          message: 'Produk berhasil dihapus!',
+          type: 'success'
+        });
+        setTimeout(() => {
+          router.push('/products');
+        }, 1500);
+      } else {
+        setAlert({
+          isOpen: true,
+          title: 'Gagal Menghapus',
+          message: result.error || 'Gagal menghapus produk.',
+          type: 'error'
+        });
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      setAlert({
+        isOpen: true,
+        title: 'Error',
+        message: 'Gagal menghapus produk.',
+        type: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
+
+  if (loadingProduct) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">Memuat data produk...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Produk Tidak Ditemukan</h1>
+            <p className="text-gray-600 mb-6">Produk dengan SKU "{sku}" tidak ditemukan.</p>
+            <Link href="/products" className="btn-primary">
+              Kembali ke Produk
+            </Link>
+          </div>
+        </div>
+        <Alert
+          isOpen={alert.isOpen}
+          onClose={() => setAlert(prev => ({ ...prev, isOpen: false }))}
+          title={alert.title}
+          message={alert.message}
+          type={alert.type}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -110,13 +248,12 @@ export default function NewProductPage() {
         <div className="mb-8">
           <Link 
             href="/products" 
-            className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 mb-4"
+            className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4"
           >
-            <ArrowLeftIcon className="w-4 h-4" />
-            <span>Kembali ke Produk</span>
+            ← Kembali ke Produk
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">Tambah Produk Baru</h1>
-          <p className="text-gray-600 mt-2">Buat produk baru dalam katalog Anda</p>
+          <h1 className="text-2xl font-bold text-gray-900">Edit Produk</h1>
+          <p className="text-gray-600 mt-2">Edit informasi produk {product.nama}</p>
         </div>
 
         {/* Form */}
@@ -124,7 +261,7 @@ export default function NewProductPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Required Fields */}
             <div className="border-b border-gray-200 pb-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Required Information</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Informasi Dasar</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -137,16 +274,17 @@ export default function NewProductPage() {
                     name="sku"
                     value={formData.sku}
                     onChange={handleInputChange}
-                    className="input-field"
+                    className="input-field bg-gray-50"
                     placeholder="e.g., KOPI-ARABICA-250G"
+                    disabled
                     required
                   />
-                  <p className="text-xs text-gray-500 mt-1">Unique product identifier</p>
+                  <p className="text-xs text-gray-500 mt-1">SKU tidak dapat diubah</p>
                 </div>
 
                 <div>
                   <label htmlFor="nama" className="block text-sm font-medium text-gray-700 mb-2">
-                    Product Name *
+                    Nama Produk *
                   </label>
                   <input
                     type="text"
@@ -164,12 +302,12 @@ export default function NewProductPage() {
 
             {/* Optional Fields */}
             <div className="border-b border-gray-200 pb-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Pricing Information</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Informasi Harga</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="default_modal_satuan_IDR" className="block text-sm font-medium text-gray-700 mb-2">
-                    Default Cost per Unit (IDR)
+                    Modal Satuan Default (IDR)
                   </label>
                   <input
                     type="number"
@@ -181,12 +319,11 @@ export default function NewProductPage() {
                     placeholder="45000"
                     min="0"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Cost price in Indonesian Rupiah</p>
                 </div>
 
                 <div>
                   <label htmlFor="default_harga_jual_SGD" className="block text-sm font-medium text-gray-700 mb-2">
-                    Default Selling Price (SGD)
+                    Harga Jual Default (SGD)
                   </label>
                   <input
                     type="number"
@@ -199,19 +336,18 @@ export default function NewProductPage() {
                     min="0"
                     step="0.01"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Selling price in Singapore Dollars</p>
                 </div>
               </div>
             </div>
 
             {/* Additional Information */}
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Additional Information</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Informasi Tambahan</h3>
               
               <div className="grid grid-cols-1 gap-6">
                 <div>
                   <label htmlFor="kategori" className="block text-sm font-medium text-gray-700 mb-2">
-                    Category
+                    Kategori
                   </label>
                   <input
                     type="text"
@@ -236,14 +372,29 @@ export default function NewProductPage() {
                 {loading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Saving...
+                    Menyimpan...
                   </>
                 ) : (
-                  'Save Product'
+                  'Simpan Perubahan'
                 )}
               </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setAlert({
+                    isOpen: true,
+                    title: 'Konfirmasi Hapus',
+                    message: `Apakah Anda yakin ingin menghapus produk "${product.nama}"? Tindakan ini tidak dapat dibatalkan.`,
+                    type: 'warning'
+                  });
+                }}
+                disabled={loading}
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors flex items-center justify-center"
+              >
+                Hapus Produk
+              </button>
               <Link href="/products" className="btn-secondary flex items-center justify-center">
-                Cancel
+                Batal
               </Link>
             </div>
           </form>
@@ -256,6 +407,9 @@ export default function NewProductPage() {
         title={alert.title}
         message={alert.message}
         type={alert.type}
+        confirmText={alert.type === 'warning' ? 'Ya, Hapus' : 'OK'}
+        cancelText={alert.type === 'warning' ? 'Batal' : undefined}
+        onConfirm={alert.type === 'warning' ? handleDelete : undefined}
       />
     </div>
   );
