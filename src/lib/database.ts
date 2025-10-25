@@ -239,6 +239,50 @@ export class DatabaseService {
     }
   }
 
+  async deleteProduct(sku: string): Promise<ApiResponse> {
+    try {
+      if (!sku) {
+        return { success: false, error: 'SKU wajib diisi' };
+      }
+
+      // Check if product exists
+      const checkStmt = this.db.prepare('SELECT sku FROM products WHERE sku = ?');
+      const existing = checkStmt.get(sku);
+      
+      if (!existing) {
+        return { success: false, error: 'Produk tidak ditemukan' };
+      }
+
+      // Check if product is used in transactions
+      const transactionStmt = this.db.prepare('SELECT COUNT(*) as count FROM transactions WHERE sku = ?');
+      const transactionCount = transactionStmt.get(sku) as { count: number };
+      
+      if (transactionCount.count > 0) {
+        return { 
+          success: false, 
+          error: `Produk tidak dapat dihapus karena sudah digunakan dalam ${transactionCount.count} transaksi` 
+        };
+      }
+
+      // Delete the product
+      const deleteStmt = this.db.prepare('DELETE FROM products WHERE sku = ?');
+      const result = deleteStmt.run(sku);
+
+      if (result.changes > 0) {
+        return { 
+          success: true, 
+          message: 'Produk berhasil dihapus',
+          data: { sku, deleted: true }
+        };
+      } else {
+        return { success: false, error: 'Gagal menghapus produk' };
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      return { success: false, error: 'Gagal menghapus produk' };
+    }
+  }
+
   async bulkImportProducts(csvText: string): Promise<ApiResponse> {
     try {
       const lines = csvText.trim().split('\n');

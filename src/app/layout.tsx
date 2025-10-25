@@ -5,8 +5,11 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Bookkeeper - Retail Sales Management',
+  title: 'Peti Cash - Retail Sales Management',
   description: 'Simple bookkeeping for retail business with IDR cost and SGD sales tracking',
+  icons: {
+    icon: '/favicon.svg',
+  },
 }
 
 export default function RootLayout({

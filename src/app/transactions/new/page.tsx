@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Navigation from '@/components/Navigation';
+import Alert from '@/components/Alert';
 import Link from 'next/link';
 import { TransactionFormData, Product } from '@/types';
+import { ArrowLeftIcon } from '@/components/Icons';
 
 export default function NewTransactionPage() {
   const router = useRouter();
@@ -14,6 +16,12 @@ export default function NewTransactionPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [showProductList, setShowProductList] = useState(false);
+  const [alert, setAlert] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: 'success' | 'error' | 'warning' | 'info';
+  }>({ isOpen: false, title: '', message: '', type: 'info' });
 
   const [formData, setFormData] = useState<TransactionFormData>({
     tanggal: new Date().toISOString().split('T')[0],
@@ -81,7 +89,12 @@ export default function NewTransactionPage() {
     e.preventDefault();
     
     if (!formData.sku || !formData.qty || !formData.harga_jual_SGD) {
-      alert('SKU, Kuantitas, dan Harga Jual wajib diisi');
+      setAlert({
+        isOpen: true,
+        title: 'Data Tidak Lengkap',
+        message: 'SKU, Kuantitas, dan Harga Jual wajib diisi.',
+        type: 'warning'
+      });
       return;
     }
 
@@ -115,14 +128,31 @@ export default function NewTransactionPage() {
       const result = await response.json();
 
       if (result.success) {
-        alert('Transaksi berhasil disimpan!');
-        router.push('/transactions');
+        setAlert({
+          isOpen: true,
+          title: 'Berhasil',
+          message: 'Transaksi berhasil disimpan!',
+          type: 'success'
+        });
+        setTimeout(() => {
+          router.push('/transactions');
+        }, 1500);
       } else {
-        alert(result.error || 'Gagal menyimpan transaksi');
+        setAlert({
+          isOpen: true,
+          title: 'Gagal Menyimpan',
+          message: result.error || 'Gagal menyimpan transaksi.',
+          type: 'error'
+        });
       }
     } catch (error) {
       console.error('Error saving transaction:', error);
-      alert('Gagal menyimpan transaksi');
+      setAlert({
+        isOpen: true,
+        title: 'Error',
+        message: 'Gagal menyimpan transaksi.',
+        type: 'error'
+      });
     } finally {
       setLoading(false);
     }
@@ -147,9 +177,10 @@ export default function NewTransactionPage() {
         <div className="mb-8">
           <Link 
             href="/transactions" 
-            className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4"
+            className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 mb-4"
           >
-            ← Kembali ke Transaksi
+            <ArrowLeftIcon className="w-4 h-4" />
+            <span>Kembali ke Transaksi</span>
           </Link>
           <h1 className="text-3xl font-bold text-gray-900">Transaksi Baru</h1>
           <p className="text-lg text-gray-600 mt-2">Catat penjualan baru</p>
@@ -428,6 +459,14 @@ export default function NewTransactionPage() {
           </form>
         </div>
       </main>
+
+      <Alert
+        isOpen={alert.isOpen}
+        onClose={() => setAlert(prev => ({ ...prev, isOpen: false }))}
+        title={alert.title}
+        message={alert.message}
+        type={alert.type}
+      />
     </div>
   );
 }

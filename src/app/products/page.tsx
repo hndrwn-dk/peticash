@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
-// Icons removed for clean production build
 import { Product } from '@/types';
+import { AddIcon, EditIcon } from '@/components/Icons';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -21,8 +21,7 @@ export default function ProductsPage() {
       const filtered = products.filter(product =>
         product.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (product.kategori && product.kategori.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (product.barcode && product.barcode.includes(searchQuery))
+        (product.kategori && product.kategori.toLowerCase().includes(searchQuery.toLowerCase()))
       );
       setFilteredProducts(filtered);
     } else {
@@ -58,11 +57,9 @@ export default function ProductsPage() {
             <p className="text-gray-600">Kelola katalog produk Anda</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-0">
-            <Link href="/products/import" className="btn-secondary flex items-center justify-center">
-              Import CSV
-            </Link>
-            <Link href="/products/new" className="btn-primary flex items-center justify-center">
-              Tambah Produk
+            <Link href="/products/new" className="btn-primary flex items-center justify-center space-x-2">
+              <AddIcon className="w-4 h-4" />
+              <span>Tambah Produk</span>
             </Link>
           </div>
         </div>
@@ -73,15 +70,12 @@ export default function ProductsPage() {
             <div className="flex-1">
               <input
                 type="text"
-                placeholder="Cari berdasarkan SKU, nama, kategori, atau barcode..."
+                placeholder="Cari berdasarkan SKU, nama, atau kategori..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="input-field"
               />
             </div>
-            <button className="btn-secondary flex items-center justify-center">
-              Pindai Barcode
-            </button>
           </div>
         </div>
 
@@ -126,9 +120,6 @@ export default function ProductsPage() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Default Price (SGD)
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Barcode
-                    </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Actions
                     </th>
@@ -160,15 +151,13 @@ export default function ProductsPage() {
                           : '-'
                         }
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {product.barcode || '-'}
-                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <Link 
                           href={`/products/${product.sku}/edit`}
-                          className="text-primary-600 hover:text-primary-900"
+                          className="text-blue-600 hover:text-blue-900 flex items-center justify-end space-x-1"
                         >
-                          Edit
+                          <EditIcon className="w-4 h-4" />
+                          <span>Edit</span>
                         </Link>
                       </td>
                     </tr>
