@@ -105,12 +105,8 @@ export default function EditProductPage() {
         nama: formData.nama,
         kategori: formData.kategori,
         barcode: formData.barcode,
-        ...(formData.default_modal_satuan_IDR && {
-          default_modal_satuan_IDR: parseInt(formData.default_modal_satuan_IDR)
-        }),
-        ...(formData.default_harga_jual_SGD && {
-          default_harga_jual_SGD: parseFloat(formData.default_harga_jual_SGD)
-        })
+        default_modal_satuan_IDR: formData.default_modal_satuan_IDR ? parseInt(formData.default_modal_satuan_IDR) : null,
+        default_harga_jual_SGD: formData.default_harga_jual_SGD ? parseFloat(formData.default_harga_jual_SGD) : null
       };
 
       const response = await fetch('/api/products', {
