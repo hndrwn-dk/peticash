@@ -459,12 +459,16 @@ export class DatabaseService {
   // TRANSACTION MANAGEMENT
   async addTransaction(transaction: Transaction): Promise<ApiResponse> {
     try {
+      console.log('🔍 Adding transaction:', JSON.stringify(transaction, null, 2));
+      
       // Validate required fields
       if (!transaction.tanggal || !this.validateDate(transaction.tanggal)) {
+        console.error('❌ Invalid date:', transaction.tanggal);
         return { success: false, error: 'Format tanggal harus YYYY-MM-DD' };
       }
 
       if (!transaction.sku) {
+        console.error('❌ Missing SKU');
         return { success: false, error: 'SKU wajib diisi' };
       }
 
@@ -530,6 +534,28 @@ export class DatabaseService {
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
 
+      console.log('💾 Executing database insert...');
+      console.log('Insert values:', {
+        tanggal: transaction.tanggal,
+        sku: transaction.sku,
+        qty: transaction.qty,
+        modalSatuanIDR,
+        modalTotalIDR,
+        harga_jual_SGD: this.roundSGD(transaction.harga_jual_SGD),
+        pendapatanSGD,
+        fee_rate: transaction.fee_rate || 0,
+        feeFlatSGD,
+        biayaTransaksiSGD,
+        biaya_lain_SGD: this.roundSGD(transaction.biaya_lain_SGD || 0),
+        applyGST,
+        gstRate,
+        gstSGD,
+        pelanggan: transaction.pelanggan || '',
+        metode_bayar: transaction.metode_bayar || '',
+        catatan: (transaction.catatan || '').replace(/\n/g, ' ').trim(),
+        status
+      });
+
       const result = stmt.run(
         transaction.tanggal,
         transaction.sku,
@@ -551,6 +577,8 @@ export class DatabaseService {
         status
       );
 
+      console.log('✅ Transaction inserted successfully, ID:', result.lastInsertRowid);
+
       const ym = transaction.tanggal.substring(0, 7); // YYYY-MM
 
       return { 
@@ -560,8 +588,9 @@ export class DatabaseService {
       };
 
     } catch (error) {
-      console.error('Error adding transaction:', error);
-      return { success: false, error: 'Gagal menyimpan transaksi' };
+      console.error('❌ Error adding transaction:', error);
+      console.error('Transaction data was:', JSON.stringify(transaction, null, 2));
+      return { success: false, error: `Gagal menyimpan transaksi: ${error instanceof Error ? error.message : String(error)}` };
     }
   }
 
