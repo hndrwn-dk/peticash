@@ -23,7 +23,8 @@ export async function GET(
     if (result.success) {
       return NextResponse.json(result);
     } else {
-      return NextResponse.json(result, { status: 404 });
+      // Return 200 with error message instead of 404 for no data
+      return NextResponse.json(result, { status: 200 });
     }
   } catch (error) {
     console.error('GET /api/reports/[periode] error:', error);

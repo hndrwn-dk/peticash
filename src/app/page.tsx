@@ -4,14 +4,34 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { DashboardStats, Transaction, Product } from '@/types';
 import { CashIcon, ProductIcon, TransactionIcon, ReportIcon, AddIcon } from '@/components/Icons';
+import { DashboardChart, generateSampleRevenueData, generateSampleModalData, generateSampleTransactionData } from '@/components/Charts';
 
 export default function HomePage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [chartData, setChartData] = useState<any>(null);
+  const [chartsLoading, setChartsLoading] = useState(true);
 
   useEffect(() => {
     loadDashboardData();
+    loadChartData();
   }, []);
+
+  const loadChartData = async () => {
+    try {
+      setChartsLoading(true);
+      const response = await fetch('/api/dashboard/stats?months=6');
+      const data = await response.json();
+      
+      if (data.success) {
+        setChartData(data.data);
+      }
+    } catch (error) {
+      console.error('Error loading chart data:', error);
+    } finally {
+      setChartsLoading(false);
+    }
+  };
 
   const loadDashboardData = async () => {
     try {
@@ -204,6 +224,78 @@ export default function HomePage() {
             <ReportIcon className="w-5 h-5" />
             <span>Laporan Bulanan</span>
           </Link>
+        </div>
+
+        {/* Charts Section */}
+        <div className="mb-10">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Tren Bisnis</h2>
+          {chartsLoading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
+              <p className="text-gray-600">Memuat data grafik...</p>
+            </div>
+          ) : chartData ? (
+            <>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <DashboardChart
+                  data={{
+                    labels: chartData.labels,
+                    datasets: [{
+                      label: 'Pendapatan (SGD)',
+                      data: chartData.revenue,
+                      borderColor: '#10b981',
+                      backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                      tension: 0.4,
+                    }]
+                  }}
+                  title="Pendapatan Bulanan (SGD)"
+                  type="line"
+                />
+                <DashboardChart
+                  data={{
+                    labels: chartData.labels,
+                    datasets: [{
+                      label: 'Modal (Ribu IDR)',
+                      data: chartData.modal,
+                      borderColor: '#f59e0b',
+                      backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                      tension: 0.4,
+                    }]
+                  }}
+                  title="Modal Bulanan (Ribu IDR)"
+                  type="line"
+                />
+              </div>
+              <div className="grid grid-cols-1 gap-8 mb-8">
+                <DashboardChart
+                  data={{
+                    labels: chartData.labels,
+                    datasets: [{
+                      label: 'Jumlah Transaksi',
+                      data: chartData.transactions,
+                      backgroundColor: '#3b82f6',
+                      borderColor: '#3b82f6',
+                    }]
+                  }}
+                  title="Jumlah Transaksi per Bulan"
+                  type="bar"
+                />
+              </div>
+            </>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <DashboardChart
+                data={generateSampleRevenueData()}
+                title="Pendapatan Bulanan (SGD) - Sample Data"
+                type="line"
+              />
+              <DashboardChart
+                data={generateSampleModalData()}
+                title="Modal Bulanan (IDR) - Sample Data"
+                type="line"
+              />
+            </div>
+          )}
         </div>
 
         {/* Recent Activity */}

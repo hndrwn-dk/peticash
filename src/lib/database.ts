@@ -67,8 +67,7 @@ export class DatabaseService {
         metode_bayar TEXT,
         catatan TEXT,
         status TEXT DEFAULT 'complete',
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (sku) REFERENCES products (sku)
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
@@ -360,6 +359,19 @@ export class DatabaseService {
 
       if (!transaction.sku) {
         return { success: false, error: 'SKU wajib diisi' };
+      }
+
+      // Check if product exists, create if it doesn't
+      const checkProductStmt = this.db.prepare('SELECT sku FROM products WHERE sku = ?');
+      const existingProduct = checkProductStmt.get(transaction.sku);
+      
+      if (!existingProduct) {
+        // Create a basic product entry for this SKU
+        const insertProductStmt = this.db.prepare(`
+          INSERT OR IGNORE INTO products (sku, nama, created_at, updated_at)
+          VALUES (?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        `);
+        insertProductStmt.run(transaction.sku, transaction.sku); // Use SKU as name if not provided
       }
 
       if (!transaction.qty || transaction.qty <= 0) {
