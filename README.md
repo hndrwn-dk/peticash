@@ -111,7 +111,7 @@ Add Products
 - Save to add to catalog
 
 Bulk Import
-- Prepare CSV with headers: sku,nama,default_modal_satuan_IDR,default_harga_jual_SGD,kategori,barcode
+- Prepare CSV with headers: sku,nama,default_modal_satuan_idr,default_harga_jual_sgd,kategori,barcode
 - Go to Products → Import CSV
 - Paste CSV content and import
 

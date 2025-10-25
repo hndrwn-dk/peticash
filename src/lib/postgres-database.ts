@@ -30,8 +30,8 @@ export class PostgresDatabaseService {
         CREATE TABLE IF NOT EXISTS products (
           sku VARCHAR(50) PRIMARY KEY,
           nama VARCHAR(255) NOT NULL,
-          default_modal_satuan_IDR INTEGER,
-          default_harga_jual_SGD DECIMAL(10,2),
+          default_modal_satuan_idr INTEGER,
+          default_harga_jual_sgd DECIMAL(10,2),
           kategori VARCHAR(100) DEFAULT '',
           barcode VARCHAR(100) DEFAULT '',
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -132,7 +132,7 @@ export class PostgresDatabaseService {
       let query;
       
       if (barcode) {
-        query = sql`SELECT sku, nama, default_modal_satuan_IDR, default_harga_jual_SGD, kategori, barcode FROM products WHERE barcode = ${barcode}`;
+        query = sql`SELECT sku, nama, default_modal_satuan_idr, default_harga_jual_sgd, kategori, barcode FROM products WHERE barcode = ${barcode}`;
       } else if (q) {
         const searchTerm = `%${q}%`;
         query = sql`SELECT sku, nama, default_modal_satuan_idr, default_harga_jual_sgd, kategori, barcode FROM products WHERE LOWER(nama) LIKE LOWER(${searchTerm}) OR LOWER(sku) LIKE LOWER(${searchTerm}) ORDER BY nama`;
