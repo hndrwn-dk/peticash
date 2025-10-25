@@ -2,8 +2,8 @@
 export interface Product {
   sku: string;
   nama: string;
-  default_modal_satuan_IDR?: number;
-  default_harga_jual_SGD?: number;
+  default_modal_satuan_idr?: number;
+  default_harga_jual_sgd?: number;
   kategori?: string;
   barcode?: string;
 }
@@ -69,8 +69,8 @@ export interface TransactionSearchParams {
 export interface ProductFormData {
   sku: string;
   nama: string;
-  default_modal_satuan_IDR: string;
-  default_harga_jual_SGD: string;
+  default_modal_satuan_idr: string;
+  default_harga_jual_sgd: string;
   kategori: string;
   barcode: string;
 }

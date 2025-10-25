@@ -25,8 +25,8 @@ export default function EditProductPage() {
   const [formData, setFormData] = useState<ProductFormData>({
     sku: '',
     nama: '',
-    default_modal_satuan_IDR: '',
-    default_harga_jual_SGD: '',
+    default_modal_satuan_idr: '',
+    default_harga_jual_sgd: '',
     kategori: '',
     barcode: ''
   });
@@ -50,8 +50,8 @@ export default function EditProductPage() {
           setFormData({
             sku: foundProduct.sku,
             nama: foundProduct.nama,
-            default_modal_satuan_IDR: foundProduct.default_modal_satuan_IDR?.toString() || '',
-            default_harga_jual_SGD: foundProduct.default_harga_jual_SGD?.toString() || '',
+            default_modal_satuan_idr: foundProduct.default_modal_satuan_idr?.toString() || '',
+            default_harga_jual_sgd: foundProduct.default_harga_jual_sgd?.toString() || '',
             kategori: foundProduct.kategori || '',
             barcode: foundProduct.barcode || ''
           });
@@ -105,8 +105,8 @@ export default function EditProductPage() {
         nama: formData.nama,
         kategori: formData.kategori,
         barcode: formData.barcode,
-        default_modal_satuan_IDR: formData.default_modal_satuan_IDR ? parseInt(formData.default_modal_satuan_IDR) : null,
-        default_harga_jual_SGD: formData.default_harga_jual_SGD ? parseFloat(formData.default_harga_jual_SGD) : null
+        default_modal_satuan_idr: formData.default_modal_satuan_idr ? parseInt(formData.default_modal_satuan_idr) : null,
+        default_harga_jual_sgd: formData.default_harga_jual_sgd ? parseFloat(formData.default_harga_jual_sgd) : null
       };
 
       const response = await fetch('/api/products', {
@@ -302,14 +302,14 @@ export default function EditProductPage() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="default_modal_satuan_IDR" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="default_modal_satuan_idr" className="block text-sm font-medium text-gray-700 mb-2">
                     Modal Satuan Default (IDR)
                   </label>
                   <input
                     type="number"
-                    id="default_modal_satuan_IDR"
-                    name="default_modal_satuan_IDR"
-                    value={formData.default_modal_satuan_IDR}
+                    id="default_modal_satuan_idr"
+                    name="default_modal_satuan_idr"
+                    value={formData.default_modal_satuan_idr}
                     onChange={handleInputChange}
                     className="input-field"
                     placeholder="45000"
@@ -318,14 +318,14 @@ export default function EditProductPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="default_harga_jual_SGD" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="default_harga_jual_sgd" className="block text-sm font-medium text-gray-700 mb-2">
                     Harga Jual Default (SGD)
                   </label>
                   <input
                     type="number"
-                    id="default_harga_jual_SGD"
-                    name="default_harga_jual_SGD"
-                    value={formData.default_harga_jual_SGD}
+                    id="default_harga_jual_sgd"
+                    name="default_harga_jual_sgd"
+                    value={formData.default_harga_jual_sgd}
                     onChange={handleInputChange}
                     className="input-field"
                     placeholder="7.90"
