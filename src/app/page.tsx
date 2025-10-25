@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { DashboardStats, Transaction, Product } from '@/types';
 import { CashIcon, ProductIcon, TransactionIcon, ReportIcon, AddIcon } from '@/components/Icons';
 import { DashboardChart, generateSampleRevenueData, generateSampleModalData, generateSampleTransactionData } from '@/components/Charts';
+import Alert from '@/components/Alert';
 
 export default function HomePage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -12,6 +13,12 @@ export default function HomePage() {
   const [chartData, setChartData] = useState<any>(null);
   const [chartsLoading, setChartsLoading] = useState(true);
   const [seeding, setSeeding] = useState(false);
+  const [alert, setAlert] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: 'success' | 'error' | 'warning' | 'info';
+  }>({ isOpen: false, title: '', message: '', type: 'info' });
 
   useEffect(() => {
     loadDashboardData();
@@ -43,16 +50,33 @@ export default function HomePage() {
       const result = await response.json();
       
       if (result.success) {
-        alert(`✅ Dummy data seeded successfully!\n\n📊 Added ${result.data.successful} transactions\n🗓️ Date range: ${result.data.summary.date_range}\n📦 Products: ${result.data.summary.products_covered.length} products covered`);
+        setAlert({
+          isOpen: true,
+          title: 'Data Seeded Successfully!',
+          message: `✅ Added ${result.data.successful} transactions\n📦 ${result.data.products_added} new products added\n🗓️ Date range: ${result.data.summary.date_range}\n📊 Total products: ${result.data.summary.total_products}\n🏷️ Categories: ${result.data.summary.categories.join(', ')}`,
+          type: 'success'
+        });
         // Reload data
-        loadDashboardData();
-        loadChartData();
+        setTimeout(() => {
+          loadDashboardData();
+          loadChartData();
+        }, 1500);
       } else {
-        alert(`❌ Failed to seed data: ${result.error}`);
+        setAlert({
+          isOpen: true,
+          title: 'Seeding Failed',
+          message: `❌ Failed to seed data: ${result.error}`,
+          type: 'error'
+        });
       }
     } catch (error) {
       console.error('Error seeding dummy data:', error);
-      alert('❌ Error seeding dummy data');
+      setAlert({
+        isOpen: true,
+        title: 'Seeding Error',
+        message: '❌ Error seeding dummy data. Please try again.',
+        type: 'error'
+      });
     } finally {
       setSeeding(false);
     }
@@ -410,6 +434,14 @@ export default function HomePage() {
           </div>
         </div>
       </main>
+
+      <Alert
+        isOpen={alert.isOpen}
+        onClose={() => setAlert(prev => ({ ...prev, isOpen: false }))}
+        title={alert.title}
+        message={alert.message}
+        type={alert.type}
+      />
     </div>
   );
 }
