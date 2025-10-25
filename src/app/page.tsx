@@ -11,6 +11,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState<any>(null);
   const [chartsLoading, setChartsLoading] = useState(true);
+  const [seeding, setSeeding] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -30,6 +31,30 @@ export default function HomePage() {
       console.error('Error loading chart data:', error);
     } finally {
       setChartsLoading(false);
+    }
+  };
+
+  const seedDummyData = async () => {
+    try {
+      setSeeding(true);
+      const response = await fetch('/api/seed-data', {
+        method: 'POST',
+      });
+      const result = await response.json();
+      
+      if (result.success) {
+        alert(`✅ Dummy data seeded successfully!\n\n📊 Added ${result.data.successful} transactions\n🗓️ Date range: ${result.data.summary.date_range}\n📦 Products: ${result.data.summary.products_covered.length} products covered`);
+        // Reload data
+        loadDashboardData();
+        loadChartData();
+      } else {
+        alert(`❌ Failed to seed data: ${result.error}`);
+      }
+    } catch (error) {
+      console.error('Error seeding dummy data:', error);
+      alert('❌ Error seeding dummy data');
+    } finally {
+      setSeeding(false);
     }
   };
 
@@ -145,10 +170,21 @@ export default function HomePage() {
       <main className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="mb-10">
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">Dashboard</h2>
-          <p className="text-lg text-gray-600">
-            Pembukuan penjualan retail dengan modal IDR dan penjualan SGD
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-3">Dashboard</h2>
+              <p className="text-lg text-gray-600">
+                Pembukuan penjualan retail dengan modal IDR dan penjualan SGD
+              </p>
+            </div>
+            <button
+              onClick={seedDummyData}
+              disabled={seeding}
+              className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors shadow-sm hover:shadow-md text-sm disabled:opacity-50"
+            >
+              {seeding ? 'Seeding...' : '🌱 Seed Dummy Data'}
+            </button>
+          </div>
         </div>
 
         {/* Stats Cards */}
