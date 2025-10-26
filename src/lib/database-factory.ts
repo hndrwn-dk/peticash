@@ -13,23 +13,20 @@ export function createDatabase() {
     VERCEL: process.env.VERCEL ? 'present' : 'missing'
   });
   
-  // Force PostgreSQL in production/Vercel environment
-  if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
-    console.log('🐘 Production environment - forcing PostgreSQL');
-    try {
-      return new PostgresDatabaseService();
-    } catch (error) {
-      console.error('❌ PostgreSQL initialization failed in production:', error);
-      throw new Error('PostgreSQL connection required in production environment');
-    }
-  }
-  
   if (hasPostgresUrl) {
     console.log('🐘 Using PostgreSQL database');
     try {
-      return new PostgresDatabaseService();
+      const postgresService = new PostgresDatabaseService();
+      console.log('✅ PostgreSQL service created successfully');
+      return postgresService;
     } catch (error) {
-      console.error('❌ PostgreSQL initialization failed, falling back to SQLite:', error);
+      console.error('❌ PostgreSQL initialization failed:', error);
+      console.error('Error details:', {
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        name: error instanceof Error ? error.name : undefined
+      });
+      console.log('📁 Falling back to SQLite database');
       return new DatabaseService();
     }
   } else {

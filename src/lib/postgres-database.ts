@@ -5,11 +5,31 @@ export class PostgresDatabaseService {
   private initialized = false;
 
   constructor() {
+    console.log('🐘 PostgreSQL service constructor called');
+    console.log('🔍 Environment check:', {
+      POSTGRES_URL: process.env.POSTGRES_URL ? 'present' : 'missing',
+      POSTGRES_PRISMA_URL: process.env.POSTGRES_PRISMA_URL ? 'present' : 'missing',
+      NODE_ENV: process.env.NODE_ENV,
+      VERCEL: process.env.VERCEL ? 'present' : 'missing'
+    });
+    
     // Check if we have a connection string
     if (!process.env.POSTGRES_URL && !process.env.POSTGRES_PRISMA_URL) {
-      throw new Error('No PostgreSQL connection string found. Please set POSTGRES_URL or POSTGRES_PRISMA_URL environment variable.');
+      const error = new Error('No PostgreSQL connection string found. Please set POSTGRES_URL or POSTGRES_PRISMA_URL environment variable.');
+      console.error('❌ PostgreSQL connection string missing:', error.message);
+      throw error;
     }
-    console.log('🐘 PostgreSQL database service created');
+    
+    try {
+      // Test the connection by importing the sql function
+      console.log('🔍 Testing @vercel/postgres import...');
+      const { sql } = require('@vercel/postgres');
+      console.log('✅ @vercel/postgres imported successfully');
+      console.log('🐘 PostgreSQL database service created');
+    } catch (error) {
+      console.error('❌ Failed to import @vercel/postgres:', error);
+      throw new Error(`Failed to initialize PostgreSQL: ${error instanceof Error ? error.message : String(error)}`);
+    }
   }
 
   private async ensureInitialized(): Promise<void> {
