@@ -80,7 +80,6 @@ export interface TransactionFormData {
   tanggal: string;
   sku: string;
   qty: string;
-  modal_satuan_idr: string;
   harga_jual_sgd: string;
   fee_rate: string;
   fee_flat_sgd: string;

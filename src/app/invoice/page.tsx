@@ -265,12 +265,6 @@ export default function InvoicePage() {
               <h3>Total ${invoiceType === 'customer' ? 'Amount' : 'Revenue'} (SGD)</h3>
               <p>$${Number(invoiceType === 'customer' ? invoiceData.totalAmount : invoiceData.totalRevenue || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
             </div>
-            ${invoiceType === 'financial' ? `
-            <div class="summary-item">
-              <h3>Total Cost (IDR)</h3>
-              <p>Rp ${Number(invoiceData.totalCost).toLocaleString('id-ID')}</p>
-            </div>
-            ` : ''}
             <div class="summary-item">
               <h3>Total ${invoiceType === 'customer' ? 'Items' : 'Transactions'}</h3>
               <p>${invoiceType === 'customer' ? invoiceData.transactions.length : invoiceData.totalTransactions || 0}</p>
@@ -286,7 +280,6 @@ export default function InvoicePage() {
                 <th>Qty</th>
                 <th>Unit Price (SGD)</th>
                 <th>Total (SGD)</th>
-                ${invoiceType === 'financial' ? '<th>Cost (IDR)</th>' : ''}
                 ${invoiceType === 'customer' ? '<th>Payment Method</th>' : ''}
               </tr>
             </thead>
@@ -299,7 +292,6 @@ export default function InvoicePage() {
                   <td class="text-center">${tx.qty}</td>
                   <td class="text-right">$${Number(tx.harga_jual_sgd || 0).toFixed(2)}</td>
                   <td class="text-right">$${Number(tx.pendapatan_sgd || 0).toFixed(2)}</td>
-                  ${invoiceType === 'financial' ? `<td class="text-right">Rp ${Number(tx.modal_total_IDR || 0).toLocaleString('id-ID')}</td>` : ''}
                   ${invoiceType === 'customer' ? `<td>${tx.metode_bayar || '-'}</td>` : ''}
                 </tr>
               `).join('')}
@@ -494,14 +486,6 @@ export default function InvoicePage() {
                     {formatCurrency(invoiceType === 'customer' ? invoiceData.totalAmount : invoiceData.totalRevenue || 0, 'SGD')}
                   </div>
                 </div>
-                {invoiceType === 'financial' && (
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <div className="text-sm font-medium text-gray-600">Total Cost (IDR)</div>
-                    <div className="text-2xl font-bold text-gray-900">
-                      {formatCurrency(invoiceData.totalCost, 'IDR')}
-                    </div>
-                  </div>
-                )}
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <div className="text-sm font-medium text-gray-600">
                     Total {invoiceType === 'customer' ? 'Items' : 'Transactions'}
@@ -531,11 +515,6 @@ export default function InvoicePage() {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Total (SGD)
                       </th>
-                      {invoiceType === 'financial' && (
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Cost (IDR)
-                        </th>
-                      )}
                       {invoiceType === 'customer' && (
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Payment
@@ -564,11 +543,6 @@ export default function InvoicePage() {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
                           {formatCurrency(tx.pendapatan_sgd || 0, 'SGD')}
                         </td>
-                        {invoiceType === 'financial' && (
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
-                            {formatCurrency(tx.modal_total_IDR || 0, 'IDR')}
-                          </td>
-                        )}
                         {invoiceType === 'customer' && (
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {tx.metode_bayar || '-'}

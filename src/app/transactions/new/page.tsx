@@ -27,7 +27,6 @@ export default function NewTransactionPage() {
     tanggal: new Date().toISOString().split('T')[0],
     sku: '',
     qty: '1',
-    modal_satuan_idr: '',
     harga_jual_sgd: '',
     fee_rate: '2.9',
     fee_flat_sgd: '0.5',
@@ -46,12 +45,6 @@ export default function NewTransactionPage() {
     return (qty * price).toFixed(2);
   };
 
-  // Calculate total cost
-  const calculateTotalCost = () => {
-    const qty = parseFloat(formData.qty) || 0;
-    const cost = parseFloat(formData.modal_satuan_idr) || 0;
-    return (qty * cost).toLocaleString('id-ID');
-  };
 
   useEffect(() => {
     loadProducts();
@@ -94,7 +87,6 @@ export default function NewTransactionPage() {
     setFormData(prev => ({
       ...prev,
       sku: product.sku,
-      modal_satuan_idr: product.default_modal_satuan_idr?.toString() || '',
       harga_jual_sgd: product.default_harga_jual_sgd?.toString() || ''
     }));
   };
@@ -112,7 +104,6 @@ export default function NewTransactionPage() {
       setFormData(prev => ({
         ...prev,
         sku: directProduct.sku,
-        modal_satuan_idr: directProduct.default_modal_satuan_idr?.toString() || '',
         harga_jual_sgd: directProduct.default_harga_jual_sgd?.toString() || ''
       }));
     } else {
@@ -121,7 +112,6 @@ export default function NewTransactionPage() {
       setFormData(prev => ({
         ...prev,
         sku: value, // Allow manual SKU entry
-        modal_satuan_idr: '',
         harga_jual_sgd: ''
       }));
     }
@@ -147,7 +137,6 @@ export default function NewTransactionPage() {
         tanggal: formData.tanggal,
         sku: formData.sku,
         qty: parseInt(formData.qty),
-        modal_satuan_idr: formData.modal_satuan_idr ? parseInt(formData.modal_satuan_idr) : undefined,
         harga_jual_sgd: parseFloat(formData.harga_jual_sgd),
         // Use default values for removed fields
         fee_rate: 2.9,
@@ -339,33 +328,6 @@ export default function NewTransactionPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                <div>
-                  <label htmlFor="modal_satuan_idr" className="block text-sm font-medium text-gray-700 mb-2">
-                    Biaya Satuan (IDR)
-                  </label>
-                  <input
-                    type="number"
-                    id="modal_satuan_idr"
-                    name="modal_satuan_idr"
-                    value={formData.modal_satuan_idr}
-                    onChange={handleInputChange}
-                    className="input-field"
-                    placeholder="45000"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">Otomatis terisi dari produk</p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Biaya Total (IDR)
-                  </label>
-                  <div className="input-field bg-gray-50 text-gray-600 font-medium">
-                    Rp {calculateTotalCost()}
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">Kuantitas × Biaya Satuan</p>
-                </div>
-              </div>
             </div>
 
 
