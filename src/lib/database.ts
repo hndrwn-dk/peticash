@@ -196,6 +196,13 @@ export class DatabaseService {
       
       if (result.count === 0) {
         const sampleTransactions = [
+          // October 2025 transactions (where actual data exists)
+          { tanggal: '2025-10-17', sku: 'KOPI-ARABICA-250G', qty: 2, modal_satuan_IDR: 45000, harga_jual_SGD: 7.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+          { tanggal: '2025-10-18', sku: 'TEH-MATCHA-100G', qty: 1, modal_satuan_IDR: 33000, harga_jual_SGD: 8.5, pelanggan: 'Sarah Lim', metode_bayar: 'Kartu' },
+          { tanggal: '2025-10-19', sku: 'COKLAT-DARK-200G', qty: 3, modal_satuan_IDR: 28000, harga_jual_SGD: 6.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+          { tanggal: '2025-10-20', sku: 'KOPI-ROBUSTA-250G', qty: 1, modal_satuan_IDR: 38000, harga_jual_SGD: 7.2, pelanggan: 'John Tan', metode_bayar: 'E-Wallet' },
+          { tanggal: '2025-10-21', sku: 'TEH-EARL-GREY-100G', qty: 2, modal_satuan_IDR: 25000, harga_jual_SGD: 5.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+          
           // October 2024 transactions
           { tanggal: '2024-10-01', sku: 'KOPI-ARABICA-250G', qty: 2, modal_satuan_IDR: 45000, harga_jual_SGD: 7.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
           { tanggal: '2024-10-02', sku: 'TEH-MATCHA-100G', qty: 1, modal_satuan_IDR: 33000, harga_jual_SGD: 8.5, pelanggan: 'Sarah Lim', metode_bayar: 'Kartu' },
