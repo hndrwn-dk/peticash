@@ -416,7 +416,7 @@ export default function HomePage() {
                         SGD {Number(tx.pendapatan_sgd || 0).toFixed(2)}
                       </p>
                       <p className="text-sm text-gray-600">
-                        IDR {Number(tx.modal_total_idr || 0).toLocaleString('id-ID')}
+                        IDR {Number(tx.modal_total_IDR || 0).toLocaleString('id-ID')}
                       </p>
                     </div>
                   </div>

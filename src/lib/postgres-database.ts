@@ -407,14 +407,14 @@ export class PostgresDatabaseService {
       let status: 'complete' | 'incomplete' | 'invalid' = 'complete';
       
       // Calculate modal_total_idr if not provided
-      let modalTotalIDR = transaction.modal_total_idr;
-      if (!modalTotalIDR && transaction.modal_satuan_idr) {
-        modalTotalIDR = this.roundIDR(transaction.qty * transaction.modal_satuan_idr);
+      let modalTotalIDR = transaction.modal_total_IDR;
+      if (!modalTotalIDR && transaction.modal_satuan_IDR) {
+        modalTotalIDR = this.roundIDR(transaction.qty * transaction.modal_satuan_IDR);
       } else if (modalTotalIDR) {
         modalTotalIDR = this.roundIDR(modalTotalIDR);
       }
 
-      const modalSatuanIDR = transaction.modal_satuan_idr ? this.roundIDR(transaction.modal_satuan_idr) : null;
+      const modalSatuanIDR = transaction.modal_satuan_IDR ? this.roundIDR(transaction.modal_satuan_IDR) : null;
 
       // Calculate pendapatan_sgd
       const pendapatanSGD = this.roundSGD(transaction.qty * transaction.harga_jual_sgd);
@@ -549,7 +549,7 @@ export class PostgresDatabaseService {
 
       // Calculate derived fields if price or quantity changed
       let pendapatan_sgd = existing.pendapatan_sgd;
-      let modal_total_idr = existing.modal_total_idr;
+      let modal_total_idr = existing.modal_total_IDR;
 
       if (transaction.qty !== undefined || transaction.harga_jual_sgd !== undefined) {
         const qty = transaction.qty ?? existing.qty;
@@ -557,9 +557,9 @@ export class PostgresDatabaseService {
         pendapatan_sgd = this.roundSGD(qty * price);
       }
 
-      if (transaction.qty !== undefined || transaction.modal_satuan_idr !== undefined) {
+      if (transaction.qty !== undefined || transaction.modal_satuan_IDR !== undefined) {
         const qty = transaction.qty ?? existing.qty;
-        const modalSatuan = transaction.modal_satuan_idr ?? existing.modal_satuan_idr;
+        const modalSatuan = transaction.modal_satuan_IDR ?? existing.modal_satuan_IDR;
         if (modalSatuan) {
           modal_total_idr = this.roundIDR(qty * modalSatuan);
         }
@@ -572,8 +572,8 @@ export class PostgresDatabaseService {
           tanggal = ${transaction.tanggal ?? existing.tanggal},
           sku = ${transaction.sku ?? existing.sku},
           qty = ${transaction.qty ?? existing.qty},
-          modal_satuan_idr = ${transaction.modal_satuan_idr ?? existing.modal_satuan_idr},
-          modal_total_idr = ${modal_total_idr ?? existing.modal_total_idr},
+          modal_satuan_IDR = ${transaction.modal_satuan_IDR ?? existing.modal_satuan_IDR},
+          modal_total_IDR = ${modal_total_idr ?? existing.modal_total_IDR},
           harga_jual_sgd = ${transaction.harga_jual_sgd ?? existing.harga_jual_sgd},
           pendapatan_sgd = ${pendapatan_sgd ?? existing.pendapatan_sgd},
           pelanggan = ${transaction.pelanggan ?? existing.pelanggan},
@@ -636,7 +636,7 @@ export class PostgresDatabaseService {
 
       transactions.forEach(tx => {
         totalPendapatanSGD += tx.pendapatan_sgd || 0;
-        totalModalIDR += tx.modal_total_idr || 0;
+        totalModalIDR += tx.modal_total_IDR || 0;
         totalBiayaTransaksiSGD += tx.biaya_transaksi_sgd || 0;
         totalBiayaLainSGD += tx.biaya_lain_sgd || 0;
         totalGSTSGD += tx.gst_sgd || 0;
@@ -646,7 +646,7 @@ export class PostgresDatabaseService {
         }
         productSummary[tx.sku].qty += tx.qty;
         productSummary[tx.sku].pendapatan += tx.pendapatan_sgd || 0;
-        productSummary[tx.sku].modal += tx.modal_total_idr || 0;
+        productSummary[tx.sku].modal += tx.modal_total_IDR || 0;
       });
 
       // Find top SKU by revenue

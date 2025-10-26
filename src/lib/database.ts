@@ -528,12 +528,15 @@ export class DatabaseService {
       let status: 'complete' | 'incomplete' | 'invalid' = 'complete';
       
       // Calculate modal_total_idr if not provided
-      let modalTotalIDR = transaction.modal_total_idr;
-      let modalSatuanIDR = transaction.modal_satuan_idr;
+      let modalTotalIDR = transaction.modal_total_IDR;
+      let modalSatuanIDR = transaction.modal_satuan_IDR;
       
       // If no modal_satuan_idr provided, try to use product's default cost
       if (!modalSatuanIDR && existingProduct?.default_modal_satuan_idr) {
         modalSatuanIDR = existingProduct.default_modal_satuan_idr;
+        console.log('🔍 Using product default cost:', modalSatuanIDR);
+      } else if (!modalSatuanIDR) {
+        console.log('⚠️ No modal_satuan_idr provided and no product default cost found for SKU:', transaction.sku);
       }
       
       // Calculate modal_total_idr
@@ -698,7 +701,7 @@ export class DatabaseService {
 
       // Calculate derived fields if price or quantity changed
       let pendapatan_sgd = existing.pendapatan_sgd;
-      let modal_total_idr = existing.modal_total_idr;
+      let modal_total_idr = existing.modal_total_IDR;
 
       if (transaction.qty !== undefined || transaction.harga_jual_sgd !== undefined) {
         const qty = transaction.qty ?? existing.qty;
@@ -706,9 +709,9 @@ export class DatabaseService {
         pendapatan_sgd = this.roundSGD(qty * price);
       }
 
-      if (transaction.qty !== undefined || transaction.modal_satuan_idr !== undefined) {
+      if (transaction.qty !== undefined || transaction.modal_satuan_IDR !== undefined) {
         const qty = transaction.qty ?? existing.qty;
-        const modalSatuan = transaction.modal_satuan_idr ?? existing.modal_satuan_idr;
+        const modalSatuan = transaction.modal_satuan_IDR ?? existing.modal_satuan_IDR;
         if (modalSatuan) {
           modal_total_idr = this.roundIDR(qty * modalSatuan);
         }
@@ -730,12 +733,12 @@ export class DatabaseService {
         updateFields.push('qty = ?');
         values.push(transaction.qty);
       }
-      if (transaction.modal_satuan_idr !== undefined) {
-        updateFields.push('modal_satuan_idr = ?');
-        values.push(transaction.modal_satuan_idr);
+      if (transaction.modal_satuan_IDR !== undefined) {
+        updateFields.push('modal_satuan_IDR = ?');
+        values.push(transaction.modal_satuan_IDR);
       }
-      if (modal_total_idr !== existing.modal_total_idr) {
-        updateFields.push('modal_total_idr = ?');
+      if (modal_total_idr !== existing.modal_total_IDR) {
+        updateFields.push('modal_total_IDR = ?');
         values.push(modal_total_idr);
       }
       if (transaction.harga_jual_sgd !== undefined) {
@@ -842,7 +845,7 @@ export class DatabaseService {
         }
 
         // Add to totals
-        if (tx.modal_total_idr) totalModalIDR += tx.modal_total_idr;
+        if (tx.modal_total_IDR) totalModalIDR += tx.modal_total_IDR;
         if (tx.pendapatan_sgd) {
           totalPenjualanSGD += tx.pendapatan_sgd;
           skuRevenue[tx.sku] = (skuRevenue[tx.sku] || 0) + tx.pendapatan_sgd;

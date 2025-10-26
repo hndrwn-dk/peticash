@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
         
         transactions.forEach((tx: any) => {
           if (tx.pendapatan_sgd) monthlyRevenue += tx.pendapatan_sgd;
-          if (tx.modal_total_idr) monthlyModal += tx.modal_total_idr;
+          if (tx.modal_total_IDR) monthlyModal += tx.modal_total_IDR;
         });
         
         chartData.revenue.push(Math.round(monthlyRevenue * 100) / 100);
