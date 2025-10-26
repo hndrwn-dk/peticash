@@ -38,7 +38,7 @@ export default function InventoryPage() {
     notes: ''
   });
 
-  const locations = ['All', 'Gudang Utama', 'Toko A', 'Toko B', 'Toko C', 'Gudang Cabang'];
+  const locations = ['All', 'Ane', 'Endah', 'Lina', 'Nisa', 'Rini'];
 
   useEffect(() => {
     loadInventory();
@@ -76,6 +76,10 @@ export default function InventoryPage() {
     } catch (error) {
       console.error('Error loading products:', error);
     }
+  };
+
+  const refreshProducts = () => {
+    loadProducts();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -239,20 +243,57 @@ export default function InventoryPage() {
                   <label htmlFor="sku" className="block text-sm font-medium text-gray-700 mb-2">
                     Produk *
                   </label>
-                  <select
-                    id="sku"
-                    value={formData.sku}
-                    onChange={(e) => setFormData(prev => ({ ...prev, sku: e.target.value }))}
-                    className="input-field"
-                    required
-                  >
-                    <option value="">Pilih Produk</option>
-                    {products.map(product => (
-                      <option key={product.sku} value={product.sku}>
-                        {product.nama} ({product.sku})
-                      </option>
-                    ))}
-                  </select>
+                  <div className="flex gap-2">
+                    <select
+                      id="sku"
+                      value={formData.sku}
+                      onChange={(e) => setFormData(prev => ({ ...prev, sku: e.target.value }))}
+                      className="input-field flex-1"
+                      required
+                    >
+                      <option value="">Pilih Produk</option>
+                      {products.map(product => (
+                        <option key={product.sku} value={product.sku}>
+                          {product.nama} ({product.sku})
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={refreshProducts}
+                      className="btn-secondary flex items-center px-3 py-2 text-sm"
+                      title="Refresh Daftar Produk"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newWindow = window.open('/products/new', '_blank');
+                        // Refresh products when the new window is closed
+                        if (newWindow) {
+                          const checkClosed = setInterval(() => {
+                            if (newWindow.closed) {
+                              clearInterval(checkClosed);
+                              refreshProducts();
+                            }
+                          }, 1000);
+                        }
+                      }}
+                      className="btn-secondary flex items-center px-3 py-2 text-sm"
+                      title="Tambah Produk Baru"
+                    >
+                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                      Baru
+                    </button>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Tidak menemukan produk? Klik "Baru" untuk menambah produk baru.
+                  </p>
                 </div>
 
                 <div>
