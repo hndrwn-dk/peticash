@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
+import EditTransactionModal from '@/components/EditTransactionModal';
 // Icons removed for clean production build
 import { Transaction } from '@/types';
 
@@ -10,6 +11,8 @@ export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPeriod, setSelectedPeriod] = useState('');
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<Transaction | null>(null);
 
   useEffect(() => {
     // Set current month as default
@@ -58,6 +61,58 @@ export default function TransactionsPage() {
         return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error-100 text-error-800">Invalid</span>;
       default:
         return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Unknown</span>;
+    }
+  };
+
+  const handleEdit = (transaction: Transaction) => {
+    setEditingTransaction(transaction);
+  };
+
+  const handleDelete = (transaction: Transaction) => {
+    setShowDeleteConfirm(transaction);
+  };
+
+  const confirmDelete = async () => {
+    if (!showDeleteConfirm?.id) return;
+    
+    try {
+      const response = await fetch(`/api/transactions/${showDeleteConfirm.id}`, {
+        method: 'DELETE',
+      });
+      
+      if (response.ok) {
+        // Refresh transactions list
+        await loadTransactions();
+        setShowDeleteConfirm(null);
+      } else {
+        alert('Failed to delete transaction');
+      }
+    } catch (error) {
+      console.error('Error deleting transaction:', error);
+      alert('Error deleting transaction');
+    }
+  };
+
+  const handleSaveEdit = async (updatedTransaction: Transaction) => {
+    try {
+      const response = await fetch(`/api/transactions/${updatedTransaction.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedTransaction),
+      });
+      
+      if (response.ok) {
+        // Refresh transactions list
+        await loadTransactions();
+        setEditingTransaction(null);
+      } else {
+        alert('Failed to update transaction');
+      }
+    } catch (error) {
+      console.error('Error updating transaction:', error);
+      alert('Error updating transaction');
     }
   };
 
@@ -146,6 +201,9 @@ export default function TransactionsPage() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Status
                     </th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -194,6 +252,28 @@ export default function TransactionsPage() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         {getStatusBadge(transaction.status)}
                       </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div className="flex justify-end space-x-2">
+                          <button
+                            onClick={() => handleEdit(transaction)}
+                            className="text-blue-600 hover:text-blue-900 p-1 rounded"
+                            title="Edit Transaction"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => handleDelete(transaction)}
+                            className="text-red-600 hover:text-red-900 p-1 rounded"
+                            title="Delete Transaction"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -230,6 +310,41 @@ export default function TransactionsPage() {
           </div>
         )}
       </main>
+
+      {/* Edit Transaction Modal */}
+      {editingTransaction && (
+        <EditTransactionModal
+          transaction={editingTransaction}
+          onSave={handleSaveEdit}
+          onCancel={() => setEditingTransaction(null)}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Delete Transaction</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this transaction for {showDeleteConfirm.sku}? This action cannot be undone.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setShowDeleteConfirm(null)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
