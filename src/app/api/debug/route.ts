@@ -38,13 +38,13 @@ export async function GET(request: NextRequest) {
           date: tx.tanggal,
           sku: tx.sku,
           qty: tx.qty,
-          revenue_sgd: tx.pendapatan_SGD
+          revenue_sgd: tx.pendapatan_sgd
         })),
         current_month_transactions_detail: currentMonthTransactions.map((tx: any) => ({
           date: tx.tanggal,
           sku: tx.sku,
           qty: tx.qty,
-          revenue_sgd: tx.pendapatan_SGD
+          revenue_sgd: tx.pendapatan_sgd
         }))
       }
     });

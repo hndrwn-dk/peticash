@@ -27,11 +27,11 @@ export default function NewTransactionPage() {
     tanggal: new Date().toISOString().split('T')[0],
     sku: '',
     qty: '1',
-    modal_satuan_IDR: '',
-    harga_jual_SGD: '',
+    modal_satuan_idr: '',
+    harga_jual_sgd: '',
     fee_rate: '2.9',
-    fee_flat_SGD: '0.5',
-    biaya_lain_SGD: '0',
+    fee_flat_sgd: '0.5',
+    biaya_lain_sgd: '0',
     apply_gst: false,
     gst_rate: '0.09',
     pelanggan: '',
@@ -42,7 +42,7 @@ export default function NewTransactionPage() {
   // Calculate total price
   const calculateTotalPrice = () => {
     const qty = parseFloat(formData.qty) || 0;
-    const price = parseFloat(formData.harga_jual_SGD) || 0;
+    const price = parseFloat(formData.harga_jual_sgd) || 0;
     return (qty * price).toFixed(2);
   };
 
@@ -87,8 +87,8 @@ export default function NewTransactionPage() {
     setFormData(prev => ({
       ...prev,
       sku: product.sku,
-      modal_satuan_IDR: product.default_modal_satuan_idr?.toString() || '',
-      harga_jual_SGD: product.default_harga_jual_sgd?.toString() || ''
+      modal_satuan_idr: product.default_modal_satuan_idr?.toString() || '',
+      harga_jual_sgd: product.default_harga_jual_sgd?.toString() || ''
     }));
   };
 
@@ -105,8 +105,8 @@ export default function NewTransactionPage() {
       setFormData(prev => ({
         ...prev,
         sku: directProduct.sku,
-        modal_satuan_IDR: directProduct.default_modal_satuan_idr?.toString() || '',
-        harga_jual_SGD: directProduct.default_harga_jual_sgd?.toString() || ''
+        modal_satuan_idr: directProduct.default_modal_satuan_idr?.toString() || '',
+        harga_jual_sgd: directProduct.default_harga_jual_sgd?.toString() || ''
       }));
     } else {
       // Clear selection if no direct match
@@ -114,8 +114,8 @@ export default function NewTransactionPage() {
       setFormData(prev => ({
         ...prev,
         sku: value, // Allow manual SKU entry
-        modal_satuan_IDR: '',
-        harga_jual_SGD: ''
+        modal_satuan_idr: '',
+        harga_jual_sgd: ''
       }));
     }
   };
@@ -123,7 +123,7 @@ export default function NewTransactionPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.sku || !formData.qty || !formData.harga_jual_SGD) {
+    if (!formData.sku || !formData.qty || !formData.harga_jual_sgd) {
       setAlert({
         isOpen: true,
         title: 'Data Tidak Lengkap',
@@ -140,11 +140,11 @@ export default function NewTransactionPage() {
         tanggal: formData.tanggal,
         sku: formData.sku,
         qty: parseInt(formData.qty),
-        harga_jual_SGD: parseFloat(formData.harga_jual_SGD),
+        harga_jual_sgd: parseFloat(formData.harga_jual_sgd),
         // Use default values for removed fields
         fee_rate: 2.9,
-        fee_flat_SGD: 0.5,
-        biaya_lain_SGD: 0,
+        fee_flat_sgd: 0.5,
+        biaya_lain_sgd: 0,
         apply_gst: false,
         gst_rate: 0.09,
         pelanggan: formData.pelanggan,
@@ -303,14 +303,14 @@ export default function NewTransactionPage() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="harga_jual_SGD" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="harga_jual_sgd" className="block text-sm font-medium text-gray-700 mb-2">
                     Harga Jual (SGD) *
                   </label>
                   <input
                     type="number"
-                    id="harga_jual_SGD"
-                    name="harga_jual_SGD"
-                    value={formData.harga_jual_SGD}
+                    id="harga_jual_sgd"
+                    name="harga_jual_sgd"
+                    value={formData.harga_jual_sgd}
                     onChange={handleInputChange}
                     className="input-field"
                     step="0.01"

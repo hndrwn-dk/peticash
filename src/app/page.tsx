@@ -82,8 +82,8 @@ export default function HomePage() {
       const transactions: Transaction[] = transactionsData.success ? transactionsData.data : [];
 
       // Calculate stats
-      const currentMonthRevenue = transactions.reduce((sum, tx) => sum + (tx.pendapatan_SGD || 0), 0);
-      const currentMonthModal = transactions.reduce((sum, tx) => sum + (tx.modal_total_IDR || 0), 0);
+      const currentMonthRevenue = transactions.reduce((sum, tx) => sum + (tx.pendapatan_sgd || 0), 0);
+      const currentMonthModal = transactions.reduce((sum, tx) => sum + (tx.modal_total_idr || 0), 0);
 
       // Calculate top products
       const productStats: { [sku: string]: { revenue: number, qty: number, nama: string } } = {};
@@ -97,7 +97,7 @@ export default function HomePage() {
             nama: product?.nama || tx.sku
           };
         }
-        productStats[tx.sku].revenue += tx.pendapatan_SGD || 0;
+        productStats[tx.sku].revenue += tx.pendapatan_sgd || 0;
         productStats[tx.sku].qty += tx.qty;
       });
 
@@ -409,10 +409,10 @@ export default function HomePage() {
                     </div>
                     <div className="text-right">
                       <p className="font-medium text-gray-900">
-                        SGD {Number(tx.pendapatan_SGD || 0).toFixed(2)}
+                        SGD {Number(tx.pendapatan_sgd || 0).toFixed(2)}
                       </p>
                       <p className="text-sm text-gray-600">
-                        IDR {Number(tx.modal_total_IDR || 0).toLocaleString('id-ID')}
+                        IDR {Number(tx.modal_total_idr || 0).toLocaleString('id-ID')}
                       </p>
                     </div>
                   </div>

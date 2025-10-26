@@ -40,8 +40,8 @@ export async function GET(request: NextRequest) {
         let transactionCount = transactions.length;
         
         transactions.forEach(tx => {
-          if (tx.pendapatan_SGD) monthlyRevenue += tx.pendapatan_SGD;
-          if (tx.modal_total_IDR) monthlyModal += tx.modal_total_IDR;
+          if (tx.pendapatan_sgd) monthlyRevenue += tx.pendapatan_sgd;
+          if (tx.modal_total_idr) monthlyModal += tx.modal_total_idr;
         });
         
         chartData.revenue.push(Math.round(monthlyRevenue * 100) / 100);
