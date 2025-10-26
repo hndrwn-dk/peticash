@@ -9,8 +9,20 @@ export function createDatabase() {
   console.log('🔍 Database selection:', {
     NODE_ENV: process.env.NODE_ENV,
     POSTGRES_URL: process.env.POSTGRES_URL ? 'present' : 'missing',
-    POSTGRES_PRISMA_URL: process.env.POSTGRES_PRISMA_URL ? 'present' : 'missing'
+    POSTGRES_PRISMA_URL: process.env.POSTGRES_PRISMA_URL ? 'present' : 'missing',
+    VERCEL: process.env.VERCEL ? 'present' : 'missing'
   });
+  
+  // Force PostgreSQL in production/Vercel environment
+  if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+    console.log('🐘 Production environment - forcing PostgreSQL');
+    try {
+      return new PostgresDatabaseService();
+    } catch (error) {
+      console.error('❌ PostgreSQL initialization failed in production:', error);
+      throw new Error('PostgreSQL connection required in production environment');
+    }
+  }
   
   if (hasPostgresUrl) {
     console.log('🐘 Using PostgreSQL database');
