@@ -5,7 +5,10 @@ export class PostgresDatabaseService {
   private initialized = false;
 
   constructor() {
-    // Don't initialize immediately, wait for first use
+    // Check if we have a connection string
+    if (!process.env.POSTGRES_URL && !process.env.POSTGRES_PRISMA_URL) {
+      throw new Error('No PostgreSQL connection string found. Please set POSTGRES_URL or POSTGRES_PRISMA_URL environment variable.');
+    }
     console.log('🐘 PostgreSQL database service created');
   }
 
@@ -19,11 +22,6 @@ export class PostgresDatabaseService {
   private async initializeDatabase(): Promise<void> {
     try {
       console.log('🐘 Initializing PostgreSQL database...');
-      
-      // Check if we have a connection string
-      if (!process.env.POSTGRES_URL && !process.env.POSTGRES_PRISMA_URL) {
-        throw new Error('No PostgreSQL connection string found');
-      }
       
       // Create products table
       await sql`
