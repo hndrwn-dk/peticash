@@ -499,6 +499,25 @@ export class PostgresDatabaseService {
     }
   }
 
+  async getAllTransactions(): Promise<Transaction[]> {
+    try {
+      await this.ensureInitialized();
+      const result = await sql`
+        SELECT * FROM transactions 
+        ORDER BY tanggal DESC, id DESC
+      `;
+      return result.rows as Transaction[];
+    } catch (error) {
+      console.error('Error getting all transactions:', error);
+      // During build time, return empty array instead of throwing
+      if (error instanceof Error && error.message.includes('No PostgreSQL connection string found')) {
+        console.log('📦 Build time - returning empty transactions array');
+        return [];
+      }
+      return [];
+    }
+  }
+
   async getTransactionById(id: number): Promise<Transaction | null> {
     try {
       const query = sql`SELECT * FROM transactions WHERE id = ${id}`;
