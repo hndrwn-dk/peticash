@@ -184,7 +184,7 @@ export default function TransactionsPage() {
                           }
                         </div>
                         <div className="text-xs text-gray-500">
-                          @ ${transaction.harga_jual_SGD?.toFixed(2) || '0.00'}
+                          @ ${transaction.harga_jual_SGD ? Number(transaction.harga_jual_SGD).toFixed(2) : '0.00'}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">

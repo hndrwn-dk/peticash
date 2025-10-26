@@ -409,10 +409,10 @@ export default function HomePage() {
                     </div>
                     <div className="text-right">
                       <p className="font-medium text-gray-900">
-                        SGD {(tx.pendapatan_SGD || 0).toFixed(2)}
+                        SGD {Number(tx.pendapatan_SGD || 0).toFixed(2)}
                       </p>
                       <p className="text-sm text-gray-600">
-                        IDR {(tx.modal_total_IDR || 0).toLocaleString('id-ID')}
+                        IDR {Number(tx.modal_total_IDR || 0).toLocaleString('id-ID')}
                       </p>
                     </div>
                   </div>
@@ -446,7 +446,7 @@ export default function HomePage() {
                     </div>
                     <div className="text-right">
                       <p className="font-medium text-gray-900">
-                        SGD {product.revenue.toFixed(2)}
+                        SGD {Number(product.revenue).toFixed(2)}
                       </p>
                       <p className="text-sm text-gray-600">
                         Qty: {product.qty_sold}
