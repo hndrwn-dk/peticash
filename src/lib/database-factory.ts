@@ -35,5 +35,20 @@ export function createDatabase() {
   }
 }
 
-// Export the database instance
-export const database = createDatabase();
+// Lazy database instance - only created when first accessed
+let _database: any = null;
+
+export function getDatabase() {
+  if (!_database) {
+    _database = createDatabase();
+  }
+  return _database;
+}
+
+// For backward compatibility, export database as a getter
+export const database = new Proxy({} as any, {
+  get(target, prop) {
+    const db = getDatabase();
+    return db[prop];
+  }
+});
