@@ -44,10 +44,11 @@ export default function TransactionsPage() {
   };
 
   const formatCurrency = (amount: number, currency: 'IDR' | 'SGD') => {
+    const numAmount = Number(amount) || 0;
     if (currency === 'IDR') {
-      return `Rp ${amount.toLocaleString('id-ID')}`;
+      return `Rp ${numAmount.toLocaleString('id-ID')}`;
     } else {
-      return `$${amount.toFixed(2)}`;
+      return `$${numAmount.toFixed(2)}`;
     }
   };
 
@@ -293,7 +294,7 @@ export default function TransactionsPage() {
               <div className="text-sm font-medium text-gray-600">Total Cost (IDR)</div>
               <div className="text-2xl font-bold text-gray-900">
                 {formatCurrency(
-                  transactions.reduce((sum, tx) => sum + (tx.modal_total_idr || 0), 0),
+                  transactions.reduce((sum, tx) => sum + (Number(tx.modal_total_idr) || 0), 0),
                   'IDR'
                 )}
               </div>
@@ -302,7 +303,7 @@ export default function TransactionsPage() {
               <div className="text-sm font-medium text-gray-600">Total Revenue (SGD)</div>
               <div className="text-2xl font-bold text-gray-900">
                 {formatCurrency(
-                  transactions.reduce((sum, tx) => sum + (tx.pendapatan_sgd || 0), 0),
+                  transactions.reduce((sum, tx) => sum + (Number(tx.pendapatan_sgd) || 0), 0),
                   'SGD'
                 )}
               </div>

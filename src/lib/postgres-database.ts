@@ -506,70 +506,22 @@ export class PostgresDatabaseService {
         }
       }
 
-      // Build update query
-      const updateFields: string[] = [];
-      const values: any[] = [];
-
-      if (transaction.tanggal !== undefined) {
-        updateFields.push(`tanggal = $${values.length + 1}`);
-        values.push(transaction.tanggal);
-      }
-      if (transaction.sku !== undefined) {
-        updateFields.push(`sku = $${values.length + 1}`);
-        values.push(transaction.sku);
-      }
-      if (transaction.qty !== undefined) {
-        updateFields.push(`qty = $${values.length + 1}`);
-        values.push(transaction.qty);
-      }
-      if (transaction.modal_satuan_idr !== undefined) {
-        updateFields.push(`modal_satuan_idr = $${values.length + 1}`);
-        values.push(transaction.modal_satuan_idr);
-      }
-      if (modal_total_idr !== existing.modal_total_idr) {
-        updateFields.push(`modal_total_idr = $${values.length + 1}`);
-        values.push(modal_total_idr);
-      }
-      if (transaction.harga_jual_sgd !== undefined) {
-        updateFields.push(`harga_jual_sgd = $${values.length + 1}`);
-        values.push(transaction.harga_jual_sgd);
-      }
-      if (pendapatan_sgd !== existing.pendapatan_sgd) {
-        updateFields.push(`pendapatan_sgd = $${values.length + 1}`);
-        values.push(pendapatan_sgd);
-      }
-      if (transaction.pelanggan !== undefined) {
-        updateFields.push(`pelanggan = $${values.length + 1}`);
-        values.push(transaction.pelanggan);
-      }
-      if (transaction.metode_bayar !== undefined) {
-        updateFields.push(`metode_bayar = $${values.length + 1}`);
-        values.push(transaction.metode_bayar);
-      }
-      if (transaction.catatan !== undefined) {
-        updateFields.push(`catatan = $${values.length + 1}`);
-        values.push(transaction.catatan);
-      }
-
-      if (updateFields.length === 0) {
-        return { success: false, error: 'No fields to update' };
-      }
-
-      // For now, let's use a simpler approach - we'll build individual queries
-      // This is not ideal but will work for the current implementation
-      let query = sql`UPDATE transactions SET `;
-      
-      if (transaction.tanggal !== undefined) {
-        query = sql`UPDATE transactions SET tanggal = ${transaction.tanggal}`;
-      }
-      if (transaction.sku !== undefined) {
-        query = sql`${query}, sku = ${transaction.sku}`;
-      }
-      // Add other fields as needed...
-      
-      query = sql`${query} WHERE id = ${id}`;
-      
-      await query;
+      // Simple update approach - update all provided fields
+      await sql`
+        UPDATE transactions 
+        SET 
+          tanggal = ${transaction.tanggal ?? existing.tanggal},
+          sku = ${transaction.sku ?? existing.sku},
+          qty = ${transaction.qty ?? existing.qty},
+          modal_satuan_idr = ${transaction.modal_satuan_idr ?? existing.modal_satuan_idr},
+          modal_total_idr = ${modal_total_idr ?? existing.modal_total_idr},
+          harga_jual_sgd = ${transaction.harga_jual_sgd ?? existing.harga_jual_sgd},
+          pendapatan_sgd = ${pendapatan_sgd ?? existing.pendapatan_sgd},
+          pelanggan = ${transaction.pelanggan ?? existing.pelanggan},
+          metode_bayar = ${transaction.metode_bayar ?? existing.metode_bayar},
+          catatan = ${transaction.catatan ?? existing.catatan}
+        WHERE id = ${id}
+      `;
 
       return { 
         success: true, 

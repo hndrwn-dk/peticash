@@ -51,10 +51,11 @@ export default function ReportsPage() {
   // }, [selectedPeriod]);
 
   const formatCurrency = (amount: number, currency: 'IDR' | 'SGD') => {
+    const numAmount = Number(amount) || 0;
     if (currency === 'IDR') {
-      return `Rp ${amount.toLocaleString('id-ID')}`;
+      return `Rp ${numAmount.toLocaleString('id-ID')}`;
     } else {
-      return `$${amount.toFixed(2)}`;
+      return `$${numAmount.toFixed(2)}`;
     }
   };
 
