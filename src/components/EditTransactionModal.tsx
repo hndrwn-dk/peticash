@@ -11,7 +11,7 @@ interface EditTransactionModalProps {
 
 export default function EditTransactionModal({ transaction, onSave, onCancel }: EditTransactionModalProps) {
   const [formData, setFormData] = useState({
-    tanggal: transaction.tanggal || '',
+    tanggal: transaction.tanggal ? transaction.tanggal.split('T')[0] : '',
     sku: transaction.sku || '',
     qty: transaction.qty?.toString() || '',
     modal_satuan_idr: transaction.modal_satuan_idr?.toString() || '',
