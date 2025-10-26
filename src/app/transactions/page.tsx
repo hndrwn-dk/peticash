@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 import EditTransactionModal from '@/components/EditTransactionModal';
+import Alert from '@/components/Alert';
 // Icons removed for clean production build
 import { Transaction } from '@/types';
 
@@ -13,6 +14,13 @@ export default function TransactionsPage() {
   const [selectedPeriod, setSelectedPeriod] = useState('');
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<Transaction | null>(null);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [alert, setAlert] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    type: 'info' as 'success' | 'error' | 'warning' | 'info'
+  });
 
   useEffect(() => {
     // Set current month as default
@@ -71,6 +79,7 @@ export default function TransactionsPage() {
 
   const handleDelete = (transaction: Transaction) => {
     setShowDeleteConfirm(transaction);
+    setDeleteConfirmText(''); // Reset confirmation text
   };
 
   const confirmDelete = async () => {
@@ -81,16 +90,34 @@ export default function TransactionsPage() {
         method: 'DELETE',
       });
       
-      if (response.ok) {
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
         // Refresh transactions list
         await loadTransactions();
         setShowDeleteConfirm(null);
+        setAlert({
+          isOpen: true,
+          title: 'Success',
+          message: 'Transaction deleted successfully',
+          type: 'success'
+        });
       } else {
-        alert('Failed to delete transaction');
+        setAlert({
+          isOpen: true,
+          title: 'Error',
+          message: result.error || 'Failed to delete transaction',
+          type: 'error'
+        });
       }
     } catch (error) {
       console.error('Error deleting transaction:', error);
-      alert('Error deleting transaction');
+      setAlert({
+        isOpen: true,
+        title: 'Error',
+        message: 'Error deleting transaction',
+        type: 'error'
+      });
     }
   };
 
@@ -104,16 +131,34 @@ export default function TransactionsPage() {
         body: JSON.stringify(updatedTransaction),
       });
       
-      if (response.ok) {
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
         // Refresh transactions list
         await loadTransactions();
         setEditingTransaction(null);
+        setAlert({
+          isOpen: true,
+          title: 'Success',
+          message: 'Transaction updated successfully',
+          type: 'success'
+        });
       } else {
-        alert('Failed to update transaction');
+        setAlert({
+          isOpen: true,
+          title: 'Error',
+          message: result.error || 'Failed to update transaction',
+          type: 'error'
+        });
       }
     } catch (error) {
       console.error('Error updating transaction:', error);
-      alert('Error updating transaction');
+      setAlert({
+        isOpen: true,
+        title: 'Error',
+        message: 'Error updating transaction',
+        type: 'error'
+      });
     }
   };
 
@@ -422,27 +467,62 @@ export default function TransactionsPage() {
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Delete Transaction</h3>
-            <p className="text-gray-600 mb-6">
-              Are you sure you want to delete this transaction for {showDeleteConfirm.sku}? This action cannot be undone.
-            </p>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">⚠️ Delete Transaction</h3>
+            <div className="mb-6">
+              <p className="text-gray-600 mb-4">
+                Are you sure you want to delete this transaction?
+              </p>
+              <div className="bg-gray-50 p-3 rounded-md mb-4">
+                <p className="text-sm"><strong>SKU:</strong> {showDeleteConfirm.sku}</p>
+                <p className="text-sm"><strong>Date:</strong> {showDeleteConfirm.tanggal}</p>
+                <p className="text-sm"><strong>Quantity:</strong> {showDeleteConfirm.qty}</p>
+                <p className="text-sm"><strong>Revenue:</strong> {showDeleteConfirm.pendapatan_sgd ? formatCurrency(showDeleteConfirm.pendapatan_sgd, 'SGD') : '-'}</p>
+              </div>
+              <p className="text-red-600 text-sm font-medium mb-3">
+                This action cannot be undone. Type "DELETE" to confirm:
+              </p>
+              <input
+                type="text"
+                value={deleteConfirmText}
+                onChange={(e) => setDeleteConfirmText(e.target.value)}
+                placeholder="Type DELETE to confirm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              />
+            </div>
             <div className="flex justify-end space-x-3">
               <button
-                onClick={() => setShowDeleteConfirm(null)}
+                onClick={() => {
+                  setShowDeleteConfirm(null);
+                  setDeleteConfirmText('');
+                }}
                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmDelete}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md"
+                disabled={deleteConfirmText !== 'DELETE'}
+                className={`px-4 py-2 text-sm font-medium text-white rounded-md ${
+                  deleteConfirmText === 'DELETE' 
+                    ? 'bg-red-600 hover:bg-red-700' 
+                    : 'bg-gray-400 cursor-not-allowed'
+                }`}
               >
-                Delete
+                Delete Transaction
               </button>
             </div>
           </div>
         </div>
       )}
+
+      {/* Alert Component */}
+      <Alert
+        isOpen={alert.isOpen}
+        onClose={() => setAlert({ ...alert, isOpen: false })}
+        title={alert.title}
+        message={alert.message}
+        type={alert.type}
+      />
     </div>
   );
 }

@@ -481,9 +481,9 @@ export class DatabaseService {
         return { success: false, error: 'SKU wajib diisi' };
       }
 
-      // Check if product exists, create if it doesn't
-      const checkProductStmt = this.db.prepare('SELECT sku FROM products WHERE sku = ?');
-      const existingProduct = checkProductStmt.get(transaction.sku);
+      // Check if product exists and get default cost
+      const checkProductStmt = this.db.prepare('SELECT sku, default_modal_satuan_idr FROM products WHERE sku = ?');
+      const existingProduct = checkProductStmt.get(transaction.sku) as { sku: string, default_modal_satuan_idr?: number } | undefined;
       
       if (!existingProduct) {
         // Create a basic product entry for this SKU
@@ -512,13 +512,21 @@ export class DatabaseService {
       
       // Calculate modal_total_idr if not provided
       let modalTotalIDR = transaction.modal_total_idr;
-      if (!modalTotalIDR && transaction.modal_satuan_idr) {
-        modalTotalIDR = this.roundIDR(transaction.qty * transaction.modal_satuan_idr);
+      let modalSatuanIDR = transaction.modal_satuan_idr;
+      
+      // If no modal_satuan_idr provided, try to use product's default cost
+      if (!modalSatuanIDR && existingProduct?.default_modal_satuan_idr) {
+        modalSatuanIDR = existingProduct.default_modal_satuan_idr;
+      }
+      
+      // Calculate modal_total_idr
+      if (!modalTotalIDR && modalSatuanIDR) {
+        modalTotalIDR = this.roundIDR(transaction.qty * modalSatuanIDR);
       } else if (modalTotalIDR) {
         modalTotalIDR = this.roundIDR(modalTotalIDR);
       }
 
-      const modalSatuanIDR = transaction.modal_satuan_idr ? this.roundIDR(transaction.modal_satuan_idr) : null;
+      const finalModalSatuanIDR = modalSatuanIDR ? this.roundIDR(modalSatuanIDR) : null;
 
       // Calculate pendapatan_sgd
       const pendapatanSGD = this.roundSGD(transaction.qty * transaction.harga_jual_sgd);
@@ -569,7 +577,7 @@ export class DatabaseService {
         transaction.tanggal,
         transaction.sku,
         transaction.qty,
-        modalSatuanIDR || null,
+        finalModalSatuanIDR || null,
         modalTotalIDR || null,
         this.roundSGD(transaction.harga_jual_sgd),
         pendapatanSGD,
