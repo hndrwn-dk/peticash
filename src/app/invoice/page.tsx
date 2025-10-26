@@ -436,16 +436,47 @@ export default function InvoicePage() {
                 <label htmlFor="period" className="block text-sm font-medium text-gray-700 mb-2">
                   Periode (YYYY-MM) *
                 </label>
-                <input
-                  type="month"
-                  id="period"
-                  value={period}
-                  onChange={(e) => setPeriod(e.target.value)}
-                  className="input-field"
-                  required
-                />
+                <div className="flex gap-2">
+                  <select
+                    id="year"
+                    value={period.split('-')[0]}
+                    onChange={(e) => {
+                      const month = period.split('-')[1] || '01';
+                      setPeriod(`${e.target.value}-${month}`);
+                    }}
+                    className="input-field flex-1"
+                    required
+                  >
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                  </select>
+                  <select
+                    id="month"
+                    value={period.split('-')[1] || '01'}
+                    onChange={(e) => {
+                      const year = period.split('-')[0] || '2025';
+                      setPeriod(`${year}-${e.target.value}`);
+                    }}
+                    className="input-field flex-1"
+                    required
+                  >
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                  </select>
+                </div>
                 <p className="text-xs text-gray-500 mt-1">
-                  Current month: {period} | Select any month to view financial data
+                  Selected period: {period} | Data available for 2025-10
                 </p>
               </div>
             )}
