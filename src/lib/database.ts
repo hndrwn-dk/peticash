@@ -650,6 +650,23 @@ export class DatabaseService {
     }
   }
 
+  async getAllTransactions(): Promise<Transaction[]> {
+    try {
+      const query = `
+        SELECT * FROM transactions 
+        ORDER BY tanggal DESC, id DESC
+      `;
+      
+      const stmt = this.db.prepare(query);
+      const transactions = stmt.all() as Transaction[];
+      
+      return transactions;
+    } catch (error) {
+      console.error('Error getting all transactions:', error);
+      return [];
+    }
+  }
+
   async getTransactionById(id: number): Promise<Transaction | null> {
     try {
       const stmt = this.db.prepare('SELECT * FROM transactions WHERE id = ?');

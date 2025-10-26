@@ -9,11 +9,13 @@ export async function GET(request: NextRequest) {
     const periode = searchParams.get('periode'); // YYYY-MM
     const limit = searchParams.get('limit');
 
+    // If no periode provided, get all transactions (for customer list)
     if (!periode) {
-      return NextResponse.json(
-        { success: false, error: 'Periode parameter is required (YYYY-MM)' },
-        { status: 400 }
-      );
+      const transactions = await database.getAllTransactions();
+      return NextResponse.json({
+        success: true,
+        data: transactions
+      });
     }
 
     const limitNum = limit ? parseInt(limit) : undefined;

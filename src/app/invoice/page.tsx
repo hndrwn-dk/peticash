@@ -50,7 +50,8 @@ export default function InvoicePage() {
         // Extract unique customer names from transactions
         const customerNames = result.data
           .map((tx: any) => tx.pelanggan)
-          .filter((name: string) => name && name.trim() !== '') as string[];
+          .filter((name: string) => name && name.trim() !== '' && name !== "''")
+          .map((name: string) => name.trim()) as string[];
         const uniqueCustomers = Array.from(new Set(customerNames)).sort();
         
         setCustomers(uniqueCustomers);
