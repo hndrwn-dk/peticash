@@ -21,6 +21,9 @@ export default function InvoicePage() {
   const [period, setPeriod] = useState('');
   const [loading, setLoading] = useState(false);
   const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
+  const [customers, setCustomers] = useState<string[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
   const [alert, setAlert] = useState<{
     isOpen: boolean;
     title: string;
@@ -33,6 +36,47 @@ export default function InvoicePage() {
     const now = new Date();
     const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     setPeriod(currentMonth);
+    
+    // Fetch customers from transactions
+    fetchCustomers();
+  }, []);
+
+  const fetchCustomers = async () => {
+    try {
+      const response = await fetch('/api/transactions');
+      const result = await response.json();
+      
+      if (result.success) {
+        // Extract unique customer names from transactions
+        const customerNames = result.data
+          .map((tx: any) => tx.pelanggan)
+          .filter((name: string) => name && name.trim() !== '') as string[];
+        const uniqueCustomers = Array.from(new Set(customerNames)).sort();
+        
+        setCustomers(uniqueCustomers);
+      }
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+    }
+  };
+
+  const filteredCustomers = customers.filter(customer =>
+    customer.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('.customer-dropdown')) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   const generateInvoice = async () => {
@@ -220,10 +264,12 @@ export default function InvoicePage() {
               <h3>Total ${invoiceType === 'customer' ? 'Amount' : 'Revenue'} (SGD)</h3>
               <p>$${Number(invoiceType === 'customer' ? invoiceData.totalAmount : invoiceData.totalRevenue || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
             </div>
+            ${invoiceType === 'financial' ? `
             <div class="summary-item">
               <h3>Total Cost (IDR)</h3>
               <p>Rp ${Number(invoiceData.totalCost).toLocaleString('id-ID')}</p>
             </div>
+            ` : ''}
             <div class="summary-item">
               <h3>Total ${invoiceType === 'customer' ? 'Items' : 'Transactions'}</h3>
               <p>${invoiceType === 'customer' ? invoiceData.transactions.length : invoiceData.totalTransactions || 0}</p>
@@ -239,7 +285,7 @@ export default function InvoicePage() {
                 <th>Qty</th>
                 <th>Unit Price (SGD)</th>
                 <th>Total (SGD)</th>
-                <th>Cost (IDR)</th>
+                ${invoiceType === 'financial' ? '<th>Cost (IDR)</th>' : ''}
                 ${invoiceType === 'customer' ? '<th>Payment Method</th>' : ''}
               </tr>
             </thead>
@@ -252,7 +298,7 @@ export default function InvoicePage() {
                   <td class="text-center">${tx.qty}</td>
                   <td class="text-right">$${Number(tx.harga_jual_sgd || 0).toFixed(2)}</td>
                   <td class="text-right">$${Number(tx.pendapatan_sgd || 0).toFixed(2)}</td>
-                  <td class="text-right">Rp ${Number(tx.modal_total_idr || 0).toLocaleString('id-ID')}</td>
+                  ${invoiceType === 'financial' ? `<td class="text-right">Rp ${Number(tx.modal_total_idr || 0).toLocaleString('id-ID')}</td>` : ''}
                   ${invoiceType === 'customer' ? `<td>${tx.metode_bayar || '-'}</td>` : ''}
                 </tr>
               `).join('')}
@@ -327,19 +373,62 @@ export default function InvoicePage() {
             </div>
 
             {invoiceType === 'customer' && (
-              <div>
+              <div className="relative customer-dropdown">
                 <label htmlFor="customer" className="block text-sm font-medium text-gray-700 mb-2">
                   Nama Pelanggan *
                 </label>
-                <input
-                  type="text"
-                  id="customer"
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  className="input-field"
-                  placeholder="Masukkan nama pelanggan"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    id="customer"
+                    value={searchTerm}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
+                      setShowDropdown(true);
+                    }}
+                    onFocus={() => setShowDropdown(true)}
+                    className="input-field w-full"
+                    placeholder="Cari atau pilih pelanggan..."
+                    required
+                  />
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+                
+                {showDropdown && (
+                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+                    {filteredCustomers.length > 0 ? (
+                      filteredCustomers.map((customer) => (
+                        <div
+                          key={customer}
+                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                          onClick={() => {
+                            setCustomerName(customer);
+                            setSearchTerm(customer);
+                            setShowDropdown(false);
+                          }}
+                        >
+                          {customer}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="px-4 py-2 text-gray-500">
+                        {searchTerm ? 'Tidak ada pelanggan yang cocok' : 'Tidak ada pelanggan tersedia'}
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                {customerName && (
+                  <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-md">
+                    <span className="text-sm text-green-800">
+                      <strong>Dipilih:</strong> {customerName}
+                    </span>
+                  </div>
+                )}
               </div>
             )}
 
@@ -404,12 +493,14 @@ export default function InvoicePage() {
                     {formatCurrency(invoiceType === 'customer' ? invoiceData.totalAmount : invoiceData.totalRevenue || 0, 'SGD')}
                   </div>
                 </div>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <div className="text-sm font-medium text-gray-600">Total Cost (IDR)</div>
-                  <div className="text-2xl font-bold text-gray-900">
-                    {formatCurrency(invoiceData.totalCost, 'IDR')}
+                {invoiceType === 'financial' && (
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="text-sm font-medium text-gray-600">Total Cost (IDR)</div>
+                    <div className="text-2xl font-bold text-gray-900">
+                      {formatCurrency(invoiceData.totalCost, 'IDR')}
+                    </div>
                   </div>
-                </div>
+                )}
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <div className="text-sm font-medium text-gray-600">
                     Total {invoiceType === 'customer' ? 'Items' : 'Transactions'}
@@ -439,9 +530,11 @@ export default function InvoicePage() {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Total (SGD)
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Cost (IDR)
-                      </th>
+                      {invoiceType === 'financial' && (
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Cost (IDR)
+                        </th>
+                      )}
                       {invoiceType === 'customer' && (
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Payment
@@ -470,9 +563,11 @@ export default function InvoicePage() {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
                           {formatCurrency(tx.pendapatan_sgd || 0, 'SGD')}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
-                          {formatCurrency(tx.modal_total_idr || 0, 'IDR')}
-                        </td>
+                        {invoiceType === 'financial' && (
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
+                            {formatCurrency(tx.modal_total_idr || 0, 'IDR')}
+                          </td>
+                        )}
                         {invoiceType === 'customer' && (
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {tx.metode_bayar || '-'}
