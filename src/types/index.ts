@@ -13,17 +13,17 @@ export interface Transaction {
   tanggal: string; // YYYY-MM-DD
   sku: string;
   qty: number;
-  modal_satuan_IDR?: number;
-  modal_total_IDR?: number;
-  harga_jual_SGD: number;
-  pendapatan_SGD?: number;
+  modal_satuan_idr?: number;
+  modal_total_idr?: number;
+  harga_jual_sgd: number;
+  pendapatan_sgd?: number;
   fee_rate?: number;
-  fee_flat_SGD?: number;
-  biaya_transaksi_SGD?: number;
-  biaya_lain_SGD?: number;
+  fee_flat_sgd?: number;
+  biaya_transaksi_sgd?: number;
+  biaya_lain_sgd?: number;
   apply_gst?: boolean;
   gst_rate?: number;
-  GST_SGD?: number;
+  gst_sgd?: number;
   pelanggan?: string;
   metode_bayar?: string;
   catatan?: string;
@@ -33,11 +33,11 @@ export interface Transaction {
 // Monthly Summary Types
 export interface MonthlyReport {
   periode: string; // YYYY-MM
-  total_modal_IDR: number;
-  total_penjualan_SGD: number;
-  total_biaya_transaksi_SGD: number;
-  total_biaya_lain_SGD: number;
-  total_GST_SGD: number;
+  total_modal_idr: number;
+  total_penjualan_sgd: number;
+  total_biaya_transaksi_sgd: number;
+  total_biaya_lain_sgd: number;
+  total_gst_sgd: number;
   transaksi_lengkap: number;
   transaksi_incomplete: number;
   top_sku_by_revenue: string;
@@ -79,11 +79,11 @@ export interface TransactionFormData {
   tanggal: string;
   sku: string;
   qty: string;
-  modal_satuan_IDR: string;
-  harga_jual_SGD: string;
+  modal_satuan_idr: string;
+  harga_jual_sgd: string;
   fee_rate: string;
-  fee_flat_SGD: string;
-  biaya_lain_SGD: string;
+  fee_flat_sgd: string;
+  biaya_lain_sgd: string;
   apply_gst: boolean;
   gst_rate: string;
   pelanggan: string;

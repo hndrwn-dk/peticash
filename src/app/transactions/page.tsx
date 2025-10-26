@@ -165,26 +165,26 @@ export default function TransactionsPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          {transaction.modal_total_IDR 
-                            ? formatCurrency(transaction.modal_total_IDR, 'IDR')
+                          {transaction.modal_total_idr 
+                            ? formatCurrency(transaction.modal_total_idr, 'IDR')
                             : '-'
                           }
                         </div>
-                        {transaction.modal_satuan_IDR && (
+                        {transaction.modal_satuan_idr && (
                           <div className="text-xs text-gray-500">
-                            @ {formatCurrency(transaction.modal_satuan_IDR, 'IDR')}
+                            @ {formatCurrency(transaction.modal_satuan_idr, 'IDR')}
                           </div>
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          {transaction.pendapatan_SGD 
-                            ? formatCurrency(transaction.pendapatan_SGD, 'SGD')
+                          {transaction.pendapatan_sgd 
+                            ? formatCurrency(transaction.pendapatan_sgd, 'SGD')
                             : '-'
                           }
                         </div>
                         <div className="text-xs text-gray-500">
-                          @ ${transaction.harga_jual_SGD ? Number(transaction.harga_jual_SGD).toFixed(2) : '0.00'}
+                          @ ${transaction.harga_jual_sgd ? Number(transaction.harga_jual_sgd).toFixed(2) : '0.00'}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -213,7 +213,7 @@ export default function TransactionsPage() {
               <div className="text-sm font-medium text-gray-600">Total Cost (IDR)</div>
               <div className="text-2xl font-bold text-gray-900">
                 {formatCurrency(
-                  transactions.reduce((sum, tx) => sum + (tx.modal_total_IDR || 0), 0),
+                  transactions.reduce((sum, tx) => sum + (tx.modal_total_idr || 0), 0),
                   'IDR'
                 )}
               </div>
@@ -222,7 +222,7 @@ export default function TransactionsPage() {
               <div className="text-sm font-medium text-gray-600">Total Revenue (SGD)</div>
               <div className="text-2xl font-bold text-gray-900">
                 {formatCurrency(
-                  transactions.reduce((sum, tx) => sum + (tx.pendapatan_SGD || 0), 0),
+                  transactions.reduce((sum, tx) => sum + (tx.pendapatan_sgd || 0), 0),
                   'SGD'
                 )}
               </div>
