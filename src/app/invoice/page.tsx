@@ -32,10 +32,8 @@ export default function InvoicePage() {
   }>({ isOpen: false, title: '', message: '', type: 'info' });
 
   useEffect(() => {
-    // Set current month as default for financial reports
-    const now = new Date();
-    const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-    setPeriod(currentMonth);
+    // Set default to 2025-10 where the actual data exists
+    setPeriod('2025-10');
     
     // Fetch customers from transactions
     fetchCustomers();
