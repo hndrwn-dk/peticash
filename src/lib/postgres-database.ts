@@ -66,9 +66,27 @@ export class PostgresDatabaseService {
         )
       `;
 
+      // Create inventory table
+      await sql`
+        CREATE TABLE IF NOT EXISTS inventory (
+          id SERIAL PRIMARY KEY,
+          sku VARCHAR(50) NOT NULL,
+          store_location VARCHAR(255) NOT NULL,
+          current_stock INTEGER DEFAULT 0,
+          last_counted_date DATE,
+          notes TEXT,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (sku) REFERENCES products (sku),
+          UNIQUE(sku, store_location)
+        )
+      `;
+
       // Create indexes for better performance
       await sql`CREATE INDEX IF NOT EXISTS idx_transactions_tanggal ON transactions(tanggal)`;
       await sql`CREATE INDEX IF NOT EXISTS idx_transactions_sku ON transactions(sku)`;
+      await sql`CREATE INDEX IF NOT EXISTS idx_inventory_sku ON inventory(sku)`;
+      await sql`CREATE INDEX IF NOT EXISTS idx_inventory_location ON inventory(store_location)`;
       // Remove the problematic DATE_TRUNC index - we'll use a simpler approach
 
       await this.seedSampleData();
@@ -610,6 +628,90 @@ export class PostgresDatabaseService {
     } catch (error) {
       console.error('Error generating monthly report:', error);
       return { success: false, error: 'Gagal membuat laporan bulanan' };
+    }
+  }
+
+  // INVENTORY MANAGEMENT
+  async getInventory(): Promise<any[]> {
+    try {
+      await this.ensureInitialized();
+      const result = await sql`
+        SELECT i.*, p.nama as product_name 
+        FROM inventory i 
+        LEFT JOIN products p ON i.sku = p.sku 
+        ORDER BY i.store_location, p.nama
+      `;
+      return result.rows;
+    } catch (error) {
+      console.error('Error getting inventory:', error);
+      return [];
+    }
+  }
+
+  async updateInventory(sku: string, storeLocation: string, currentStock: number, notes?: string): Promise<ApiResponse> {
+    try {
+      await this.ensureInitialized();
+      
+      // Check if product exists
+      const product = await sql`SELECT sku FROM products WHERE sku = ${sku}`;
+      if (product.rows.length === 0) {
+        return { success: false, error: 'Produk tidak ditemukan' };
+      }
+
+      // Upsert inventory record
+      await sql`
+        INSERT INTO inventory (sku, store_location, current_stock, last_counted_date, notes, updated_at)
+        VALUES (${sku}, ${storeLocation}, ${currentStock}, CURRENT_DATE, ${notes || ''}, CURRENT_TIMESTAMP)
+        ON CONFLICT (sku, store_location) 
+        DO UPDATE SET
+          current_stock = EXCLUDED.current_stock,
+          last_counted_date = EXCLUDED.last_counted_date,
+          notes = EXCLUDED.notes,
+          updated_at = EXCLUDED.updated_at
+      `;
+
+      return { 
+        success: true, 
+        message: 'Inventory updated successfully',
+        data: { sku, store_location: storeLocation, current_stock: currentStock }
+      };
+    } catch (error) {
+      console.error('Error updating inventory:', error);
+      return { success: false, error: 'Failed to update inventory' };
+    }
+  }
+
+  async getInventoryByLocation(storeLocation: string): Promise<any[]> {
+    try {
+      await this.ensureInitialized();
+      const result = await sql`
+        SELECT i.*, p.nama as product_name 
+        FROM inventory i 
+        LEFT JOIN products p ON i.sku = p.sku 
+        WHERE i.store_location = ${storeLocation}
+        ORDER BY p.nama
+      `;
+      return result.rows;
+    } catch (error) {
+      console.error('Error getting inventory by location:', error);
+      return [];
+    }
+  }
+
+  async getTransactionsByCustomer(customer: string): Promise<Transaction[]> {
+    try {
+      await this.ensureInitialized();
+      const result = await sql`
+        SELECT t.*, p.nama as product_name
+        FROM transactions t
+        LEFT JOIN products p ON t.sku = p.sku
+        WHERE LOWER(t.pelanggan) = LOWER(${customer})
+        ORDER BY t.tanggal DESC, t.id DESC
+      `;
+      return result.rows as Transaction[];
+    } catch (error) {
+      console.error('Error getting transactions by customer:', error);
+      return [];
     }
   }
 }
