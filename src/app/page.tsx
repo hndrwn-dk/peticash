@@ -204,7 +204,7 @@ export default function HomePage() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          <div className="stats-card">
+          <Link href="/products" className="stats-card hover:shadow-lg transition-shadow cursor-pointer">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 mb-1">Total Produk</p>
@@ -214,9 +214,9 @@ export default function HomePage() {
                 <ProductIcon className="w-6 h-6 text-blue-600" />
               </div>
             </div>
-          </div>
+          </Link>
 
-          <div className="stats-card">
+          <Link href="/transactions" className="stats-card hover:shadow-lg transition-shadow cursor-pointer">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 mb-1">Transaksi</p>
@@ -226,7 +226,7 @@ export default function HomePage() {
                 <TransactionIcon className="w-6 h-6 text-green-600" />
               </div>
             </div>
-          </div>
+          </Link>
 
           <div className="stats-card">
             <div className="flex items-center justify-between">
