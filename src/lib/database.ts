@@ -625,6 +625,151 @@ export class DatabaseService {
     }
   }
 
+  async getTransactionById(id: number): Promise<Transaction | null> {
+    try {
+      const stmt = this.db.prepare('SELECT * FROM transactions WHERE id = ?');
+      const transaction = stmt.get(id) as Transaction | undefined;
+      
+      return transaction || null;
+    } catch (error) {
+      console.error('Error getting transaction by ID:', error);
+      return null;
+    }
+  }
+
+  async updateTransaction(id: number, transaction: Partial<Transaction>): Promise<ApiResponse> {
+    try {
+      // Check if transaction exists
+      const existing = await this.getTransactionById(id);
+      if (!existing) {
+        return { success: false, error: 'Transaction not found' };
+      }
+
+      // Validate required fields
+      if (transaction.qty !== undefined && transaction.qty <= 0) {
+        return { success: false, error: 'Qty harus > 0' };
+      }
+
+      if (transaction.harga_jual_sgd !== undefined && transaction.harga_jual_sgd <= 0) {
+        return { success: false, error: 'Harga jual SGD wajib diisi dan > 0' };
+      }
+
+      // Calculate derived fields if price or quantity changed
+      let pendapatan_sgd = existing.pendapatan_sgd;
+      let modal_total_idr = existing.modal_total_idr;
+
+      if (transaction.qty !== undefined || transaction.harga_jual_sgd !== undefined) {
+        const qty = transaction.qty ?? existing.qty;
+        const price = transaction.harga_jual_sgd ?? existing.harga_jual_sgd;
+        pendapatan_sgd = this.roundSGD(qty * price);
+      }
+
+      if (transaction.qty !== undefined || transaction.modal_satuan_idr !== undefined) {
+        const qty = transaction.qty ?? existing.qty;
+        const modalSatuan = transaction.modal_satuan_idr ?? existing.modal_satuan_idr;
+        if (modalSatuan) {
+          modal_total_idr = this.roundIDR(qty * modalSatuan);
+        }
+      }
+
+      // Build update query dynamically
+      const updateFields: string[] = [];
+      const values: any[] = [];
+
+      if (transaction.tanggal !== undefined) {
+        updateFields.push('tanggal = ?');
+        values.push(transaction.tanggal);
+      }
+      if (transaction.sku !== undefined) {
+        updateFields.push('sku = ?');
+        values.push(transaction.sku);
+      }
+      if (transaction.qty !== undefined) {
+        updateFields.push('qty = ?');
+        values.push(transaction.qty);
+      }
+      if (transaction.modal_satuan_idr !== undefined) {
+        updateFields.push('modal_satuan_idr = ?');
+        values.push(transaction.modal_satuan_idr);
+      }
+      if (modal_total_idr !== existing.modal_total_idr) {
+        updateFields.push('modal_total_idr = ?');
+        values.push(modal_total_idr);
+      }
+      if (transaction.harga_jual_sgd !== undefined) {
+        updateFields.push('harga_jual_sgd = ?');
+        values.push(transaction.harga_jual_sgd);
+      }
+      if (pendapatan_sgd !== existing.pendapatan_sgd) {
+        updateFields.push('pendapatan_sgd = ?');
+        values.push(pendapatan_sgd);
+      }
+      if (transaction.pelanggan !== undefined) {
+        updateFields.push('pelanggan = ?');
+        values.push(transaction.pelanggan);
+      }
+      if (transaction.metode_bayar !== undefined) {
+        updateFields.push('metode_bayar = ?');
+        values.push(transaction.metode_bayar);
+      }
+      if (transaction.catatan !== undefined) {
+        updateFields.push('catatan = ?');
+        values.push(transaction.catatan);
+      }
+
+      if (updateFields.length === 0) {
+        return { success: false, error: 'No fields to update' };
+      }
+
+      const query = `UPDATE transactions SET ${updateFields.join(', ')} WHERE id = ?`;
+      values.push(id);
+
+      const stmt = this.db.prepare(query);
+      const result = stmt.run(...values);
+
+      if (result.changes > 0) {
+        return { 
+          success: true, 
+          message: 'Transaction updated successfully',
+          data: { id, updated: true }
+        };
+      } else {
+        return { success: false, error: 'Failed to update transaction' };
+      }
+
+    } catch (error) {
+      console.error('Error updating transaction:', error);
+      return { success: false, error: 'Failed to update transaction' };
+    }
+  }
+
+  async deleteTransaction(id: number): Promise<ApiResponse> {
+    try {
+      // Check if transaction exists
+      const existing = await this.getTransactionById(id);
+      if (!existing) {
+        return { success: false, error: 'Transaction not found' };
+      }
+
+      const stmt = this.db.prepare('DELETE FROM transactions WHERE id = ?');
+      const result = stmt.run(id);
+
+      if (result.changes > 0) {
+        return { 
+          success: true, 
+          message: 'Transaction deleted successfully',
+          data: { id, deleted: true }
+        };
+      } else {
+        return { success: false, error: 'Failed to delete transaction' };
+      }
+
+    } catch (error) {
+      console.error('Error deleting transaction:', error);
+      return { success: false, error: 'Failed to delete transaction' };
+    }
+  }
+
   // REPORTING
   async generateMonthlyReport(ym: string): Promise<ApiResponse<{ report: MonthlyReport, summary: string }>> {
     try {

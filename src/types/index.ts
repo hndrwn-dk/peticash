@@ -10,6 +10,7 @@ export interface Product {
 
 // Transaction Types
 export interface Transaction {
+  id?: number;
   tanggal: string; // YYYY-MM-DD
   sku: string;
   qty: number;
