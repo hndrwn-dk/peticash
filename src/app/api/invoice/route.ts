@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       const invoiceData = {
         customer,
         transactions,
-        totalAmount: transactions.reduce((sum: number, tx: any) => sum + (tx.pendapatan_sgd || 0), 0),
+        totalAmount: transactions.reduce((sum: number, tx: any) => sum + Number(tx.pendapatan_sgd || 0), 0),
         generatedAt: new Date().toISOString()
       };
 
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const totalRevenue = transactions.reduce((sum: number, tx: any) => sum + (tx.pendapatan_sgd || 0), 0);
+      const totalRevenue = transactions.reduce((sum: number, tx: any) => sum + Number(tx.pendapatan_sgd || 0), 0);
       console.log(`💰 Total revenue calculation:`, {
         totalRevenue,
         individualRevenues: transactions.map((tx: any) => ({
