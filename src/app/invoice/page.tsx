@@ -32,8 +32,10 @@ export default function InvoicePage() {
   }>({ isOpen: false, title: '', message: '', type: 'info' });
 
   useEffect(() => {
-    // Set a default period with sample data, but allow user to change it
-    setPeriod('2024-10');
+    // Set current month as default for financial reports
+    const now = new Date();
+    const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    setPeriod(currentMonth);
     
     // Fetch customers from transactions
     fetchCustomers();
@@ -443,7 +445,7 @@ export default function InvoicePage() {
                   required
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  Sample data available for: 2024-07, 2024-08, 2024-09, 2024-10
+                  Current month: {period} | Select any month to view financial data
                 </p>
               </div>
             )}
