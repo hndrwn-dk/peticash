@@ -7,12 +7,13 @@ import {
   PointElement,
   LineElement,
   BarElement,
+  ArcElement,
   Title,
   Tooltip,
   Legend,
   Filler,
 } from 'chart.js';
-import { Line, Bar } from 'react-chartjs-2';
+import { Line, Bar, Pie } from 'react-chartjs-2';
 
 ChartJS.register(
   CategoryScale,
@@ -20,6 +21,7 @@ ChartJS.register(
   PointElement,
   LineElement,
   BarElement,
+  ArcElement,
   Title,
   Tooltip,
   Legend,
@@ -43,7 +45,7 @@ interface ChartData {
 interface ChartProps {
   data: ChartData;
   title: string;
-  type?: 'line' | 'bar';
+  type?: 'line' | 'bar' | 'pie';
   height?: number;
 }
 
@@ -111,7 +113,7 @@ export function DashboardChart({ data, title, type = 'line', height = 280 }: Cha
     },
   };
 
-  const ChartComponent = type === 'bar' ? Bar : Line;
+  const ChartComponent = type === 'bar' ? Bar : type === 'pie' ? Pie : Line;
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-lg hover:shadow-xl transition-all duration-300 backdrop-blur-sm">

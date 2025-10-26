@@ -12,7 +12,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState<any>(null);
   const [chartsLoading, setChartsLoading] = useState(true);
-  const [chartTimeRange, setChartTimeRange] = useState<1 | 3 | 6>(6);
+  const [chartTimeRange, setChartTimeRange] = useState<1 | 3 | 6>(1);
   const [dbStatus, setDbStatus] = useState<any>(null);
   const [alert, setAlert] = useState<{
     isOpen: boolean;
@@ -83,7 +83,12 @@ export default function HomePage() {
 
       // Calculate stats
       const currentMonthRevenue = transactions.reduce((sum, tx) => sum + (Number(tx.pendapatan_sgd) || 0), 0);
-      const currentMonthModal = transactions.reduce((sum, tx) => sum + (Number(tx.modal_total_idr) || 0), 0);
+      
+      // Calculate total modal from all products (not just transactions)
+      const totalModalValue = products.reduce((sum, product) => {
+        const modalValue = Number(product.default_modal_satuan_idr) || 0;
+        return sum + modalValue;
+      }, 0);
 
       // Calculate top products
       const productStats: { [sku: string]: { revenue: number, qty: number, nama: string } } = {};
@@ -115,7 +120,7 @@ export default function HomePage() {
         total_products: products.length,
         current_month_transactions: transactions.length,
         current_month_revenue_sgd: currentMonthRevenue,
-        current_month_modal_idr: currentMonthModal,
+        current_month_modal_idr: totalModalValue,
         recent_transactions: transactions.slice(0, 5),
         top_products: topProducts
       };
@@ -330,14 +335,27 @@ export default function HomePage() {
                     datasets: [{
                       label: 'Pendapatan',
                       data: chartData.revenue,
-                      borderColor: '#10b981',
-                      backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                      fill: true,
-                      tension: 0.4,
+                      backgroundColor: [
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(139, 92, 246, 0.8)',
+                        'rgba(236, 72, 153, 0.8)',
+                      ],
+                      borderColor: [
+                        '#10b981',
+                        '#3b82f6',
+                        '#f59e0b',
+                        '#ef4444',
+                        '#8b5cf6',
+                        '#ec4899',
+                      ],
+                      borderWidth: 2,
                     }]
                   }}
                   title="Pendapatan Bulanan (SGD)"
-                  type="line"
+                  type="pie"
                 />
                 <DashboardChart
                   data={{
@@ -345,14 +363,14 @@ export default function HomePage() {
                     datasets: [{
                       label: 'Modal',
                       data: chartData.modal,
+                      backgroundColor: 'rgba(245, 158, 11, 0.8)',
                       borderColor: '#f59e0b',
-                      backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                      fill: true,
-                      tension: 0.4,
+                      borderWidth: 0,
+                      borderRadius: 8,
                     }]
                   }}
                   title="Modal Bulanan (Ribu IDR)"
-                  type="line"
+                  type="bar"
                 />
               </div>
               <div className="grid grid-cols-1 gap-8 mb-8">

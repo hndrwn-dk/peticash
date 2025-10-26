@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { DashboardIcon, ProductIcon, TransactionIcon, ReportIcon, CashIcon } from './Icons';
+import { DashboardIcon, ProductIcon, TransactionIcon, ReportIcon, CashIcon, InventoryIcon, InvoiceIcon } from './Icons';
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -11,6 +11,8 @@ export default function Navigation() {
     { href: '/', label: 'Dashboard', icon: DashboardIcon },
     { href: '/products', label: 'Produk', icon: ProductIcon },
     { href: '/transactions', label: 'Transaksi', icon: TransactionIcon },
+    { href: '/inventory', label: 'Stock Opname', icon: InventoryIcon },
+    { href: '/invoice', label: 'Invoice', icon: InvoiceIcon },
     { href: '/reports', label: 'Laporan', icon: ReportIcon },
   ];
 
