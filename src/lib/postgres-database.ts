@@ -13,14 +13,17 @@ export class PostgresDatabaseService {
       VERCEL: process.env.VERCEL ? 'present' : 'missing'
     });
     
-    // Don't validate connection during constructor - do it lazily
-    console.log('🐘 PostgreSQL database service created (lazy initialization)');
+    // Don't validate anything during constructor - do it all lazily
+    console.log('🐘 PostgreSQL database service created (fully lazy initialization)');
   }
 
   private async ensureInitialized(): Promise<void> {
     if (!this.initialized) {
       // Check if we have a connection string
       if (!process.env.POSTGRES_URL && !process.env.POSTGRES_PRISMA_URL) {
+        // During build time, environment variables might not be available
+        // This is expected and will be handled at runtime
+        console.log('⚠️ PostgreSQL connection string not available during build - this is expected');
         throw new Error('No PostgreSQL connection string found. Please set POSTGRES_URL or POSTGRES_PRISMA_URL environment variable.');
       }
       
@@ -170,6 +173,11 @@ export class PostgresDatabaseService {
       return result.rows as Product[];
     } catch (error) {
       console.error('Error getting products:', error);
+      // During build time, return empty array instead of throwing
+      if (error instanceof Error && error.message.includes('No PostgreSQL connection string found')) {
+        console.log('📦 Build time - returning empty products array');
+        return [];
+      }
       return [];
     }
   }
@@ -460,6 +468,7 @@ export class PostgresDatabaseService {
 
   async getTransactions(ym: string, limit?: number): Promise<Transaction[]> {
     try {
+      await this.ensureInitialized();
       let query;
       
       if (limit) {
@@ -481,6 +490,11 @@ export class PostgresDatabaseService {
       return result.rows as Transaction[];
     } catch (error) {
       console.error('Error getting transactions:', error);
+      // During build time, return empty array instead of throwing
+      if (error instanceof Error && error.message.includes('No PostgreSQL connection string found')) {
+        console.log('📦 Build time - returning empty transactions array');
+        return [];
+      }
       return [];
     }
   }

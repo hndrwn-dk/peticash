@@ -13,6 +13,14 @@ export function createDatabase() {
     VERCEL: process.env.VERCEL ? 'present' : 'missing'
   });
   
+  // In production/Vercel, always try PostgreSQL first
+  if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+    console.log('🐘 Production environment - forcing PostgreSQL');
+    const postgresService = new PostgresDatabaseService();
+    console.log('✅ PostgreSQL service created successfully');
+    return postgresService;
+  }
+  
   if (hasPostgresUrl) {
     console.log('🐘 Using PostgreSQL database');
     try {
