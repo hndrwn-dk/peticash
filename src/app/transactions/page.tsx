@@ -117,6 +117,92 @@ export default function TransactionsPage() {
     }
   };
 
+  const handlePrintPDF = () => {
+    // Create a printable version of the transactions
+    const printContent = `
+      <html>
+        <head>
+          <title>Transaction Report - ${selectedPeriod}</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            h1 { color: #1f2937; margin-bottom: 10px; }
+            .header { margin-bottom: 30px; border-bottom: 2px solid #e5e7eb; padding-bottom: 20px; }
+            .summary { margin-bottom: 30px; display: flex; gap: 30px; }
+            .summary-item { background: #f9fafb; padding: 15px; border-radius: 8px; }
+            .summary-item h3 { margin: 0 0 5px 0; color: #6b7280; font-size: 14px; }
+            .summary-item p { margin: 0; font-size: 18px; font-weight: bold; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #e5e7eb; padding: 8px; text-align: left; }
+            th { background-color: #f9fafb; font-weight: 600; }
+            .text-right { text-align: right; }
+            @media print { .no-print { display: none; } }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>Transaction Report</h1>
+            <p><strong>Period:</strong> ${selectedPeriod}</p>
+            <p><strong>Generated:</strong> ${new Date().toLocaleString()}</p>
+          </div>
+          
+          <div class="summary">
+            <div class="summary-item">
+              <h3>Total Transactions</h3>
+              <p>${transactions.length}</p>
+            </div>
+            <div class="summary-item">
+              <h3>Total Cost (IDR)</h3>
+              <p>${formatCurrency(transactions.reduce((sum, tx) => sum + (Number(tx.modal_total_idr) || 0), 0), 'IDR')}</p>
+            </div>
+            <div class="summary-item">
+              <h3>Total Revenue (SGD)</h3>
+              <p>${formatCurrency(transactions.reduce((sum, tx) => sum + (Number(tx.pendapatan_sgd) || 0), 0), 'SGD')}</p>
+            </div>
+          </div>
+          
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>SKU</th>
+                <th>Qty</th>
+                <th>Cost (IDR)</th>
+                <th>Revenue (SGD)</th>
+                <th>Customer</th>
+                <th>Payment</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${transactions.map(tx => `
+                <tr>
+                  <td>${tx.tanggal}</td>
+                  <td>${tx.sku}</td>
+                  <td>${tx.qty}</td>
+                  <td>${tx.modal_total_idr ? formatCurrency(tx.modal_total_idr, 'IDR') : '-'}</td>
+                  <td>${tx.pendapatan_sgd ? formatCurrency(tx.pendapatan_sgd, 'SGD') : '-'}</td>
+                  <td>${tx.pelanggan || '-'}</td>
+                  <td>${tx.metode_bayar || '-'}</td>
+                  <td>${tx.status || 'Complete'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </body>
+      </html>
+    `;
+    
+    // Open print dialog
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
+      printWindow.close();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
@@ -128,9 +214,20 @@ export default function TransactionsPage() {
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Transaksi</h1>
             <p className="text-gray-600">Lihat dan kelola transaksi penjualan Anda</p>
           </div>
-          <Link href="/transactions/new" className="btn-primary flex items-center justify-center mt-4 sm:mt-0">
-            Transaksi Baru
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-0">
+            <button
+              onClick={handlePrintPDF}
+              className="btn-secondary flex items-center justify-center"
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+              </svg>
+              Print PDF
+            </button>
+            <Link href="/transactions/new" className="btn-primary flex items-center justify-center">
+              Transaksi Baru
+            </Link>
+          </div>
         </div>
 
         {/* Filters */}
