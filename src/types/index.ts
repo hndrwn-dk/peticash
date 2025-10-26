@@ -14,8 +14,8 @@ export interface Transaction {
   tanggal: string; // YYYY-MM-DD
   sku: string;
   qty: number;
-  modal_satuan_idr?: number;
-  modal_total_idr?: number;
+  modal_satuan_IDR?: number;
+  modal_total_IDR?: number;
   harga_jual_sgd: number;
   pendapatan_sgd?: number;
   fee_rate?: number;

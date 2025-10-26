@@ -278,14 +278,14 @@ export default function TransactionsPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          {transaction.modal_total_idr 
-                            ? formatCurrency(transaction.modal_total_idr, 'IDR')
+                          {transaction.modal_total_IDR 
+                            ? formatCurrency(transaction.modal_total_IDR, 'IDR')
                             : '-'
                           }
                         </div>
-                        {transaction.modal_satuan_idr && (
+                        {transaction.modal_satuan_IDR && (
                           <div className="text-xs text-gray-500">
-                            @ {formatCurrency(transaction.modal_satuan_idr, 'IDR')}
+                            @ {formatCurrency(transaction.modal_satuan_IDR, 'IDR')}
                           </div>
                         )}
                       </td>
@@ -348,7 +348,7 @@ export default function TransactionsPage() {
               <div className="text-sm font-medium text-gray-600">Total Cost (IDR)</div>
               <div className="text-2xl font-bold text-gray-900">
                 {formatCurrency(
-                  transactions.reduce((sum, tx) => sum + (Number(tx.modal_total_idr) || 0), 0),
+                  transactions.reduce((sum, tx) => sum + (Number(tx.modal_total_IDR) || 0), 0),
                   'IDR'
                 )}
               </div>

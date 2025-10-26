@@ -299,7 +299,7 @@ export default function InvoicePage() {
                   <td class="text-center">${tx.qty}</td>
                   <td class="text-right">$${Number(tx.harga_jual_sgd || 0).toFixed(2)}</td>
                   <td class="text-right">$${Number(tx.pendapatan_sgd || 0).toFixed(2)}</td>
-                  ${invoiceType === 'financial' ? `<td class="text-right">Rp ${Number((tx.modal_satuan_idr || 0) * (tx.qty || 0)).toLocaleString('id-ID')}</td>` : ''}
+                  ${invoiceType === 'financial' ? `<td class="text-right">Rp ${Number(tx.modal_total_IDR || 0).toLocaleString('id-ID')}</td>` : ''}
                   ${invoiceType === 'customer' ? `<td>${tx.metode_bayar || '-'}</td>` : ''}
                 </tr>
               `).join('')}
@@ -566,7 +566,7 @@ export default function InvoicePage() {
                         </td>
                         {invoiceType === 'financial' && (
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
-                            {formatCurrency((tx.modal_satuan_idr || 0) * (tx.qty || 0), 'IDR')}
+                            {formatCurrency(tx.modal_total_IDR || 0, 'IDR')}
                           </td>
                         )}
                         {invoiceType === 'customer' && (
