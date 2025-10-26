@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
       data: {
         total_products: products.length,
         current_month_transactions: transactions.length,
-        products: products.map(p => ({ sku: p.sku, nama: p.nama })),
+        products: products.map((p: any) => ({ sku: p.sku, nama: p.nama })),
         sample_transactions: transactions.slice(0, 3)
       }
     });

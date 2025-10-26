@@ -28,8 +28,8 @@ export async function POST(request: NextRequest) {
       const invoiceData = {
         customer,
         transactions,
-        totalAmount: transactions.reduce((sum, tx) => sum + (tx.pendapatan_sgd || 0), 0),
-        totalCost: transactions.reduce((sum, tx) => sum + (tx.modal_total_idr || 0), 0),
+        totalAmount: transactions.reduce((sum: number, tx: any) => sum + (tx.pendapatan_sgd || 0), 0),
+        totalCost: transactions.reduce((sum: number, tx: any) => sum + (tx.modal_total_idr || 0), 0),
         generatedAt: new Date().toISOString()
       };
 
@@ -59,8 +59,8 @@ export async function POST(request: NextRequest) {
       const reportData = {
         period,
         transactions,
-        totalRevenue: transactions.reduce((sum, tx) => sum + (tx.pendapatan_sgd || 0), 0),
-        totalCost: transactions.reduce((sum, tx) => sum + (tx.modal_total_idr || 0), 0),
+        totalRevenue: transactions.reduce((sum: number, tx: any) => sum + (tx.pendapatan_sgd || 0), 0),
+        totalCost: transactions.reduce((sum: number, tx: any) => sum + (tx.modal_total_idr || 0), 0),
         totalTransactions: transactions.length,
         generatedAt: new Date().toISOString()
       };

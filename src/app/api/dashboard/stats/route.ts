@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
         let monthlyModal = 0;
         let transactionCount = transactions.length;
         
-        transactions.forEach(tx => {
+        transactions.forEach((tx: any) => {
           if (tx.pendapatan_sgd) monthlyRevenue += tx.pendapatan_sgd;
           if (tx.modal_total_idr) monthlyModal += tx.modal_total_idr;
         });
