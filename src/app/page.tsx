@@ -82,8 +82,8 @@ export default function HomePage() {
       const transactions: Transaction[] = transactionsData.success ? transactionsData.data : [];
 
       // Calculate stats
-      const currentMonthRevenue = transactions.reduce((sum, tx) => sum + (tx.pendapatan_sgd || 0), 0);
-      const currentMonthModal = transactions.reduce((sum, tx) => sum + (tx.modal_total_idr || 0), 0);
+      const currentMonthRevenue = transactions.reduce((sum, tx) => sum + (Number(tx.pendapatan_sgd) || 0), 0);
+      const currentMonthModal = transactions.reduce((sum, tx) => sum + (Number(tx.modal_total_idr) || 0), 0);
 
       // Calculate top products
       const productStats: { [sku: string]: { revenue: number, qty: number, nama: string } } = {};
@@ -97,7 +97,7 @@ export default function HomePage() {
             nama: product?.nama || tx.sku
           };
         }
-        productStats[tx.sku].revenue += tx.pendapatan_sgd || 0;
+        productStats[tx.sku].revenue += Number(tx.pendapatan_sgd) || 0;
         productStats[tx.sku].qty += tx.qty;
       });
 
@@ -233,7 +233,7 @@ export default function HomePage() {
               <div>
                 <p className="text-sm font-medium text-gray-500 mb-1">Pendapatan (SGD)</p>
                 <p className="text-3xl font-bold text-gray-900">
-                  ${(stats?.current_month_revenue_sgd || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  ${Number(stats?.current_month_revenue_sgd || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                 </p>
               </div>
               <div className="w-12 h-12 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl flex items-center justify-center shadow-sm">
@@ -247,7 +247,7 @@ export default function HomePage() {
               <div>
                 <p className="text-sm font-medium text-gray-500 mb-1">Modal (IDR)</p>
                 <p className="text-3xl font-bold text-gray-900">
-                  Rp {(stats?.current_month_modal_idr || 0).toLocaleString('id-ID')}
+                  Rp {Number(stats?.current_month_modal_idr || 0).toLocaleString('id-ID')}
                 </p>
               </div>
               <div className="w-12 h-12 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl flex items-center justify-center shadow-sm">
