@@ -79,6 +79,21 @@ export class DatabaseService {
       )
     `);
 
+    // Create inventory table for stock opname
+    this.db.exec(`
+      CREATE TABLE IF NOT EXISTS inventory (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        sku TEXT NOT NULL,
+        store_location TEXT NOT NULL,
+        current_stock INTEGER DEFAULT 0,
+        last_counted_date DATE,
+        notes TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (sku) REFERENCES products (sku)
+      )
+    `);
+
     // Create indexes for better performance
     this.db.exec(`
       CREATE INDEX IF NOT EXISTS idx_products_nama ON products (nama);
@@ -87,6 +102,8 @@ export class DatabaseService {
       CREATE INDEX IF NOT EXISTS idx_transactions_tanggal ON transactions (tanggal);
       CREATE INDEX IF NOT EXISTS idx_transactions_sku ON transactions (sku);
       CREATE INDEX IF NOT EXISTS idx_transactions_periode ON transactions (substr(tanggal, 1, 7));
+      CREATE INDEX IF NOT EXISTS idx_inventory_sku ON inventory (sku);
+      CREATE INDEX IF NOT EXISTS idx_inventory_location ON inventory (store_location);
     `);
   }
 
@@ -861,6 +878,128 @@ export class DatabaseService {
     } catch (error) {
       console.error('Error generating report:', error);
       return { success: false, error: 'Gagal generate rekap' };
+    }
+  }
+
+  // INVENTORY MANAGEMENT
+  async getInventory(): Promise<any[]> {
+    try {
+      const query = `
+        SELECT 
+          i.*,
+          p.nama as product_name,
+          p.kategori,
+          p.default_modal_satuan_idr
+        FROM inventory i
+        LEFT JOIN products p ON i.sku = p.sku
+        ORDER BY i.store_location, p.nama
+      `;
+      
+      const stmt = this.db.prepare(query);
+      const inventory = stmt.all() as any[];
+      
+      return inventory;
+    } catch (error) {
+      console.error('Error getting inventory:', error);
+      return [];
+    }
+  }
+
+  async updateInventory(sku: string, storeLocation: string, currentStock: number, notes?: string): Promise<ApiResponse> {
+    try {
+      if (!sku || !storeLocation) {
+        return { success: false, error: 'SKU dan lokasi toko wajib diisi' };
+      }
+
+      // Check if inventory record exists
+      const checkStmt = this.db.prepare('SELECT id FROM inventory WHERE sku = ? AND store_location = ?');
+      const existing = checkStmt.get(sku, storeLocation);
+
+      if (existing) {
+        // Update existing record
+        const updateStmt = this.db.prepare(`
+          UPDATE inventory 
+          SET current_stock = ?, last_counted_date = CURRENT_DATE, notes = ?, updated_at = CURRENT_TIMESTAMP
+          WHERE sku = ? AND store_location = ?
+        `);
+        
+        const result = updateStmt.run(currentStock, notes || '', sku, storeLocation);
+        
+        if (result.changes > 0) {
+          return { 
+            success: true, 
+            message: 'Stok berhasil diperbarui',
+            data: { sku, store_location: storeLocation, current_stock: currentStock }
+          };
+        } else {
+          return { success: false, error: 'Gagal memperbarui stok' };
+        }
+      } else {
+        // Insert new record
+        const insertStmt = this.db.prepare(`
+          INSERT INTO inventory (sku, store_location, current_stock, last_counted_date, notes)
+          VALUES (?, ?, ?, CURRENT_DATE, ?)
+        `);
+        
+        const result = insertStmt.run(sku, storeLocation, currentStock, notes || '');
+        
+        if (result.changes > 0) {
+          return { 
+            success: true, 
+            message: 'Stok berhasil ditambahkan',
+            data: { sku, store_location: storeLocation, current_stock: currentStock }
+          };
+        } else {
+          return { success: false, error: 'Gagal menambahkan stok' };
+        }
+      }
+    } catch (error) {
+      console.error('Error updating inventory:', error);
+      return { success: false, error: 'Gagal menyimpan stok' };
+    }
+  }
+
+  async getInventoryByLocation(storeLocation: string): Promise<any[]> {
+    try {
+      const query = `
+        SELECT 
+          i.*,
+          p.nama as product_name,
+          p.kategori,
+          p.default_modal_satuan_idr
+        FROM inventory i
+        LEFT JOIN products p ON i.sku = p.sku
+        WHERE i.store_location = ?
+        ORDER BY p.nama
+      `;
+      
+      const stmt = this.db.prepare(query);
+      const inventory = stmt.all(storeLocation) as any[];
+      
+      return inventory;
+    } catch (error) {
+      console.error('Error getting inventory by location:', error);
+      return [];
+    }
+  }
+
+  async getTransactionsByCustomer(customer: string): Promise<Transaction[]> {
+    try {
+      const query = `
+        SELECT t.*, p.nama as product_name
+        FROM transactions t
+        LEFT JOIN products p ON t.sku = p.sku
+        WHERE t.pelanggan = ?
+        ORDER BY t.tanggal DESC
+      `;
+      
+      const stmt = this.db.prepare(query);
+      const transactions = stmt.all(customer) as Transaction[];
+      
+      return transactions;
+    } catch (error) {
+      console.error('Error getting transactions by customer:', error);
+      return [];
     }
   }
 

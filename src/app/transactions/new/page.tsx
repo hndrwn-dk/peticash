@@ -46,6 +46,13 @@ export default function NewTransactionPage() {
     return (qty * price).toFixed(2);
   };
 
+  // Calculate total cost
+  const calculateTotalCost = () => {
+    const qty = parseFloat(formData.qty) || 0;
+    const cost = parseFloat(formData.modal_satuan_idr) || 0;
+    return (qty * cost).toLocaleString('id-ID');
+  };
+
   useEffect(() => {
     loadProducts();
   }, []);
@@ -140,6 +147,7 @@ export default function NewTransactionPage() {
         tanggal: formData.tanggal,
         sku: formData.sku,
         qty: parseInt(formData.qty),
+        modal_satuan_idr: formData.modal_satuan_idr ? parseInt(formData.modal_satuan_idr) : undefined,
         harga_jual_sgd: parseFloat(formData.harga_jual_sgd),
         // Use default values for removed fields
         fee_rate: 2.9,
@@ -299,7 +307,7 @@ export default function NewTransactionPage() {
 
             {/* Pricing */}
             <div className="border-b border-gray-100 pb-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">Harga</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">Harga & Biaya</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -325,9 +333,37 @@ export default function NewTransactionPage() {
                     Harga Total (SGD)
                   </label>
                   <div className="input-field bg-gray-50 text-gray-600 font-medium">
-                    {calculateTotalPrice()}
+                    ${calculateTotalPrice()}
                   </div>
                   <p className="text-xs text-gray-500 mt-1">Kuantitas × Harga Jual</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div>
+                  <label htmlFor="modal_satuan_idr" className="block text-sm font-medium text-gray-700 mb-2">
+                    Biaya Satuan (IDR)
+                  </label>
+                  <input
+                    type="number"
+                    id="modal_satuan_idr"
+                    name="modal_satuan_idr"
+                    value={formData.modal_satuan_idr}
+                    onChange={handleInputChange}
+                    className="input-field"
+                    placeholder="45000"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Otomatis terisi dari produk</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Biaya Total (IDR)
+                  </label>
+                  <div className="input-field bg-gray-50 text-gray-600 font-medium">
+                    Rp {calculateTotalCost()}
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">Kuantitas × Biaya Satuan</p>
                 </div>
               </div>
             </div>
