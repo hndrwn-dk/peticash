@@ -269,6 +269,12 @@ export default function InvoicePage() {
               <h3>Total ${invoiceType === 'customer' ? 'Items' : 'Transactions'}</h3>
               <p>${invoiceType === 'customer' ? invoiceData.transactions.length : invoiceData.totalTransactions || 0}</p>
             </div>
+            ${invoiceType === 'financial' ? `
+            <div class="summary-item">
+              <h3>Total Quantity</h3>
+              <p>${invoiceData.transactions?.reduce((sum: number, tx: any) => sum + (tx.qty || 0), 0) || 0}</p>
+            </div>
+            ` : ''}
           </div>
           
           <table>
@@ -494,6 +500,16 @@ export default function InvoicePage() {
                     {invoiceType === 'customer' ? invoiceData.transactions.length : invoiceData.totalTransactions || 0}
                   </div>
                 </div>
+                {invoiceType === 'financial' && (
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="text-sm font-medium text-gray-600">
+                      Total Quantity
+                    </div>
+                    <div className="text-2xl font-bold text-gray-900">
+                      {invoiceData.transactions?.reduce((sum: number, tx: any) => sum + (tx.qty || 0), 0) || 0}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="overflow-x-auto">
