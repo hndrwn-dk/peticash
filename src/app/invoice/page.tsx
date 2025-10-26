@@ -32,6 +32,9 @@ export default function InvoicePage() {
   }>({ isOpen: false, title: '', message: '', type: 'info' });
 
   useEffect(() => {
+    // Set a default period with sample data, but allow user to change it
+    setPeriod('2024-10');
+    
     // Fetch customers from transactions
     fetchCustomers();
   }, []);
