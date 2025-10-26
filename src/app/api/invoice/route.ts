@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
         customer,
         transactions,
         totalAmount: transactions.reduce((sum: number, tx: any) => sum + (tx.pendapatan_sgd || 0), 0),
-        totalCost: transactions.reduce((sum: number, tx: any) => sum + (tx.modal_total_idr || 0), 0),
+        totalCost: transactions.reduce((sum: number, tx: any) => sum + ((tx.modal_satuan_idr || 0) * (tx.qty || 0)), 0),
         generatedAt: new Date().toISOString()
       };
 
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
         period,
         transactions,
         totalRevenue: transactions.reduce((sum: number, tx: any) => sum + (tx.pendapatan_sgd || 0), 0),
-        totalCost: transactions.reduce((sum: number, tx: any) => sum + (tx.modal_total_idr || 0), 0),
+        totalCost: transactions.reduce((sum: number, tx: any) => sum + ((tx.modal_satuan_idr || 0) * (tx.qty || 0)), 0),
         totalTransactions: transactions.length,
         generatedAt: new Date().toISOString()
       };
