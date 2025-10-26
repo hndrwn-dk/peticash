@@ -335,22 +335,8 @@ export default function HomePage() {
                     datasets: [{
                       label: 'Pendapatan',
                       data: chartData.revenue,
-                      backgroundColor: [
-                        'rgba(16, 185, 129, 0.8)',
-                        'rgba(59, 130, 246, 0.8)',
-                        'rgba(245, 158, 11, 0.8)',
-                        'rgba(239, 68, 68, 0.8)',
-                        'rgba(139, 92, 246, 0.8)',
-                        'rgba(236, 72, 153, 0.8)',
-                      ],
-                      borderColor: [
-                        '#10b981',
-                        '#3b82f6',
-                        '#f59e0b',
-                        '#ef4444',
-                        '#8b5cf6',
-                        '#ec4899',
-                      ],
+                      backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                      borderColor: '#10b981',
                       borderWidth: 2,
                     }]
                   }}
