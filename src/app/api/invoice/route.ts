@@ -47,6 +47,10 @@ export async function POST(request: NextRequest) {
       }
 
       const transactions = await database.getTransactions(period);
+      console.log(`🔍 Financial report for period ${period}:`, {
+        transactionCount: transactions.length,
+        sampleTransaction: transactions[0] || 'No transactions'
+      });
       
       if (transactions.length === 0) {
         return NextResponse.json(
@@ -55,10 +59,16 @@ export async function POST(request: NextRequest) {
         );
       }
 
+      const totalRevenue = transactions.reduce((sum: number, tx: any) => sum + (tx.pendapatan_sgd || 0), 0);
+      console.log(`💰 Total revenue calculation:`, {
+        totalRevenue,
+        transactionRevenues: transactions.map((tx: any) => ({ sku: tx.sku, pendapatan_sgd: tx.pendapatan_sgd }))
+      });
+
       const reportData = {
         period,
         transactions,
-        totalRevenue: transactions.reduce((sum: number, tx: any) => sum + (tx.pendapatan_sgd || 0), 0),
+        totalRevenue,
         totalTransactions: transactions.length,
         generatedAt: new Date().toISOString()
       };
