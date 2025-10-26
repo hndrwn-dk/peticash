@@ -362,8 +362,8 @@ export class PostgresDatabaseService {
         return { success: false, error: 'Qty harus > 0', data: { status: 'invalid' } };
       }
 
-      if (!transaction.harga_jual_SGD || transaction.harga_jual_SGD <= 0) {
-        console.error('❌ Invalid price:', transaction.harga_jual_SGD);
+      if (!transaction.harga_jual_sgd || transaction.harga_jual_sgd <= 0) {
+        console.error('❌ Invalid price:', transaction.harga_jual_sgd);
         return { success: false, error: 'Harga jual SGD wajib diisi dan > 0' };
       }
 
@@ -372,22 +372,22 @@ export class PostgresDatabaseService {
       // Calculate derived fields
       let status: 'complete' | 'incomplete' | 'invalid' = 'complete';
       
-      // Calculate modal_total_IDR if not provided
-      let modalTotalIDR = transaction.modal_total_IDR;
-      if (!modalTotalIDR && transaction.modal_satuan_IDR) {
-        modalTotalIDR = this.roundIDR(transaction.qty * transaction.modal_satuan_IDR);
+      // Calculate modal_total_idr if not provided
+      let modalTotalIDR = transaction.modal_total_idr;
+      if (!modalTotalIDR && transaction.modal_satuan_idr) {
+        modalTotalIDR = this.roundIDR(transaction.qty * transaction.modal_satuan_idr);
       } else if (modalTotalIDR) {
         modalTotalIDR = this.roundIDR(modalTotalIDR);
       }
 
-      const modalSatuanIDR = transaction.modal_satuan_IDR ? this.roundIDR(transaction.modal_satuan_IDR) : null;
+      const modalSatuanIDR = transaction.modal_satuan_idr ? this.roundIDR(transaction.modal_satuan_idr) : null;
 
-      // Calculate pendapatan_SGD
-      const pendapatanSGD = this.roundSGD(transaction.qty * transaction.harga_jual_SGD);
+      // Calculate pendapatan_sgd
+      const pendapatanSGD = this.roundSGD(transaction.qty * transaction.harga_jual_sgd);
 
       // Calculate biaya_transaksi_SGD
       const feeRate = (transaction.fee_rate || 0) / 100;
-      const feeFlatSGD = transaction.fee_flat_SGD || 0;
+      const feeFlatSGD = transaction.fee_flat_sgd || 0;
       const biayaTransaksiSGD = this.roundSGD((feeRate * pendapatanSGD) + feeFlatSGD);
 
       // Calculate GST
@@ -405,9 +405,9 @@ export class PostgresDatabaseService {
           GST_SGD, pelanggan, metode_bayar, catatan, status
         ) VALUES (
           ${transaction.tanggal}, ${transaction.sku}, ${transaction.qty}, 
-          ${modalSatuanIDR}, ${modalTotalIDR}, ${this.roundSGD(transaction.harga_jual_SGD)}, 
+          ${modalSatuanIDR}, ${modalTotalIDR}, ${this.roundSGD(transaction.harga_jual_sgd)}, 
           ${pendapatanSGD}, ${transaction.fee_rate || 0}, ${feeFlatSGD || 0},
-          ${biayaTransaksiSGD || 0}, ${this.roundSGD(transaction.biaya_lain_SGD || 0)}, 
+          ${biayaTransaksiSGD || 0}, ${this.roundSGD(transaction.biaya_lain_sgd || 0)}, 
           ${applyGST}, ${gstRate || 0}, ${gstSGD || 0}, 
           ${transaction.pelanggan || ''}, ${transaction.metode_bayar || ''}, 
           ${(transaction.catatan || '').replace(/\n/g, ' ').trim()}, ${status}
@@ -477,18 +477,18 @@ export class PostgresDatabaseService {
       const productSummary: { [sku: string]: { qty: number, pendapatan: number, modal: number } } = {};
 
       transactions.forEach(tx => {
-        totalPendapatanSGD += tx.pendapatan_SGD || 0;
-        totalModalIDR += tx.modal_total_IDR || 0;
-        totalBiayaTransaksiSGD += tx.biaya_transaksi_SGD || 0;
-        totalBiayaLainSGD += tx.biaya_lain_SGD || 0;
-        totalGSTSGD += tx.GST_SGD || 0;
+        totalPendapatanSGD += tx.pendapatan_sgd || 0;
+        totalModalIDR += tx.modal_total_idr || 0;
+        totalBiayaTransaksiSGD += tx.biaya_transaksi_sgd || 0;
+        totalBiayaLainSGD += tx.biaya_lain_sgd || 0;
+        totalGSTSGD += tx.gst_sgd || 0;
 
         if (!productSummary[tx.sku]) {
           productSummary[tx.sku] = { qty: 0, pendapatan: 0, modal: 0 };
         }
         productSummary[tx.sku].qty += tx.qty;
-        productSummary[tx.sku].pendapatan += tx.pendapatan_SGD || 0;
-        productSummary[tx.sku].modal += tx.modal_total_IDR || 0;
+        productSummary[tx.sku].pendapatan += tx.pendapatan_sgd || 0;
+        productSummary[tx.sku].modal += tx.modal_total_idr || 0;
       });
 
       // Find top SKU by revenue
@@ -497,11 +497,11 @@ export class PostgresDatabaseService {
 
       const report: MonthlyReport = {
         periode: ym,
-        total_modal_IDR: this.roundIDR(totalModalIDR),
-        total_penjualan_SGD: this.roundSGD(totalPendapatanSGD),
-        total_biaya_transaksi_SGD: this.roundSGD(totalBiayaTransaksiSGD),
-        total_biaya_lain_SGD: this.roundSGD(totalBiayaLainSGD),
-        total_GST_SGD: this.roundSGD(totalGSTSGD),
+        total_modal_idr: this.roundIDR(totalModalIDR),
+        total_penjualan_sgd: this.roundSGD(totalPendapatanSGD),
+        total_biaya_transaksi_sgd: this.roundSGD(totalBiayaTransaksiSGD),
+        total_biaya_lain_sgd: this.roundSGD(totalBiayaLainSGD),
+        total_gst_sgd: this.roundSGD(totalGSTSGD),
         transaksi_lengkap: transactions.filter(tx => tx.status === 'complete').length,
         transaksi_incomplete: transactions.filter(tx => tx.status === 'incomplete').length,
         top_sku_by_revenue: topSku ? topSku[0] : ''

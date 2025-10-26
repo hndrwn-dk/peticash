@@ -118,7 +118,7 @@ export default function ReportsPage() {
                   <div>
                     <p className="text-sm font-medium text-gray-500 mb-1">Total Modal</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      {formatCurrency(report.total_modal_IDR, 'IDR')}
+                      {formatCurrency(report.total_modal_idr, 'IDR')}
                     </p>
                   </div>
                   <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center">
@@ -132,7 +132,7 @@ export default function ReportsPage() {
                   <div>
                     <p className="text-sm font-medium text-gray-500 mb-1">Total Penjualan</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      {formatCurrency(report.total_penjualan_SGD, 'SGD')}
+                      {formatCurrency(report.total_penjualan_sgd, 'SGD')}
                     </p>
                   </div>
                   <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
@@ -165,31 +165,31 @@ export default function ReportsPage() {
                   <div className="flex justify-between items-center py-3 border-b border-gray-100">
                     <span className="font-medium text-gray-700">Total Modal (IDR)</span>
                     <span className="font-semibold text-gray-900">
-                      {formatCurrency(report.total_modal_IDR, 'IDR')}
+                      {formatCurrency(report.total_modal_idr, 'IDR')}
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-3 border-b border-gray-100">
                     <span className="font-medium text-gray-700">Total Penjualan (SGD)</span>
                     <span className="font-semibold text-gray-900">
-                      {formatCurrency(report.total_penjualan_SGD, 'SGD')}
+                      {formatCurrency(report.total_penjualan_sgd, 'SGD')}
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-3 border-b border-gray-100">
                     <span className="font-medium text-gray-700">Biaya Transaksi (SGD)</span>
                     <span className="font-semibold text-gray-900">
-                      {formatCurrency(report.total_biaya_transaksi_SGD, 'SGD')}
+                      {formatCurrency(report.total_biaya_transaksi_sgd, 'SGD')}
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-3 border-b border-gray-100">
                     <span className="font-medium text-gray-700">Biaya Lain (SGD)</span>
                     <span className="font-semibold text-gray-900">
-                      {formatCurrency(report.total_biaya_lain_SGD, 'SGD')}
+                      {formatCurrency(report.total_biaya_lain_sgd, 'SGD')}
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-3">
                     <span className="font-medium text-gray-700">GST (SGD)</span>
                     <span className="font-semibold text-gray-900">
-                      {formatCurrency(report.total_GST_SGD, 'SGD')}
+                      {formatCurrency(report.total_gst_sgd, 'SGD')}
                     </span>
                   </div>
                 </div>

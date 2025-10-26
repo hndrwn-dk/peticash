@@ -58,67 +58,67 @@ export async function POST(request: NextRequest) {
     // Now add comprehensive transaction data
     const sampleTransactions = [
       // October 2024 transactions
-      { tanggal: '2024-10-01', sku: 'KOPI-ARABICA-250G', qty: 2, modal_satuan_IDR: 45000, harga_jual_SGD: 7.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-10-02', sku: 'TEH-MATCHA-100G', qty: 1, modal_satuan_IDR: 33000, harga_jual_SGD: 8.5, pelanggan: 'Sarah Lim', metode_bayar: 'Kartu' },
-      { tanggal: '2024-10-03', sku: 'COKLAT-DARK-200G', qty: 3, modal_satuan_IDR: 28000, harga_jual_SGD: 6.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-10-04', sku: 'KOPI-ROBUSTA-250G', qty: 1, modal_satuan_IDR: 38000, harga_jual_SGD: 7.2, pelanggan: 'John Tan', metode_bayar: 'E-Wallet' },
-      { tanggal: '2024-10-05', sku: 'TEH-EARL-GREY-100G', qty: 2, modal_satuan_IDR: 25000, harga_jual_SGD: 5.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-10-01', sku: 'KOPI-ARABICA-250G', qty: 2, modal_satuan_idr: 45000, harga_jual_sgd: 7.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-10-02', sku: 'TEH-MATCHA-100G', qty: 1, modal_satuan_idr: 33000, harga_jual_sgd: 8.5, pelanggan: 'Sarah Lim', metode_bayar: 'Kartu' },
+      { tanggal: '2024-10-03', sku: 'COKLAT-DARK-200G', qty: 3, modal_satuan_idr: 28000, harga_jual_sgd: 6.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-10-04', sku: 'KOPI-ROBUSTA-250G', qty: 1, modal_satuan_idr: 38000, harga_jual_sgd: 7.2, pelanggan: 'John Tan', metode_bayar: 'E-Wallet' },
+      { tanggal: '2024-10-05', sku: 'TEH-EARL-GREY-100G', qty: 2, modal_satuan_idr: 25000, harga_jual_sgd: 5.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
       
       // More October transactions
-      { tanggal: '2024-10-08', sku: 'KOPI-ARABICA-250G', qty: 1, modal_satuan_IDR: 45000, harga_jual_SGD: 7.9, pelanggan: 'Maria Santos', metode_bayar: 'Transfer' },
-      { tanggal: '2024-10-09', sku: 'TEH-MATCHA-100G', qty: 2, modal_satuan_IDR: 33000, harga_jual_SGD: 8.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-10-10', sku: 'COKLAT-DARK-200G', qty: 1, modal_satuan_IDR: 28000, harga_jual_SGD: 6.5, pelanggan: 'David Wong', metode_bayar: 'Kartu' },
-      { tanggal: '2024-10-12', sku: 'KOPI-ROBUSTA-250G', qty: 3, modal_satuan_IDR: 38000, harga_jual_SGD: 7.2, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-10-15', sku: 'TEH-EARL-GREY-100G', qty: 1, modal_satuan_IDR: 25000, harga_jual_SGD: 5.9, pelanggan: 'Lisa Chen', metode_bayar: 'E-Wallet' },
+      { tanggal: '2024-10-08', sku: 'KOPI-ARABICA-250G', qty: 1, modal_satuan_idr: 45000, harga_jual_sgd: 7.9, pelanggan: 'Maria Santos', metode_bayar: 'Transfer' },
+      { tanggal: '2024-10-09', sku: 'TEH-MATCHA-100G', qty: 2, modal_satuan_idr: 33000, harga_jual_sgd: 8.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-10-10', sku: 'COKLAT-DARK-200G', qty: 1, modal_satuan_idr: 28000, harga_jual_sgd: 6.5, pelanggan: 'David Wong', metode_bayar: 'Kartu' },
+      { tanggal: '2024-10-12', sku: 'KOPI-ROBUSTA-250G', qty: 3, modal_satuan_idr: 38000, harga_jual_sgd: 7.2, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-10-15', sku: 'TEH-EARL-GREY-100G', qty: 1, modal_satuan_idr: 25000, harga_jual_sgd: 5.9, pelanggan: 'Lisa Chen', metode_bayar: 'E-Wallet' },
       
       // September 2024 transactions
-      { tanggal: '2024-09-05', sku: 'KOPI-ARABICA-250G', qty: 2, modal_satuan_IDR: 45000, harga_jual_SGD: 7.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-09-10', sku: 'TEH-MATCHA-100G', qty: 1, modal_satuan_IDR: 33000, harga_jual_SGD: 8.5, pelanggan: 'Amy Loh', metode_bayar: 'Kartu' },
-      { tanggal: '2024-09-15', sku: 'COKLAT-DARK-200G', qty: 2, modal_satuan_IDR: 28000, harga_jual_SGD: 6.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-09-20', sku: 'KOPI-ROBUSTA-250G', qty: 1, modal_satuan_IDR: 38000, harga_jual_SGD: 7.2, pelanggan: 'Robert Kim', metode_bayar: 'Transfer' },
-      { tanggal: '2024-09-25', sku: 'TEH-EARL-GREY-100G', qty: 3, modal_satuan_IDR: 25000, harga_jual_SGD: 5.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-09-05', sku: 'KOPI-ARABICA-250G', qty: 2, modal_satuan_idr: 45000, harga_jual_sgd: 7.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-09-10', sku: 'TEH-MATCHA-100G', qty: 1, modal_satuan_idr: 33000, harga_jual_sgd: 8.5, pelanggan: 'Amy Loh', metode_bayar: 'Kartu' },
+      { tanggal: '2024-09-15', sku: 'COKLAT-DARK-200G', qty: 2, modal_satuan_idr: 28000, harga_jual_sgd: 6.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-09-20', sku: 'KOPI-ROBUSTA-250G', qty: 1, modal_satuan_idr: 38000, harga_jual_sgd: 7.2, pelanggan: 'Robert Kim', metode_bayar: 'Transfer' },
+      { tanggal: '2024-09-25', sku: 'TEH-EARL-GREY-100G', qty: 3, modal_satuan_idr: 25000, harga_jual_sgd: 5.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
       
       // August 2024 transactions
-      { tanggal: '2024-08-02', sku: 'KOPI-ARABICA-250G', qty: 1, modal_satuan_IDR: 45000, harga_jual_SGD: 7.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-08-08', sku: 'TEH-MATCHA-100G', qty: 2, modal_satuan_IDR: 33000, harga_jual_SGD: 8.5, pelanggan: 'Grace Ng', metode_bayar: 'E-Wallet' },
-      { tanggal: '2024-08-14', sku: 'COKLAT-DARK-200G', qty: 1, modal_satuan_IDR: 28000, harga_jual_SGD: 6.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-08-20', sku: 'KOPI-ROBUSTA-250G', qty: 2, modal_satuan_IDR: 38000, harga_jual_SGD: 7.2, pelanggan: 'Michael Lee', metode_bayar: 'Kartu' },
-      { tanggal: '2024-08-26', sku: 'TEH-EARL-GREY-100G', qty: 1, modal_satuan_IDR: 25000, harga_jual_SGD: 5.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-08-02', sku: 'KOPI-ARABICA-250G', qty: 1, modal_satuan_idr: 45000, harga_jual_sgd: 7.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-08-08', sku: 'TEH-MATCHA-100G', qty: 2, modal_satuan_idr: 33000, harga_jual_sgd: 8.5, pelanggan: 'Grace Ng', metode_bayar: 'E-Wallet' },
+      { tanggal: '2024-08-14', sku: 'COKLAT-DARK-200G', qty: 1, modal_satuan_idr: 28000, harga_jual_sgd: 6.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-08-20', sku: 'KOPI-ROBUSTA-250G', qty: 2, modal_satuan_idr: 38000, harga_jual_sgd: 7.2, pelanggan: 'Michael Lee', metode_bayar: 'Kartu' },
+      { tanggal: '2024-08-26', sku: 'TEH-EARL-GREY-100G', qty: 1, modal_satuan_idr: 25000, harga_jual_sgd: 5.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
       
       // July 2024 transactions
-      { tanggal: '2024-07-03', sku: 'KOPI-ARABICA-250G', qty: 3, modal_satuan_IDR: 45000, harga_jual_SGD: 7.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-07-12', sku: 'TEH-MATCHA-100G', qty: 1, modal_satuan_IDR: 33000, harga_jual_SGD: 8.5, pelanggan: 'Jessica Teo', metode_bayar: 'Transfer' },
-      { tanggal: '2024-07-18', sku: 'COKLAT-DARK-200G', qty: 2, modal_satuan_IDR: 28000, harga_jual_SGD: 6.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-07-22', sku: 'KOPI-ROBUSTA-250G', qty: 1, modal_satuan_IDR: 38000, harga_jual_SGD: 7.2, pelanggan: 'Daniel Koh', metode_bayar: 'E-Wallet' },
-      { tanggal: '2024-07-28', sku: 'TEH-EARL-GREY-100G', qty: 2, modal_satuan_IDR: 25000, harga_jual_SGD: 5.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-07-03', sku: 'KOPI-ARABICA-250G', qty: 3, modal_satuan_idr: 45000, harga_jual_sgd: 7.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-07-12', sku: 'TEH-MATCHA-100G', qty: 1, modal_satuan_idr: 33000, harga_jual_sgd: 8.5, pelanggan: 'Jessica Teo', metode_bayar: 'Transfer' },
+      { tanggal: '2024-07-18', sku: 'COKLAT-DARK-200G', qty: 2, modal_satuan_idr: 28000, harga_jual_sgd: 6.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-07-22', sku: 'KOPI-ROBUSTA-250G', qty: 1, modal_satuan_idr: 38000, harga_jual_sgd: 7.2, pelanggan: 'Daniel Koh', metode_bayar: 'E-Wallet' },
+      { tanggal: '2024-07-28', sku: 'TEH-EARL-GREY-100G', qty: 2, modal_satuan_idr: 25000, harga_jual_sgd: 5.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
       
       // June 2024 transactions
-      { tanggal: '2024-06-05', sku: 'KOPI-ARABICA-250G', qty: 1, modal_satuan_IDR: 45000, harga_jual_SGD: 7.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-06-11', sku: 'TEH-MATCHA-100G', qty: 3, modal_satuan_IDR: 33000, harga_jual_SGD: 8.5, pelanggan: 'Rachel Sim', metode_bayar: 'Kartu' },
-      { tanggal: '2024-06-17', sku: 'COKLAT-DARK-200G', qty: 1, modal_satuan_IDR: 28000, harga_jual_SGD: 6.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-06-23', sku: 'KOPI-ROBUSTA-250G', qty: 2, modal_satuan_IDR: 38000, harga_jual_SGD: 7.2, pelanggan: 'Kevin Ong', metode_bayar: 'Transfer' },
-      { tanggal: '2024-06-29', sku: 'TEH-EARL-GREY-100G', qty: 1, modal_satuan_IDR: 25000, harga_jual_SGD: 5.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-06-05', sku: 'KOPI-ARABICA-250G', qty: 1, modal_satuan_idr: 45000, harga_jual_sgd: 7.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-06-11', sku: 'TEH-MATCHA-100G', qty: 3, modal_satuan_idr: 33000, harga_jual_sgd: 8.5, pelanggan: 'Rachel Sim', metode_bayar: 'Kartu' },
+      { tanggal: '2024-06-17', sku: 'COKLAT-DARK-200G', qty: 1, modal_satuan_idr: 28000, harga_jual_sgd: 6.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-06-23', sku: 'KOPI-ROBUSTA-250G', qty: 2, modal_satuan_idr: 38000, harga_jual_sgd: 7.2, pelanggan: 'Kevin Ong', metode_bayar: 'Transfer' },
+      { tanggal: '2024-06-29', sku: 'TEH-EARL-GREY-100G', qty: 1, modal_satuan_idr: 25000, harga_jual_sgd: 5.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
       
       // May 2024 transactions
-      { tanggal: '2024-05-07', sku: 'KOPI-ARABICA-250G', qty: 2, modal_satuan_IDR: 45000, harga_jual_SGD: 7.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-05-13', sku: 'TEH-MATCHA-100G', qty: 1, modal_satuan_IDR: 33000, harga_jual_SGD: 8.5, pelanggan: 'Helen Yap', metode_bayar: 'E-Wallet' },
-      { tanggal: '2024-05-19', sku: 'COKLAT-DARK-200G', qty: 3, modal_satuan_IDR: 28000, harga_jual_SGD: 6.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-05-25', sku: 'KOPI-ROBUSTA-250G', qty: 1, modal_satuan_IDR: 38000, harga_jual_SGD: 7.2, pelanggan: 'Steven Lim', metode_bayar: 'Kartu' },
-      { tanggal: '2024-05-30', sku: 'TEH-EARL-GREY-100G', qty: 2, modal_satuan_IDR: 25000, harga_jual_SGD: 5.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-05-07', sku: 'KOPI-ARABICA-250G', qty: 2, modal_satuan_idr: 45000, harga_jual_sgd: 7.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-05-13', sku: 'TEH-MATCHA-100G', qty: 1, modal_satuan_idr: 33000, harga_jual_sgd: 8.5, pelanggan: 'Helen Yap', metode_bayar: 'E-Wallet' },
+      { tanggal: '2024-05-19', sku: 'COKLAT-DARK-200G', qty: 3, modal_satuan_idr: 28000, harga_jual_sgd: 6.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-05-25', sku: 'KOPI-ROBUSTA-250G', qty: 1, modal_satuan_idr: 38000, harga_jual_sgd: 7.2, pelanggan: 'Steven Lim', metode_bayar: 'Kartu' },
+      { tanggal: '2024-05-30', sku: 'TEH-EARL-GREY-100G', qty: 2, modal_satuan_idr: 25000, harga_jual_sgd: 5.9, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
       
       // Additional transactions with new products
-      { tanggal: '2024-10-16', sku: 'BISKUIT-MARIE-200G', qty: 4, modal_satuan_IDR: 15000, harga_jual_SGD: 3.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-10-17', sku: 'KERIPIK-SINGKONG-150G', qty: 2, modal_satuan_IDR: 12000, harga_jual_SGD: 2.8, pelanggan: 'Ahmad Rizki', metode_bayar: 'E-Wallet' },
-      { tanggal: '2024-10-18', sku: 'MINYAK-KELAPA-500ML', qty: 1, modal_satuan_IDR: 35000, harga_jual_SGD: 8.0, pelanggan: 'Siti Nurhaliza', metode_bayar: 'Transfer' },
-      { tanggal: '2024-10-19', sku: 'GULA-AREN-250G', qty: 3, modal_satuan_IDR: 22000, harga_jual_SGD: 5.2, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-10-20', sku: 'KACANG-METE-100G', qty: 1, modal_satuan_IDR: 45000, harga_jual_SGD: 9.8, pelanggan: 'Budi Santoso', metode_bayar: 'Kartu' },
+      { tanggal: '2024-10-16', sku: 'BISKUIT-MARIE-200G', qty: 4, modal_satuan_idr: 15000, harga_jual_sgd: 3.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-10-17', sku: 'KERIPIK-SINGKONG-150G', qty: 2, modal_satuan_idr: 12000, harga_jual_sgd: 2.8, pelanggan: 'Ahmad Rizki', metode_bayar: 'E-Wallet' },
+      { tanggal: '2024-10-18', sku: 'MINYAK-KELAPA-500ML', qty: 1, modal_satuan_idr: 35000, harga_jual_sgd: 8.0, pelanggan: 'Siti Nurhaliza', metode_bayar: 'Transfer' },
+      { tanggal: '2024-10-19', sku: 'GULA-AREN-250G', qty: 3, modal_satuan_idr: 22000, harga_jual_sgd: 5.2, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-10-20', sku: 'KACANG-METE-100G', qty: 1, modal_satuan_idr: 45000, harga_jual_sgd: 9.8, pelanggan: 'Budi Santoso', metode_bayar: 'Kartu' },
       
       // More transactions for better charts
-      { tanggal: '2024-09-28', sku: 'BISKUIT-MARIE-200G', qty: 2, modal_satuan_IDR: 15000, harga_jual_SGD: 3.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-08-30', sku: 'KERIPIK-SINGKONG-150G', qty: 3, modal_satuan_IDR: 12000, harga_jual_SGD: 2.8, pelanggan: 'Rina Sari', metode_bayar: 'E-Wallet' },
-      { tanggal: '2024-07-31', sku: 'MINYAK-KELAPA-500ML', qty: 2, modal_satuan_IDR: 35000, harga_jual_SGD: 8.0, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
-      { tanggal: '2024-06-30', sku: 'GULA-AREN-250G', qty: 1, modal_satuan_IDR: 22000, harga_jual_SGD: 5.2, pelanggan: 'Indra Wijaya', metode_bayar: 'Transfer' },
-      { tanggal: '2024-05-31', sku: 'KACANG-METE-100G', qty: 2, modal_satuan_IDR: 45000, harga_jual_SGD: 9.8, pelanggan: 'Walk-in', metode_bayar: 'Kartu' }
+      { tanggal: '2024-09-28', sku: 'BISKUIT-MARIE-200G', qty: 2, modal_satuan_idr: 15000, harga_jual_sgd: 3.5, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-08-30', sku: 'KERIPIK-SINGKONG-150G', qty: 3, modal_satuan_idr: 12000, harga_jual_sgd: 2.8, pelanggan: 'Rina Sari', metode_bayar: 'E-Wallet' },
+      { tanggal: '2024-07-31', sku: 'MINYAK-KELAPA-500ML', qty: 2, modal_satuan_idr: 35000, harga_jual_sgd: 8.0, pelanggan: 'Walk-in', metode_bayar: 'Tunai' },
+      { tanggal: '2024-06-30', sku: 'GULA-AREN-250G', qty: 1, modal_satuan_idr: 22000, harga_jual_sgd: 5.2, pelanggan: 'Indra Wijaya', metode_bayar: 'Transfer' },
+      { tanggal: '2024-05-31', sku: 'KACANG-METE-100G', qty: 2, modal_satuan_idr: 45000, harga_jual_sgd: 9.8, pelanggan: 'Walk-in', metode_bayar: 'Kartu' }
     ];
 
     let successCount = 0;
@@ -137,11 +137,11 @@ export async function POST(request: NextRequest) {
           tanggal: tx.tanggal,
           sku: tx.sku,
           qty: tx.qty,
-          modal_satuan_IDR: tx.modal_satuan_IDR,
-          harga_jual_SGD: tx.harga_jual_SGD,
+          modal_satuan_idr: tx.modal_satuan_idr,
+          harga_jual_sgd: tx.harga_jual_sgd,
           fee_rate: 2.9,
-          fee_flat_SGD: 0.5,
-          biaya_lain_SGD: 0,
+          fee_flat_sgd: 0.5,
+          biaya_lain_sgd: 0,
           apply_gst: false,
           gst_rate: 0.09,
           pelanggan: tx.pelanggan,

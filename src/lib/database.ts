@@ -498,34 +498,34 @@ export class DatabaseService {
         return { success: false, error: 'Qty harus > 0', data: { status: 'invalid' } };
       }
 
-      if (!transaction.harga_jual_SGD || transaction.harga_jual_SGD <= 0) {
+      if (!transaction.harga_jual_sgd || transaction.harga_jual_sgd <= 0) {
         return { success: false, error: 'Harga jual SGD wajib diisi dan > 0' };
       }
 
       // Modal is optional - if not provided, transaction will be marked as incomplete
-      // if (!transaction.modal_satuan_IDR && !transaction.modal_total_IDR) {
+      // if (!transaction.modal_satuan_idr && !transaction.modal_total_idr) {
       //   return { success: false, error: 'Modal satuan IDR atau modal total IDR wajib diisi', data: { status: 'incomplete' } };
       // }
 
       // Calculate derived fields
       let status: 'complete' | 'incomplete' | 'invalid' = 'complete';
       
-      // Calculate modal_total_IDR if not provided
-      let modalTotalIDR = transaction.modal_total_IDR;
-      if (!modalTotalIDR && transaction.modal_satuan_IDR) {
-        modalTotalIDR = this.roundIDR(transaction.qty * transaction.modal_satuan_IDR);
+      // Calculate modal_total_idr if not provided
+      let modalTotalIDR = transaction.modal_total_idr;
+      if (!modalTotalIDR && transaction.modal_satuan_idr) {
+        modalTotalIDR = this.roundIDR(transaction.qty * transaction.modal_satuan_idr);
       } else if (modalTotalIDR) {
         modalTotalIDR = this.roundIDR(modalTotalIDR);
       }
 
-      const modalSatuanIDR = transaction.modal_satuan_IDR ? this.roundIDR(transaction.modal_satuan_IDR) : null;
+      const modalSatuanIDR = transaction.modal_satuan_idr ? this.roundIDR(transaction.modal_satuan_idr) : null;
 
-      // Calculate pendapatan_SGD
-      const pendapatanSGD = this.roundSGD(transaction.qty * transaction.harga_jual_SGD);
+      // Calculate pendapatan_sgd
+      const pendapatanSGD = this.roundSGD(transaction.qty * transaction.harga_jual_sgd);
 
       // Calculate biaya_transaksi_SGD
       const feeRate = (transaction.fee_rate || 0) / 100;
-      const feeFlatSGD = transaction.fee_flat_SGD || 0;
+      const feeFlatSGD = transaction.fee_flat_sgd || 0;
       const biayaTransaksiSGD = this.roundSGD((feeRate * pendapatanSGD) + feeFlatSGD);
 
       // Calculate GST
@@ -550,12 +550,12 @@ export class DatabaseService {
         qty: transaction.qty,
         modalSatuanIDR,
         modalTotalIDR,
-        harga_jual_SGD: this.roundSGD(transaction.harga_jual_SGD),
+        harga_jual_sgd: this.roundSGD(transaction.harga_jual_sgd),
         pendapatanSGD,
         fee_rate: transaction.fee_rate || 0,
         feeFlatSGD,
         biayaTransaksiSGD,
-        biaya_lain_SGD: this.roundSGD(transaction.biaya_lain_SGD || 0),
+        biaya_lain_sgd: this.roundSGD(transaction.biaya_lain_sgd || 0),
         applyGST,
         gstRate,
         gstSGD,
@@ -571,12 +571,12 @@ export class DatabaseService {
         transaction.qty,
         modalSatuanIDR || null,
         modalTotalIDR || null,
-        this.roundSGD(transaction.harga_jual_SGD),
+        this.roundSGD(transaction.harga_jual_sgd),
         pendapatanSGD,
         transaction.fee_rate || 0,
         feeFlatSGD || 0,
         biayaTransaksiSGD || 0,
-        this.roundSGD(transaction.biaya_lain_SGD || 0),
+        this.roundSGD(transaction.biaya_lain_sgd || 0),
         applyGST ? 1 : 0,
         gstRate || 0,
         gstSGD || 0,
@@ -655,14 +655,14 @@ export class DatabaseService {
         }
 
         // Add to totals
-        if (tx.modal_total_IDR) totalModalIDR += tx.modal_total_IDR;
-        if (tx.pendapatan_SGD) {
-          totalPenjualanSGD += tx.pendapatan_SGD;
-          skuRevenue[tx.sku] = (skuRevenue[tx.sku] || 0) + tx.pendapatan_SGD;
+        if (tx.modal_total_idr) totalModalIDR += tx.modal_total_idr;
+        if (tx.pendapatan_sgd) {
+          totalPenjualanSGD += tx.pendapatan_sgd;
+          skuRevenue[tx.sku] = (skuRevenue[tx.sku] || 0) + tx.pendapatan_sgd;
         }
-        if (tx.biaya_transaksi_SGD) totalBiayaTransaksiSGD += tx.biaya_transaksi_SGD;
-        if (tx.biaya_lain_SGD) totalBiayaLainSGD += tx.biaya_lain_SGD;
-        if (tx.GST_SGD) totalGSTSGD += tx.GST_SGD;
+        if (tx.biaya_transaksi_sgd) totalBiayaTransaksiSGD += tx.biaya_transaksi_sgd;
+        if (tx.biaya_lain_sgd) totalBiayaLainSGD += tx.biaya_lain_sgd;
+        if (tx.gst_sgd) totalGSTSGD += tx.gst_sgd;
       });
 
       // Round totals
@@ -680,11 +680,11 @@ export class DatabaseService {
 
       const report: MonthlyReport = {
         periode: ym,
-        total_modal_IDR: totalModalIDR,
-        total_penjualan_SGD: totalPenjualanSGD,
-        total_biaya_transaksi_SGD: totalBiayaTransaksiSGD,
-        total_biaya_lain_SGD: totalBiayaLainSGD,
-        total_GST_SGD: totalGSTSGD,
+        total_modal_idr: totalModalIDR,
+        total_penjualan_sgd: totalPenjualanSGD,
+        total_biaya_transaksi_sgd: totalBiayaTransaksiSGD,
+        total_biaya_lain_sgd: totalBiayaLainSGD,
+        total_gst_sgd: totalGSTSGD,
         transaksi_lengkap: transaksiLengkap,
         transaksi_incomplete: transaksiIncomplete,
         top_sku_by_revenue: topSKUs.join(', ')
