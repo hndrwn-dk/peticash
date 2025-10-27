@@ -986,6 +986,25 @@ export class DatabaseService {
     }
   }
 
+  async deleteInventory(id: number): Promise<ApiResponse> {
+    try {
+      const deleteStmt = this.db.prepare('DELETE FROM inventory WHERE id = ?');
+      const result = deleteStmt.run(id);
+      
+      if (result.changes > 0) {
+        return { 
+          success: true, 
+          message: 'Stok berhasil dihapus'
+        };
+      } else {
+        return { success: false, error: 'Stok tidak ditemukan' };
+      }
+    } catch (error) {
+      console.error('Error deleting inventory:', error);
+      return { success: false, error: 'Gagal menghapus stok' };
+    }
+  }
+
   async getInventoryByLocation(storeLocation: string): Promise<any[]> {
     try {
       const query = `
