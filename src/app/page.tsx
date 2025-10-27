@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { DashboardStats, Transaction, Product } from '@/types';
 import { CashIcon, ProductIcon, TransactionIcon, ReportIcon, AddIcon } from '@/components/Icons';
+import Navigation from '@/components/Navigation';
 import { 
   DashboardChart, 
   RevenueChart, 
@@ -160,6 +161,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Navigation />
       {/* Database Warning Banner */}
       {dbStatus?.is_ephemeral && (
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">

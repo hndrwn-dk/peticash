@@ -9,6 +9,7 @@ export default function Navigation() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
 
   const navItems = [
     { href: '/', label: 'Dashboard', icon: DashboardIcon },
@@ -20,13 +21,18 @@ export default function Navigation() {
   ];
 
   const toggleMobileMenu = () => {
+    console.log('Toggle mobile menu clicked, current state:', isMobileMenuOpen);
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (mobileMenuRef.current && 
+          !mobileMenuRef.current.contains(target) && 
+          mobileMenuButtonRef.current && 
+          !mobileMenuButtonRef.current.contains(target)) {
         setIsMobileMenuOpen(false);
       }
     };
@@ -72,6 +78,7 @@ export default function Navigation() {
           {/* Mobile menu button */}
           <div className="md:hidden">
             <button 
+              ref={mobileMenuButtonRef}
               onClick={toggleMobileMenu}
               className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
               aria-label="Toggle mobile menu"
