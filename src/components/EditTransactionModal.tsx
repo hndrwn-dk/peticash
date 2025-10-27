@@ -50,13 +50,13 @@ export default function EditTransactionModal({ transaction, onSave, onCancel }: 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-        <h3 className="text-lg font-medium text-gray-900 mb-6">Edit Transaction</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-6">Edit Transaksi</h3>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="tanggal" className="block text-sm font-medium text-gray-700 mb-2">
-                Date *
+                Tanggal *
               </label>
               <input
                 type="date"
@@ -87,7 +87,7 @@ export default function EditTransactionModal({ transaction, onSave, onCancel }: 
 
             <div>
               <label htmlFor="qty" className="block text-sm font-medium text-gray-700 mb-2">
-                Quantity *
+                Kuantitas *
               </label>
               <input
                 type="number"
@@ -103,7 +103,7 @@ export default function EditTransactionModal({ transaction, onSave, onCancel }: 
 
             <div>
               <label htmlFor="harga_jual_sgd" className="block text-sm font-medium text-gray-700 mb-2">
-                Price (SGD) *
+                Harga (SGD) *
               </label>
               <input
                 type="number"
@@ -120,7 +120,7 @@ export default function EditTransactionModal({ transaction, onSave, onCancel }: 
 
             <div>
               <label htmlFor="modal_satuan_idr" className="block text-sm font-medium text-gray-700 mb-2">
-                Cost per Unit (IDR)
+                Modal per Unit (IDR)
               </label>
               <input
                 type="number"
@@ -136,7 +136,7 @@ export default function EditTransactionModal({ transaction, onSave, onCancel }: 
 
             <div>
               <label htmlFor="metode_bayar" className="block text-sm font-medium text-gray-700 mb-2">
-                Payment Method
+                Metode Pembayaran
               </label>
               <select
                 id="metode_bayar"
@@ -145,9 +145,9 @@ export default function EditTransactionModal({ transaction, onSave, onCancel }: 
                 onChange={handleInputChange}
                 className="input-field"
               >
-                <option value="">Select payment method</option>
-                <option value="Tunai">Cash</option>
-                <option value="Kartu">Card</option>
+                <option value="">Pilih metode pembayaran</option>
+                <option value="Tunai">Tunai</option>
+                <option value="Kartu">Kartu</option>
                 <option value="Transfer">Transfer</option>
                 <option value="E-Wallet">E-Wallet</option>
               </select>
@@ -156,7 +156,7 @@ export default function EditTransactionModal({ transaction, onSave, onCancel }: 
 
           <div>
             <label htmlFor="pelanggan" className="block text-sm font-medium text-gray-700 mb-2">
-              Customer
+              Pelanggan
             </label>
             <input
               type="text"
@@ -165,13 +165,13 @@ export default function EditTransactionModal({ transaction, onSave, onCancel }: 
               value={formData.pelanggan}
               onChange={handleInputChange}
               className="input-field"
-              placeholder="Customer name (optional)"
+              placeholder="Nama pelanggan (opsional)"
             />
           </div>
 
           <div>
             <label htmlFor="catatan" className="block text-sm font-medium text-gray-700 mb-2">
-              Notes
+              Catatan
             </label>
             <textarea
               id="catatan"
@@ -180,7 +180,7 @@ export default function EditTransactionModal({ transaction, onSave, onCancel }: 
               onChange={handleInputChange}
               className="input-field"
               rows={3}
-              placeholder="Additional notes (optional)"
+              placeholder="Catatan tambahan (opsional)"
             />
           </div>
 
@@ -190,13 +190,13 @@ export default function EditTransactionModal({ transaction, onSave, onCancel }: 
               onClick={onCancel}
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md"
             >
-              Cancel
+              Batal
             </button>
             <button
               type="submit"
               className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md"
             >
-              Save Changes
+              Simpan Transaksi
             </button>
           </div>
         </form>
