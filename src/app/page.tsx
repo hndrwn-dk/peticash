@@ -353,6 +353,7 @@ export default function HomePage() {
                   }}
                   title="Proceeds"
                   type="line"
+                  timeRange={chartTimeRange}
                 />
                 <DashboardChart
                   data={{
@@ -368,6 +369,7 @@ export default function HomePage() {
                   }}
                   title="Gross profit"
                   type="line"
+                  timeRange={chartTimeRange}
                 />
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
