@@ -282,7 +282,7 @@ export function RevenueChart({ data, title = "Tren Pendapatan" }: { data: any, t
   );
 }
 
-export function StockChart({ data, title = "Stock Produk", filterBy = "category" }: { data: any, title?: string, filterBy?: "category" | "location" }) {
+export function StockChart({ data, title = "Stock Produk", filterBy = "category" }: { data: any, title?: string, filterBy?: "category" | "location" | "combined" }) {
   // Convert stockLevels object to chart data based on filter
   let chartData;
   
@@ -300,6 +300,34 @@ export function StockChart({ data, title = "Stock Produk", filterBy = "category"
       datasets: [{
         label: 'Stok',
         data: locationTotals.length > 0 ? locationTotals : [50, 30, 20, 15, 10],
+        backgroundColor: [
+          'rgba(34, 197, 94, 0.8)',
+          'rgba(34, 197, 94, 0.6)',
+          'rgba(34, 197, 94, 0.4)',
+          'rgba(34, 197, 94, 0.2)',
+          'rgba(34, 197, 94, 0.1)',
+        ],
+        borderColor: [
+          'rgba(34, 197, 94, 1)',
+          'rgba(34, 197, 94, 0.8)',
+          'rgba(34, 197, 94, 0.6)',
+          'rgba(34, 197, 94, 0.4)',
+          'rgba(34, 197, 94, 0.2)',
+        ],
+        borderWidth: 2,
+      }]
+    };
+  } else if (filterBy === "combined") {
+    // Group by product name and location (combined view)
+    const stockByProductLocation = data?.stockByProductLocation || {};
+    const productLocations = Object.keys(stockByProductLocation);
+    const values = Object.values(stockByProductLocation);
+
+    chartData = {
+      labels: productLocations.length > 0 ? productLocations : ['Bakso Cuangki, Ane', 'Mie Ayam Yen, Lina', 'Bakso Komplit, Endah'],
+      datasets: [{
+        label: 'Stok',
+        data: values.length > 0 ? values : [5, 10, 8],
         backgroundColor: [
           'rgba(34, 197, 94, 0.8)',
           'rgba(34, 197, 94, 0.6)',
@@ -408,7 +436,9 @@ export function StockChart({ data, title = "Stock Produk", filterBy = "category"
         <div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
           <p className="text-sm text-gray-500 font-medium">
-            {filterBy === "location" ? "Stok produk berdasarkan lokasi" : "Stok produk berdasarkan kategori"}
+            {filterBy === "location" ? "Stok produk berdasarkan lokasi" : 
+             filterBy === "combined" ? "Stok produk berdasarkan produk dan lokasi" : 
+             "Stok produk berdasarkan kategori"}
           </p>
         </div>
         <button className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-lg">
