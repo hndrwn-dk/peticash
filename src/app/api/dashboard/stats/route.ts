@@ -7,8 +7,8 @@ export const dynamic = 'force-dynamic';
 // GET /api/dashboard/stats - Get dashboard statistics and chart data
 export async function GET(request: NextRequest) {
   try {
-    // Get months parameter from URL, default to 6
-    const months = parseInt(request.nextUrl.searchParams.get('months') || '6');
+    // Get months parameter from URL, default to 1
+    const months = parseInt(request.nextUrl.searchParams.get('months') || '1');
     
     // Get current date and calculate months back
     const now = new Date();
@@ -37,6 +37,10 @@ export async function GET(request: NextRequest) {
         // Get transactions for this month
         const transactions = await database.getTransactions(periode);
         
+        // Get products to get categories
+        const products = await database.getProducts();
+        const productMap = new Map(products.map((p: any) => [p.sku, p]));
+        
         // Calculate totals
         let monthlyRevenue = 0;
         let monthlyModal = 0;
@@ -57,16 +61,20 @@ export async function GET(request: NextRequest) {
             chartData.paymentMethods[tx.metode_bayar] = (chartData.paymentMethods[tx.metode_bayar] || 0) + 1;
           }
           
-          // For now, we'll use a simple categorization based on pelanggan field
-          // In a real system, you'd have an order_type field
-          const orderType = tx.pelanggan ? 'On-site' : 'To-go'; // Simple logic for demo
-          chartData.orderTypes[orderType] = (chartData.orderTypes[orderType] || 0) + (tx.pendapatan_sgd || 0);
+          // Categorize by product categories instead of order types
+          // Get product category from the product map
+          const product = productMap.get(tx.sku) as any;
+          const productCategory = product?.kategori || 'Other';
+          chartData.orderTypes[productCategory] = (chartData.orderTypes[productCategory] || 0) + (tx.pendapatan_sgd || 0);
         });
         
         chartData.revenue.push(Math.round(monthlyRevenue * 100) / 100);
         chartData.modal.push(Math.round(monthlyModal / 1000)); // Convert to thousands
         chartData.grossProfit.push(Math.round(monthlyGrossProfit * 100) / 100);
         chartData.transactions.push(transactionCount);
+        
+        // Debug logging
+        console.log(`Month ${periode}: ${transactionCount} transactions, Revenue: ${monthlyRevenue}, Modal: ${monthlyModal}`);
       } catch (error) {
         console.error(`Error getting data for ${periode}:`, error);
         chartData.revenue.push(0);

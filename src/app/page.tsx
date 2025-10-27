@@ -376,7 +376,7 @@ export default function HomePage() {
                     labels: Object.keys(chartData.orderTypes),
                     values: Object.values(chartData.orderTypes)
                   }}
-                  title="Order types"
+                  title="Product Categories"
                 />
                 <PaymentMethodsChart 
                   data={{
