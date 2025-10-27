@@ -245,7 +245,7 @@ export default function TransactionsPage() {
                       Quantity
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Revenue (SGD)
+                      Pendapatan (SGD)
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Customer
@@ -329,7 +329,7 @@ export default function TransactionsPage() {
               <div className="text-2xl font-bold text-gray-900">{transactions.length}</div>
             </div>
             <div className="bg-white rounded-lg border border-gray-200 p-4">
-              <div className="text-sm font-medium text-gray-600">Total Revenue (SGD)</div>
+              <div className="text-sm font-medium text-gray-600">Total Pendapatan (SGD)</div>
               <div className="text-2xl font-bold text-gray-900">
                 {formatCurrency(
                   transactions.reduce((sum, tx) => sum + (Number(tx.pendapatan_sgd) || 0), 0),
@@ -363,7 +363,7 @@ export default function TransactionsPage() {
                 <p className="text-sm"><strong>SKU:</strong> {showDeleteConfirm.sku}</p>
                 <p className="text-sm"><strong>Date:</strong> {showDeleteConfirm.tanggal}</p>
                 <p className="text-sm"><strong>Quantity:</strong> {showDeleteConfirm.qty}</p>
-                <p className="text-sm"><strong>Revenue:</strong> {showDeleteConfirm.pendapatan_sgd ? formatCurrency(showDeleteConfirm.pendapatan_sgd, 'SGD') : '-'}</p>
+                <p className="text-sm"><strong>Pendapatan:</strong> {showDeleteConfirm.pendapatan_sgd ? formatCurrency(showDeleteConfirm.pendapatan_sgd, 'SGD') : '-'}</p>
               </div>
               <p className="text-red-600 text-sm font-medium mb-3">
                 This action cannot be undone. Type "DELETE" to confirm:

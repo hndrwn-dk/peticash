@@ -120,7 +120,7 @@ export default function NewProductPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Required Fields */}
             <div className="border-b border-gray-200 pb-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Required Information</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Informasi Wajib</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -137,12 +137,12 @@ export default function NewProductPage() {
                     placeholder="e.g., KOPI-ARABICA-250G"
                     required
                   />
-                  <p className="text-xs text-gray-500 mt-1">Unique product identifier</p>
+                  <p className="text-xs text-gray-500 mt-1">Pengenal unik produk</p>
                 </div>
 
                 <div>
                   <label htmlFor="nama" className="block text-sm font-medium text-gray-700 mb-2">
-                    Product Name *
+                    Nama Produk *
                   </label>
                   <input
                     type="text"
@@ -160,12 +160,12 @@ export default function NewProductPage() {
 
             {/* Optional Fields */}
             <div className="border-b border-gray-200 pb-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Pricing Information</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Informasi Harga</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="default_modal_satuan_idr" className="block text-sm font-medium text-gray-700 mb-2">
-                    Default Cost per Unit (IDR)
+                    Modal per Unit (IDR)
                   </label>
                   <input
                     type="number"
@@ -177,12 +177,12 @@ export default function NewProductPage() {
                     placeholder="45000"
                     min="0"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Cost price in Indonesian Rupiah</p>
+                  <p className="text-xs text-gray-500 mt-1">Harga modal dalam Rupiah Indonesia</p>
                 </div>
 
                 <div>
                   <label htmlFor="default_harga_jual_sgd" className="block text-sm font-medium text-gray-700 mb-2">
-                    Default Selling Price (SGD)
+                    Harga Jual (SGD)
                   </label>
                   <input
                     type="number"
@@ -195,19 +195,19 @@ export default function NewProductPage() {
                     min="0"
                     step="0.01"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Selling price in Singapore Dollars</p>
+                  <p className="text-xs text-gray-500 mt-1">Harga jual dalam Dolar Singapura</p>
                 </div>
               </div>
             </div>
 
             {/* Additional Information */}
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Additional Information</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Informasi Tambahan</h3>
               
               <div className="grid grid-cols-1 gap-6">
                 <div>
                   <label htmlFor="kategori" className="block text-sm font-medium text-gray-700 mb-2">
-                    Category
+                    Kategori
                   </label>
                   <input
                     type="text"
@@ -216,7 +216,7 @@ export default function NewProductPage() {
                     value={formData.kategori}
                     onChange={handleInputChange}
                     className="input-field"
-                    placeholder="e.g., Kopi, Teh, Makanan"
+                    placeholder="contoh: Kopi, Teh, Makanan"
                   />
                 </div>
               </div>
@@ -232,14 +232,14 @@ export default function NewProductPage() {
                 {loading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Saving...
+                    Menyimpan...
                   </>
                 ) : (
-                  'Save Product'
+                  'Simpan Produk'
                 )}
               </button>
               <Link href="/products" className="btn-secondary flex items-center justify-center">
-                Cancel
+                Batal
               </Link>
             </div>
           </form>

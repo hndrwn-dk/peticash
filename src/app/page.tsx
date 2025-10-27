@@ -51,7 +51,7 @@ export default function HomePage() {
   const loadChartData = async (months: number = chartTimeRange) => {
     try {
       setChartsLoading(true);
-      const response = await fetch(`/api/dashboard/stats?months=${months}`);
+      const response = await fetch(`/api/dashboard/stats?months=${months}&t=${Date.now()}`);
       const data = await response.json();
       
       if (data.success) {
@@ -233,7 +233,7 @@ export default function HomePage() {
           <Link href="/transactions" className="stats-card hover:shadow-lg transition-shadow cursor-pointer">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">Transaksi</p>
+                <p className="text-sm font-medium text-gray-500 mb-1">Total Transaksi</p>
                 <p className="text-3xl font-bold text-gray-900">{stats?.current_month_transactions || 0}</p>
               </div>
               <div className="w-12 h-12 bg-gradient-to-br from-green-50 to-green-100 rounded-2xl flex items-center justify-center shadow-sm">
@@ -245,7 +245,7 @@ export default function HomePage() {
           <div className="stats-card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">Pendapatan (SGD)</p>
+                <p className="text-sm font-medium text-gray-500 mb-1">Total Pendapatan (SGD)</p>
                 <p className="text-3xl font-bold text-gray-900">
                   ${Number(stats?.current_month_revenue_sgd || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                 </p>
@@ -259,7 +259,7 @@ export default function HomePage() {
           <div className="stats-card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">Modal (IDR)</p>
+                <p className="text-sm font-medium text-gray-500 mb-1">Total Modal (IDR)</p>
                 <p className="text-3xl font-bold text-gray-900">
                   Rp {Number(stats?.current_month_modal_idr || 0).toLocaleString('id-ID')}
                 </p>
@@ -296,9 +296,17 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-4 sm:mb-0">Tren Bisnis</h2>
             
-            {/* Time Range Selector */}
-            <div className="flex bg-gray-100 rounded-lg p-1">
+            {/* Time Range Selector and Refresh Button */}
+            <div className="flex items-center space-x-3">
               <button
+                onClick={() => loadChartData(chartTimeRange)}
+                className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 bg-white border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+                title="Refresh Data"
+              >
+                🔄 Refresh
+              </button>
+              <div className="flex bg-gray-100 rounded-lg p-1">
+                <button
                 onClick={() => handleTimeRangeChange(1)}
                 className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                   chartTimeRange === 1
@@ -328,6 +336,7 @@ export default function HomePage() {
               >
                 6 Bulan
               </button>
+            </div>
             </div>
           </div>
 
