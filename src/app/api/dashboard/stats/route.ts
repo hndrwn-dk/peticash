@@ -36,7 +36,9 @@ export async function GET(request: NextRequest) {
       try {
         // Get transactions for this month
         const transactions = await database.getTransactions(periode);
-        console.log('Transactions for', periode, ':', transactions.map((tx: any) => ({ sku: tx.sku, pendapatan_sgd: tx.pendapatan_sgd })));
+        console.log('Raw transactions for', periode, ':', JSON.stringify(transactions, null, 2));
+        console.log('Transaction fields:', transactions.length > 0 ? Object.keys(transactions[0]) : 'No transactions');
+        console.log('Pendapatan SGD values:', transactions.map((tx: any) => ({ sku: tx.sku, pendapatan_sgd: tx.pendapatan_sgd, type: typeof tx.pendapatan_sgd })));
         
         // Get products to get categories
         const products = await database.getProducts();
@@ -52,6 +54,7 @@ export async function GET(request: NextRequest) {
         transactions.forEach((tx: any) => {
           // Fix revenue calculation - use harga_jual_sgd if pendapatan_sgd is null
           const revenue = tx.pendapatan_sgd || tx.harga_jual_sgd || 0;
+          console.log(`Transaction ${tx.sku}: pendapatan_sgd=${tx.pendapatan_sgd}, harga_jual_sgd=${tx.harga_jual_sgd}, calculated revenue=${revenue}`);
           monthlyRevenue += revenue;
           
           if (tx.modal_total_IDR) monthlyModal += tx.modal_total_IDR;
