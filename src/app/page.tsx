@@ -4,7 +4,16 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { DashboardStats, Transaction, Product } from '@/types';
 import { CashIcon, ProductIcon, TransactionIcon, ReportIcon, AddIcon } from '@/components/Icons';
-import { DashboardChart, generateSampleRevenueData, generateSampleModalData, generateSampleTransactionData } from '@/components/Charts';
+import { 
+  DashboardChart, 
+  RevenueChart, 
+  ProfitChart, 
+  OrderTypesChart, 
+  PaymentMethodsChart,
+  generateSampleRevenueData, 
+  generateSampleModalData, 
+  generateSampleTransactionData 
+} from '@/components/Charts';
 import Alert from '@/components/Alert';
 
 export default function HomePage() {
@@ -207,57 +216,51 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          <Link href="/products" className="stats-card hover:shadow-lg transition-shadow cursor-pointer">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">Total Produk</p>
-                <p className="text-3xl font-bold text-gray-900">{stats?.total_products || 0}</p>
-              </div>
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl flex items-center justify-center shadow-sm">
-                <ProductIcon className="w-6 h-6 text-blue-600" />
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/transactions" className="stats-card hover:shadow-lg transition-shadow cursor-pointer">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">Transaksi</p>
-                <p className="text-3xl font-bold text-gray-900">{stats?.current_month_transactions || 0}</p>
-              </div>
-              <div className="w-12 h-12 bg-gradient-to-br from-green-50 to-green-100 rounded-2xl flex items-center justify-center shadow-sm">
-                <TransactionIcon className="w-6 h-6 text-green-600" />
-              </div>
-            </div>
-          </Link>
-
-          <div className="stats-card">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">Pendapatan (SGD)</p>
-                <p className="text-3xl font-bold text-gray-900">
-                  ${Number(stats?.current_month_revenue_sgd || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl flex items-center justify-center shadow-sm">
-                <CashIcon className="w-6 h-6 text-emerald-600" />
-              </div>
+        {/* Premium Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
+          <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-100">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-purple-900 mb-1">Today</p>
+              <p className="text-sm font-medium text-purple-600">5 of July</p>
             </div>
           </div>
 
-          <div className="stats-card">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">Modal (IDR)</p>
-                <p className="text-3xl font-bold text-gray-900">
-                  Rp {Number(stats?.current_month_modal_idr || 0).toLocaleString('id-ID')}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl flex items-center justify-center shadow-sm">
-                <CashIcon className="w-6 h-6 text-orange-600" />
-              </div>
+          <Link href="/transactions" className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-100 cursor-pointer group">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-blue-900 mb-1 group-hover:text-blue-800">
+                {Number(stats?.current_month_revenue_sgd || 0).toLocaleString('en-US', { minimumFractionDigits: 0 })} P
+              </p>
+              <p className="text-sm font-medium text-blue-600">Income</p>
+            </div>
+          </Link>
+
+          <Link href="/transactions" className="bg-gradient-to-br from-green-50 to-green-100 rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-green-100 cursor-pointer group">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-green-900 mb-1 group-hover:text-green-800">
+                {stats?.current_month_transactions || 0}
+              </p>
+              <p className="text-sm font-medium text-green-600">Cheques</p>
+            </div>
+          </Link>
+
+          <Link href="/products" className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-orange-100 cursor-pointer group">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-orange-900 mb-1 group-hover:text-orange-800">
+                {stats?.total_products || 0}
+              </p>
+              <p className="text-sm font-medium text-orange-600">Customers</p>
+            </div>
+          </Link>
+
+          <div className="bg-gradient-to-br from-pink-50 to-pink-100 rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-pink-100">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-pink-900 mb-1">
+                {stats?.current_month_transactions ? 
+                  (Number(stats.current_month_revenue_sgd || 0) / stats.current_month_transactions).toFixed(2) : 
+                  '0.00'
+                } P
+              </p>
+              <p className="text-sm font-medium text-pink-600">The average check</p>
             </div>
           </div>
         </div>
@@ -282,114 +285,85 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* Charts Section */}
+        {/* Premium Charts Section */}
         <div className="mb-10">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 sm:mb-0">Tren Bisnis</h2>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">General Summary</h2>
+              <p className="text-gray-600">Comprehensive business analytics and insights</p>
+            </div>
             
-            {/* Time Range Selector */}
-            <div className="flex bg-gray-100 rounded-lg p-1">
-              <button
-                onClick={() => handleTimeRangeChange(1)}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                  chartTimeRange === 1
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                1 Bulan
-              </button>
-              <button
-                onClick={() => handleTimeRangeChange(3)}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                  chartTimeRange === 3
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                3 Bulan
-              </button>
-              <button
-                onClick={() => handleTimeRangeChange(6)}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                  chartTimeRange === 6
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                6 Bulan
-              </button>
+            {/* Date Range Selector */}
+            <div className="flex items-center space-x-4 mt-4 sm:mt-0">
+              <div className="flex items-center space-x-2 bg-white rounded-xl px-4 py-3 border border-gray-200 shadow-sm">
+                <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span className="text-sm font-medium text-gray-700">10 June 2022, 00:00 - 16 July 2022, 23:59</span>
+              </div>
+              
+              {/* Action Buttons */}
+              <div className="flex items-center space-x-2">
+                <button className="p-3 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                  <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </button>
+                <button className="p-3 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                  <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </button>
+                <button className="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                  Add widget
+                </button>
+              </div>
             </div>
           </div>
+
           {chartsLoading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
-              <p className="text-gray-600">Memuat data grafik...</p>
+            <div className="text-center py-16">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-6"></div>
+              <p className="text-gray-600 text-lg">Loading premium charts...</p>
             </div>
-          ) : chartData ? (
+          ) : (
             <>
+              {/* Top Row - Revenue and Profit Charts */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                <DashboardChart
-                  data={{
+                <RevenueChart 
+                  data={chartData ? {
                     labels: chartData.labels,
-                    datasets: [{
-                      label: 'Pendapatan',
-                      data: chartData.revenue,
-                      backgroundColor: 'rgba(16, 185, 129, 0.8)',
-                      borderColor: '#10b981',
-                      borderWidth: 2,
-                    }]
-                  }}
-                  title="Pendapatan Bulanan (SGD)"
-                  type="pie"
+                    revenue: chartData.revenue
+                  } : null}
+                  title="Proceeds"
                 />
-                <DashboardChart
-                  data={{
+                <ProfitChart 
+                  data={chartData ? {
                     labels: chartData.labels,
-                    datasets: [{
-                      label: 'Modal',
-                      data: chartData.modal,
-                      backgroundColor: 'rgba(245, 158, 11, 0.8)',
-                      borderColor: '#f59e0b',
-                      borderWidth: 0,
-                      borderRadius: 8,
-                    }]
-                  }}
-                  title="Modal Bulanan (Ribu IDR)"
-                  type="bar"
+                    profit: chartData.modal
+                  } : null}
+                  title="Gross profit"
                 />
               </div>
-              <div className="grid grid-cols-1 gap-8 mb-8">
-                <DashboardChart
+
+              {/* Bottom Row - Order Types and Payment Methods */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <OrderTypesChart 
                   data={{
-                    labels: chartData.labels,
-                    datasets: [{
-                      label: 'Transaksi',
-                      data: chartData.transactions,
-                      backgroundColor: 'rgba(59, 130, 246, 0.8)',
-                      borderColor: '#3b82f6',
-                      borderWidth: 0,
-                      borderRadius: 8,
-                    }]
+                    labels: ['On-site', 'To-go', 'Delivery'],
+                    values: [4200, 5500, 800]
                   }}
-                  title="Jumlah Transaksi per Bulan"
-                  type="bar"
+                  title="Order types"
+                />
+                <PaymentMethodsChart 
+                  data={{
+                    labels: ['Card', 'Cash', 'Bonus System', 'On the House'],
+                    values: [35, 38, 22, 6]
+                  }}
+                  title="Payment methods"
                 />
               </div>
             </>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-              <DashboardChart
-                data={generateSampleRevenueData()}
-                title="Pendapatan Bulanan (SGD) - Sample Data"
-                type="line"
-              />
-              <DashboardChart
-                data={generateSampleModalData()}
-                title="Modal Bulanan (IDR) - Sample Data"
-                type="line"
-              />
-            </div>
           )}
         </div>
 
