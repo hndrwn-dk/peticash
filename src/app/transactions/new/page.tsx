@@ -50,6 +50,21 @@ export default function NewTransactionPage() {
     loadProducts();
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.product-dropdown-container')) {
+        setShowProductList(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   useEffect(() => {
     if (searchQuery.trim()) {
       const filtered = products.filter(product =>
@@ -89,6 +104,14 @@ export default function NewTransactionPage() {
       sku: product.sku,
       harga_jual_sgd: product.default_harga_jual_sgd?.toString() || ''
     }));
+    
+    // Force focus back to input to prevent double-click issues
+    setTimeout(() => {
+      const input = document.getElementById('product');
+      if (input) {
+        input.blur();
+      }
+    }, 100);
   };
 
   const handleProductSearch = (value: string) => {
@@ -241,7 +264,7 @@ export default function NewTransactionPage() {
                   />
                 </div>
 
-                <div className="relative">
+                <div className="relative product-dropdown-container">
                   <label htmlFor="product" className="block text-sm font-medium text-gray-700 mb-2">
                     Produk *
                   </label>
@@ -262,7 +285,14 @@ export default function NewTransactionPage() {
                       {filteredProducts.map((product) => (
                         <div
                           key={product.sku}
-                          onClick={() => selectProduct(product)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            selectProduct(product);
+                          }}
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                          }}
                           className="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
                         >
                           <div className="font-medium text-gray-900">{product.nama}</div>
