@@ -33,7 +33,7 @@ interface ChartData {
   datasets: {
     label: string;
     data: number[];
-    borderColor?: string;
+    borderColor?: string | string[];
     backgroundColor?: string | string[];
     tension?: number;
     fill?: boolean;
@@ -81,7 +81,7 @@ export function DashboardChart({
           padding: 20,
           font: {
             size: 12,
-            weight: '500' as const,
+            weight: 'normal' as const,
           },
           color: '#6b7280',
         },
@@ -101,7 +101,7 @@ export function DashboardChart({
         padding: 12,
         titleFont: {
           size: 13,
-          weight: '600' as const,
+          weight: 'bold' as const,
         },
         bodyFont: {
           size: 12,
@@ -140,7 +140,7 @@ export function DashboardChart({
           color: '#9ca3af',
           font: {
             size: 11,
-            weight: '500' as const,
+            weight: 'normal' as const,
           },
           padding: 12,
           callback: function(value: any) {
@@ -162,7 +162,7 @@ export function DashboardChart({
           color: '#9ca3af',
           font: {
             size: 11,
-            weight: '500' as const,
+            weight: 'normal' as const,
           },
           padding: 12,
         },
@@ -204,13 +204,13 @@ export function DashboardChart({
       backgroundColor: gradient && Array.isArray(dataset.backgroundColor) 
         ? dataset.backgroundColor 
         : gradient 
-          ? `linear-gradient(135deg, ${dataset.backgroundColor}20, ${dataset.backgroundColor}80)`
+          ? `linear-gradient(135deg, ${Array.isArray(dataset.backgroundColor) ? dataset.backgroundColor[0] : dataset.backgroundColor}20, ${Array.isArray(dataset.backgroundColor) ? dataset.backgroundColor[0] : dataset.backgroundColor}80)`
           : dataset.backgroundColor,
-      borderColor: dataset.borderColor || dataset.backgroundColor,
+      borderColor: Array.isArray(dataset.borderColor) ? dataset.borderColor[0] : (dataset.borderColor || (Array.isArray(dataset.backgroundColor) ? dataset.backgroundColor[0] : dataset.backgroundColor)),
       pointBackgroundColor: dataset.pointBackgroundColor || '#ffffff',
-      pointBorderColor: dataset.pointBorderColor || dataset.borderColor || dataset.backgroundColor,
+      pointBorderColor: dataset.pointBorderColor || (Array.isArray(dataset.borderColor) ? dataset.borderColor[0] : dataset.borderColor) || (Array.isArray(dataset.backgroundColor) ? dataset.backgroundColor[0] : dataset.backgroundColor),
       pointHoverBackgroundColor: dataset.pointHoverBackgroundColor || '#ffffff',
-      pointHoverBorderColor: dataset.pointHoverBorderColor || dataset.borderColor || dataset.backgroundColor,
+      pointHoverBorderColor: dataset.pointHoverBorderColor || (Array.isArray(dataset.borderColor) ? dataset.borderColor[0] : dataset.borderColor) || (Array.isArray(dataset.backgroundColor) ? dataset.backgroundColor[0] : dataset.backgroundColor),
     }))
   };
 
@@ -230,7 +230,7 @@ export function DashboardChart({
             <div key={index} className="flex items-center space-x-2">
               <div 
                 className="w-4 h-4 rounded-full shadow-sm border-2 border-white" 
-                style={{ backgroundColor: dataset.borderColor || dataset.backgroundColor }}
+                style={{ backgroundColor: Array.isArray(dataset.borderColor) ? dataset.borderColor[0] : (dataset.borderColor || (Array.isArray(dataset.backgroundColor) ? dataset.backgroundColor[0] : dataset.backgroundColor)) }}
               />
               <span className="text-sm font-semibold text-gray-700">{dataset.label}</span>
             </div>
@@ -355,7 +355,7 @@ export function OrderTypesChart({ data, title = "Order Types" }: { data: any, ti
           color: '#9ca3af',
           font: {
             size: 11,
-            weight: '500' as const,
+            weight: 'normal' as const,
           },
           callback: function(value: any) {
             return new Intl.NumberFormat('en-US', {
@@ -376,7 +376,7 @@ export function OrderTypesChart({ data, title = "Order Types" }: { data: any, ti
           color: '#6b7280',
           font: {
             size: 12,
-            weight: '600' as const,
+            weight: 'bold' as const,
           },
         },
       },
@@ -446,7 +446,7 @@ export function PaymentMethodsChart({ data, title = "Payment Methods" }: { data:
           padding: 20,
           font: {
             size: 12,
-            weight: '600' as const,
+            weight: 'bold' as const,
           },
           color: '#6b7280',
           generateLabels: function(chart: any) {
