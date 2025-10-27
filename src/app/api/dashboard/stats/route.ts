@@ -50,11 +50,13 @@ export async function GET(request: NextRequest) {
         let transactionCount = transactions.length;
         
         transactions.forEach((tx: any) => {
-          if (tx.pendapatan_sgd) monthlyRevenue += tx.pendapatan_sgd;
+          // Fix revenue calculation - use harga_jual_sgd if pendapatan_sgd is null
+          const revenue = tx.pendapatan_sgd || tx.harga_jual_sgd || 0;
+          monthlyRevenue += revenue;
+          
           if (tx.modal_total_IDR) monthlyModal += tx.modal_total_IDR;
           
           // Calculate gross profit (revenue - cost)
-          const revenue = tx.pendapatan_sgd || 0;
           const cost = tx.modal_total_IDR || 0;
           monthlyGrossProfit += (revenue - cost);
           
@@ -67,7 +69,7 @@ export async function GET(request: NextRequest) {
           // Get product category from the product map
           const product = productMap.get(tx.sku) as any;
           const productCategory = product?.kategori || 'Other';
-          chartData.orderTypes[productCategory] = (chartData.orderTypes[productCategory] || 0) + (tx.pendapatan_sgd || 0);
+          chartData.orderTypes[productCategory] = (chartData.orderTypes[productCategory] || 0) + revenue;
         });
         
         chartData.revenue.push(Math.round(monthlyRevenue * 100) / 100);
@@ -78,6 +80,8 @@ export async function GET(request: NextRequest) {
         // Debug logging
         console.log(`Month ${periode}: ${transactionCount} transactions, Revenue: ${monthlyRevenue}, Modal: ${monthlyModal}`);
         console.log('Product Categories:', chartData.orderTypes);
+        console.log('All products in database:', products.map((p: any) => ({ sku: p.sku, kategori: p.kategori })));
+        console.log('Transaction SKUs:', transactions.map((tx: any) => ({ sku: tx.sku, pendapatan_sgd: tx.pendapatan_sgd, harga_jual_sgd: tx.harga_jual_sgd })));
       } catch (error) {
         console.error(`Error getting data for ${periode}:`, error);
         chartData.revenue.push(0);
