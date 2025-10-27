@@ -345,7 +345,7 @@ export default function HomePage() {
                   data={{
                     labels: chartData.labels,
                     datasets: [{
-                      label: 'Proceeds (SGD)',
+                      label: 'Pendapatan (SGD)',
                       data: chartData.revenue.length > 0 ? chartData.revenue : [0],
                       borderColor: '#3b82f6',
                       backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -353,7 +353,7 @@ export default function HomePage() {
                       tension: 0.4,
                     }]
                   }}
-                  title="Proceeds"
+                  title="Pendapatan"
                   type={chartData.labels.length === 1 ? "bar" : "line"}
                   timeRange={chartTimeRange}
                 />
@@ -361,7 +361,7 @@ export default function HomePage() {
                   data={{
                     labels: chartData.labels,
                     datasets: [{
-                      label: 'Gross Profit (SGD)',
+                      label: 'Laba Kotor (SGD)',
                       data: chartData.grossProfit,
                       borderColor: '#f59e0b',
                       backgroundColor: 'rgba(245, 158, 11, 0.1)',
@@ -369,7 +369,7 @@ export default function HomePage() {
                       tension: 0.4,
                     }]
                   }}
-                  title="Gross profit"
+                  title="Laba Kotor"
                   type={chartData.labels.length === 1 ? "bar" : "line"}
                   timeRange={chartTimeRange}
                 />
@@ -380,7 +380,7 @@ export default function HomePage() {
                     labels: Object.keys(chartData.orderTypes).length > 0 ? Object.keys(chartData.orderTypes) : ['No Data'],
                     values: Object.values(chartData.orderTypes).length > 0 ? Object.values(chartData.orderTypes) : [0]
                   }}
-                  title="Product Categories"
+                  title="Kategori Produk"
                 />
                 <PaymentMethodsChart 
                   data={{
@@ -391,7 +391,7 @@ export default function HomePage() {
                       return counts.map(count => total > 0 ? Math.round((count / total) * 100) : 0);
                     })()
                   }}
-                  title="Payment methods"
+                  title="Metode Pembayaran"
                 />
               </div>
             </>
@@ -416,9 +416,9 @@ export default function HomePage() {
           {/* Recent Transactions */}
           <div className="card">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Recent Transactions</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Transaksi Terbaru</h3>
               <Link href="/transactions" className="text-primary-500 hover:text-primary-600 text-sm font-medium">
-                View All
+                Lihat Semua
               </Link>
             </div>
             <div className="space-y-3">
@@ -427,7 +427,7 @@ export default function HomePage() {
                   <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
                     <div>
                       <p className="font-medium text-gray-900">{tx.sku}</p>
-                      <p className="text-sm text-gray-600">{tx.tanggal} • Qty: {tx.qty}</p>
+                      <p className="text-sm text-gray-600">{tx.tanggal} • Jumlah: {tx.qty}</p>
                     </div>
                     <div className="text-right">
                       <p className="font-medium text-gray-900">
@@ -448,9 +448,9 @@ export default function HomePage() {
           {/* Top Products */}
           <div className="card">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Top Products (This Month)</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Produk Terlaris (Bulan Ini)</h3>
               <Link href="/reports" className="text-primary-500 hover:text-primary-600 text-sm font-medium">
-                View Report
+                Lihat Laporan
               </Link>
             </div>
             <div className="space-y-3">
@@ -471,7 +471,7 @@ export default function HomePage() {
                         SGD {Number(product.revenue).toFixed(2)}
                       </p>
                       <p className="text-sm text-gray-600">
-                        Qty: {product.qty_sold}
+                        Jumlah: {product.qty_sold}
                       </p>
                     </div>
                   </div>
