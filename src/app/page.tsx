@@ -22,7 +22,7 @@ export default function HomePage() {
   const [chartData, setChartData] = useState<any>(null);
   const [chartsLoading, setChartsLoading] = useState(true);
   const [chartTimeRange, setChartTimeRange] = useState<1 | 3 | 6>(1);
-  const [stockFilter, setStockFilter] = useState<'category' | 'location'>('category');
+  const [stockFilter, setStockFilter] = useState<'category' | 'location' | 'combined'>('category');
   const [dbStatus, setDbStatus] = useState<any>(null);
   const [alert, setAlert] = useState<{
     isOpen: boolean;
@@ -395,6 +395,16 @@ export default function HomePage() {
                         }`}
                       >
                         Lokasi
+                      </button>
+                      <button
+                        onClick={() => setStockFilter('combined')}
+                        className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                          stockFilter === 'combined'
+                            ? 'bg-white text-gray-900 shadow-sm'
+                            : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                      >
+                        Detail
                       </button>
                     </div>
                   </div>

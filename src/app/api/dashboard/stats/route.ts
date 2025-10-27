@@ -21,7 +21,8 @@ export async function GET(request: NextRequest) {
       paymentMethods: {} as Record<string, number>,
       orderTypes: {} as Record<string, number>,
       stockLevels: {} as Record<string, number>,
-      stockByLocation: {} as Record<string, Record<string, number>>
+      stockByLocation: {} as Record<string, Record<string, number>>,
+      stockByProductLocation: {} as Record<string, number>
     };
 
     // Get products once outside the loop to avoid resetting categories
@@ -47,10 +48,16 @@ export async function GET(request: NextRequest) {
         }
         const locationStock = chartData.stockByLocation[item.store_location][product.kategori] || 0;
         chartData.stockByLocation[item.store_location][product.kategori] = locationStock + (item.current_stock || 0);
+        
+        // Group by product name and location (combined view)
+        const productLocationKey = `${product.nama}, ${item.store_location}`;
+        const productLocationStock = chartData.stockByProductLocation[productLocationKey] || 0;
+        chartData.stockByProductLocation[productLocationKey] = productLocationStock + (item.current_stock || 0);
       }
     });
     console.log('Stock levels by category:', chartData.stockLevels);
     console.log('Stock levels by location:', chartData.stockByLocation);
+    console.log('Stock levels by product-location:', chartData.stockByProductLocation);
 
     // Generate last N months
     for (let i = months - 1; i >= 0; i--) {
