@@ -282,27 +282,108 @@ export function RevenueChart({ data, title = "Tren Pendapatan" }: { data: any, t
   );
 }
 
-export function ProfitChart({ data, title = "Gross Profit" }: { data: any, title?: string }) {
+export function StockChart({ data, title = "Stock Produk" }: { data: any, title?: string }) {
+  // Convert stockLevels object to chart data
+  const stockData = data?.stockLevels || {};
+  const labels = Object.keys(stockData);
+  const values = Object.values(stockData);
+
   const chartData = {
-    labels: data?.labels || ['10.07', '11.07', '12.07', '13.07', '14.07', '15.07', '16.07'],
+    labels: labels.length > 0 ? labels : ['Bakso', 'Mie', 'Minuman'],
     datasets: [{
-      label: 'Gross Profit',
-      data: data?.profit || [5000, 9000, 6500, 9000, 14000, 17000, 14000],
-      borderColor: '#f59e0b',
-      backgroundColor: 'rgba(245, 158, 11, 0.1)',
-      fill: true,
-      tension: 0.4,
+      label: 'Stok',
+      data: values.length > 0 ? values : [50, 30, 20],
+      backgroundColor: [
+        'rgba(34, 197, 94, 0.8)',
+        'rgba(34, 197, 94, 0.6)',
+        'rgba(34, 197, 94, 0.4)',
+        'rgba(34, 197, 94, 0.2)',
+      ],
+      borderColor: [
+        'rgba(34, 197, 94, 1)',
+        'rgba(34, 197, 94, 0.8)',
+        'rgba(34, 197, 94, 0.6)',
+        'rgba(34, 197, 94, 0.4)',
+      ],
+      borderWidth: 2,
     }]
   };
 
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'right' as const,
+        labels: {
+          usePointStyle: true,
+          padding: 20,
+          font: {
+            size: 12,
+            weight: 'bold' as const,
+          },
+          color: '#6b7280',
+          generateLabels: function(chart: any) {
+            const data = chart.data;
+            if (data.labels.length && data.datasets.length) {
+              return data.labels.map((label: string, i: number) => {
+                const dataset = data.datasets[0];
+                const value = dataset.data[i];
+                return {
+                  text: `${label}: ${value} unit`,
+                  fillStyle: dataset.backgroundColor[i],
+                  strokeStyle: dataset.borderColor[i],
+                  lineWidth: 2,
+                  pointStyle: 'circle',
+                  hidden: false,
+                  index: i
+                };
+              });
+            }
+            return [];
+          }
+        }
+      },
+      tooltip: {
+        enabled: true,
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleColor: '#ffffff',
+        bodyColor: '#ffffff',
+        borderColor: 'rgba(255, 255, 255, 0.1)',
+        borderWidth: 1,
+        cornerRadius: 8,
+        displayColors: true,
+        padding: 12,
+        callbacks: {
+          label: function(context: any) {
+            return `${context.label}: ${context.parsed} unit`;
+          }
+        }
+      },
+    },
+  };
+
   return (
-    <DashboardChart 
-      data={chartData} 
-      title={title} 
-      type="line" 
-      height={320}
-      gradient={true}
-    />
+    <div className="bg-white rounded-3xl border border-gray-100 p-8 shadow-xl hover:shadow-2xl transition-all duration-500 backdrop-blur-sm relative overflow-hidden group">
+      <div className="absolute inset-0 bg-gradient-to-br from-green-50/30 via-transparent to-emerald-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      
+      <div className="flex items-center justify-between mb-8 relative z-10">
+        <div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
+          <p className="text-sm text-gray-500 font-medium">Stok produk berdasarkan kategori</p>
+        </div>
+        <button className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-lg">
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+          </svg>
+        </button>
+      </div>
+      
+      <div style={{ height: 280 }} className="relative z-10">
+        <Pie options={options} data={chartData} />
+      </div>
+    </div>
   );
 }
 

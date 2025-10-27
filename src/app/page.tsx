@@ -7,7 +7,7 @@ import { CashIcon, ProductIcon, TransactionIcon, ReportIcon, AddIcon } from '@/c
 import { 
   DashboardChart, 
   RevenueChart, 
-  ProfitChart, 
+  StockChart, 
   OrderTypesChart, 
   PaymentMethodsChart,
   generateSampleRevenueData, 
@@ -370,21 +370,9 @@ export default function HomePage() {
                   type={chartData.labels.length === 1 ? "bar" : "line"}
                   timeRange={chartTimeRange}
                 />
-                <DashboardChart
-                  data={{
-                    labels: chartData.labels,
-                    datasets: [{
-                      label: 'Laba Kotor (SGD)',
-                      data: chartData.grossProfit,
-                      borderColor: '#f59e0b',
-                      backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                      fill: true,
-                      tension: 0.4,
-                    }]
-                  }}
-                  title="Laba Kotor"
-                  type={chartData.labels.length === 1 ? "bar" : "line"}
-                  timeRange={chartTimeRange}
+                <StockChart 
+                  data={chartData}
+                  title="Stock Produk"
                 />
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
