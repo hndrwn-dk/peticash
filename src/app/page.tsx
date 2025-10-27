@@ -22,6 +22,7 @@ export default function HomePage() {
   const [chartData, setChartData] = useState<any>(null);
   const [chartsLoading, setChartsLoading] = useState(true);
   const [chartTimeRange, setChartTimeRange] = useState<1 | 3 | 6>(1);
+  const [stockFilter, setStockFilter] = useState<'category' | 'location'>('category');
   const [dbStatus, setDbStatus] = useState<any>(null);
   const [alert, setAlert] = useState<{
     isOpen: boolean;
@@ -370,10 +371,39 @@ export default function HomePage() {
                   type={chartData.labels.length === 1 ? "bar" : "line"}
                   timeRange={chartTimeRange}
                 />
-                <StockChart 
-                  data={chartData}
-                  title="Stock Produk"
-                />
+                <div>
+                  {/* Stock Filter Controls */}
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Stock Produk</h3>
+                    <div className="flex bg-gray-100 rounded-lg p-1">
+                      <button
+                        onClick={() => setStockFilter('category')}
+                        className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                          stockFilter === 'category'
+                            ? 'bg-white text-gray-900 shadow-sm'
+                            : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                      >
+                        Kategori
+                      </button>
+                      <button
+                        onClick={() => setStockFilter('location')}
+                        className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                          stockFilter === 'location'
+                            ? 'bg-white text-gray-900 shadow-sm'
+                            : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                      >
+                        Lokasi
+                      </button>
+                    </div>
+                  </div>
+                  <StockChart 
+                    data={chartData}
+                    title=""
+                    filterBy={stockFilter}
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <OrderTypesChart 
