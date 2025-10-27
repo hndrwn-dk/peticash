@@ -20,7 +20,8 @@ export async function GET(request: NextRequest) {
       grossProfit: [] as number[],
       paymentMethods: {} as Record<string, number>,
       orderTypes: {} as Record<string, number>,
-      stockLevels: {} as Record<string, number>
+      stockLevels: {} as Record<string, number>,
+      stockByLocation: {} as Record<string, Record<string, number>>
     };
 
     // Get products once outside the loop to avoid resetting categories
@@ -32,15 +33,24 @@ export async function GET(request: NextRequest) {
     const inventory = await database.getInventory();
     console.log('Inventory data:', inventory);
     
-    // Group stock by product category
+    // Group stock by product category and location
     inventory.forEach((item: any) => {
       const product = productMap.get(item.sku) as any;
       if (product && product.kategori) {
+        // Group by category
         const currentStock = chartData.stockLevels[product.kategori] || 0;
         chartData.stockLevels[product.kategori] = currentStock + (item.current_stock || 0);
+        
+        // Group by location and category
+        if (!chartData.stockByLocation[item.store_location]) {
+          chartData.stockByLocation[item.store_location] = {};
+        }
+        const locationStock = chartData.stockByLocation[item.store_location][product.kategori] || 0;
+        chartData.stockByLocation[item.store_location][product.kategori] = locationStock + (item.current_stock || 0);
       }
     });
     console.log('Stock levels by category:', chartData.stockLevels);
+    console.log('Stock levels by location:', chartData.stockByLocation);
 
     // Generate last N months
     for (let i = months - 1; i >= 0; i--) {

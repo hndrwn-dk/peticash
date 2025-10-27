@@ -282,32 +282,68 @@ export function RevenueChart({ data, title = "Tren Pendapatan" }: { data: any, t
   );
 }
 
-export function StockChart({ data, title = "Stock Produk" }: { data: any, title?: string }) {
-  // Convert stockLevels object to chart data
-  const stockData = data?.stockLevels || {};
-  const labels = Object.keys(stockData);
-  const values = Object.values(stockData);
+export function StockChart({ data, title = "Stock Produk", filterBy = "category" }: { data: any, title?: string, filterBy?: "category" | "location" }) {
+  // Convert stockLevels object to chart data based on filter
+  let chartData;
+  
+  if (filterBy === "location") {
+    // Group by location
+    const stockByLocation = data?.stockByLocation || {};
+    const locations = Object.keys(stockByLocation);
+    const locationTotals = locations.map(location => {
+      const categories = stockByLocation[location];
+      return Object.values(categories).reduce((sum: number, stock: any) => sum + (stock || 0), 0);
+    });
 
-  const chartData = {
-    labels: labels.length > 0 ? labels : ['Bakso', 'Mie', 'Minuman'],
-    datasets: [{
-      label: 'Stok',
-      data: values.length > 0 ? values : [50, 30, 20],
-      backgroundColor: [
-        'rgba(34, 197, 94, 0.8)',
-        'rgba(34, 197, 94, 0.6)',
-        'rgba(34, 197, 94, 0.4)',
-        'rgba(34, 197, 94, 0.2)',
-      ],
-      borderColor: [
-        'rgba(34, 197, 94, 1)',
-        'rgba(34, 197, 94, 0.8)',
-        'rgba(34, 197, 94, 0.6)',
-        'rgba(34, 197, 94, 0.4)',
-      ],
-      borderWidth: 2,
-    }]
-  };
+    chartData = {
+      labels: locations.length > 0 ? locations : ['Ane', 'Endah', 'Lina', 'Nisa', 'Rini'],
+      datasets: [{
+        label: 'Stok',
+        data: locationTotals.length > 0 ? locationTotals : [50, 30, 20, 15, 10],
+        backgroundColor: [
+          'rgba(34, 197, 94, 0.8)',
+          'rgba(34, 197, 94, 0.6)',
+          'rgba(34, 197, 94, 0.4)',
+          'rgba(34, 197, 94, 0.2)',
+          'rgba(34, 197, 94, 0.1)',
+        ],
+        borderColor: [
+          'rgba(34, 197, 94, 1)',
+          'rgba(34, 197, 94, 0.8)',
+          'rgba(34, 197, 94, 0.6)',
+          'rgba(34, 197, 94, 0.4)',
+          'rgba(34, 197, 94, 0.2)',
+        ],
+        borderWidth: 2,
+      }]
+    };
+  } else {
+    // Group by category (default)
+    const stockData = data?.stockLevels || {};
+    const labels = Object.keys(stockData);
+    const values = Object.values(stockData);
+
+    chartData = {
+      labels: labels.length > 0 ? labels : ['Bakso', 'Mie', 'Minuman'],
+      datasets: [{
+        label: 'Stok',
+        data: values.length > 0 ? values : [50, 30, 20],
+        backgroundColor: [
+          'rgba(34, 197, 94, 0.8)',
+          'rgba(34, 197, 94, 0.6)',
+          'rgba(34, 197, 94, 0.4)',
+          'rgba(34, 197, 94, 0.2)',
+        ],
+        borderColor: [
+          'rgba(34, 197, 94, 1)',
+          'rgba(34, 197, 94, 0.8)',
+          'rgba(34, 197, 94, 0.6)',
+          'rgba(34, 197, 94, 0.4)',
+        ],
+        borderWidth: 2,
+      }]
+    };
+  }
 
   const options = {
     responsive: true,
@@ -371,7 +407,9 @@ export function StockChart({ data, title = "Stock Produk" }: { data: any, title?
       <div className="flex items-center justify-between mb-8 relative z-10">
         <div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
-          <p className="text-sm text-gray-500 font-medium">Stok produk berdasarkan kategori</p>
+          <p className="text-sm text-gray-500 font-medium">
+            {filterBy === "location" ? "Stok produk berdasarkan lokasi" : "Stok produk berdasarkan kategori"}
+          </p>
         </div>
         <button className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-lg">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
