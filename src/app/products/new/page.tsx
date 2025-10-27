@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Navigation from '@/components/Navigation';
 import Alert from '@/components/Alert';
@@ -25,6 +25,44 @@ export default function NewProductPage() {
     kategori: '',
     barcode: ''
   });
+  const [categories, setCategories] = useState<string[]>([]);
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const [categorySearchTerm, setCategorySearchTerm] = useState('');
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('.category-dropdown')) {
+        setShowCategoryDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/categories');
+      const result = await response.json();
+      if (result.success) {
+        setCategories(result.data);
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  const filteredCategories = categories.filter(category =>
+    category.toLowerCase().includes(categorySearchTerm.toLowerCase())
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -205,19 +243,63 @@ export default function NewProductPage() {
               <h3 className="text-lg font-medium text-gray-900 mb-4">Informasi Tambahan</h3>
               
               <div className="grid grid-cols-1 gap-6">
-                <div>
+                <div className="relative category-dropdown">
                   <label htmlFor="kategori" className="block text-sm font-medium text-gray-700 mb-2">
                     Kategori
                   </label>
-                  <input
-                    type="text"
-                    id="kategori"
-                    name="kategori"
-                    value={formData.kategori}
-                    onChange={handleInputChange}
-                    className="input-field"
-                    placeholder="contoh: Kopi, Teh, Makanan"
-                  />
+                  <div className="relative">
+                    <input
+                      type="text"
+                      id="kategori"
+                      name="kategori"
+                      value={categorySearchTerm}
+                      onChange={(e) => {
+                        setCategorySearchTerm(e.target.value);
+                        setFormData(prev => ({ ...prev, kategori: e.target.value }));
+                        setShowCategoryDropdown(true);
+                      }}
+                      onFocus={() => setShowCategoryDropdown(true)}
+                      className="input-field w-full"
+                      placeholder="Cari atau ketik kategori baru..."
+                    />
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                      <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
+                  
+                  {showCategoryDropdown && (
+                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+                      {filteredCategories.length > 0 ? (
+                        filteredCategories.map((category) => (
+                          <div
+                            key={category}
+                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                            onClick={() => {
+                              setFormData(prev => ({ ...prev, kategori: category }));
+                              setCategorySearchTerm(category);
+                              setShowCategoryDropdown(false);
+                            }}
+                          >
+                            {category}
+                          </div>
+                        ))
+                      ) : (
+                        <div className="px-4 py-2 text-gray-500">
+                          {categorySearchTerm ? 'Tidak ada kategori yang cocok' : 'Tidak ada kategori tersedia'}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
+                  {formData.kategori && (
+                    <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+                      <span className="text-sm text-blue-800">
+                        <strong>Dipilih:</strong> {formData.kategori}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

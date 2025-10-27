@@ -79,19 +79,23 @@ export default function HomePage() {
       const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
       
       // Fetch products and transactions in parallel
-      const [productsRes, transactionsRes] = await Promise.all([
+      const [productsRes, transactionsRes, allTransactionsRes] = await Promise.all([
         fetch('/api/products'),
-        fetch(`/api/transactions?periode=${currentMonth}&limit=5`)
+        fetch(`/api/transactions?periode=${currentMonth}&limit=5`),
+        fetch('/api/transactions') // Get all transactions for total revenue
       ]);
 
       const productsData = await productsRes.json();
       const transactionsData = await transactionsRes.json();
+      const allTransactionsData = await allTransactionsRes.json();
 
       const products: Product[] = productsData.success ? productsData.data : [];
       const transactions: Transaction[] = transactionsData.success ? transactionsData.data : [];
+      const allTransactions: Transaction[] = allTransactionsData.success ? allTransactionsData.data : [];
 
       // Calculate stats
       const currentMonthRevenue = transactions.reduce((sum, tx) => sum + (Number(tx.pendapatan_sgd) || 0), 0);
+      const totalRevenue = allTransactions.reduce((sum, tx) => sum + (Number(tx.pendapatan_sgd) || 0), 0);
       
       // Calculate total modal from all products (not just transactions)
       const totalModalValue = products.reduce((sum, product) => {
@@ -128,7 +132,7 @@ export default function HomePage() {
       const dashboardStats: DashboardStats = {
         total_products: products.length,
         current_month_transactions: transactions.length,
-        current_month_revenue_sgd: currentMonthRevenue,
+        current_month_revenue_sgd: totalRevenue, // Use total revenue instead of current month
         current_month_modal_idr: totalModalValue,
         recent_transactions: transactions.slice(0, 5),
         top_products: topProducts
