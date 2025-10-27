@@ -226,9 +226,9 @@ export function DashboardChart({
         <div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
           <p className="text-sm text-gray-500 font-medium">
-            {timeRange === 1 ? 'Last 1 month performance' : 
-             timeRange === 3 ? 'Last 3 months performance' : 
-             'Last 6 months performance'}
+            {timeRange === 1 ? 'Performa 1 bulan terakhir' : 
+             timeRange === 3 ? 'Performa 3 bulan terakhir' : 
+             'Performa 6 bulan terakhir'}
           </p>
         </div>
         <div className="flex items-center space-x-4">
@@ -258,11 +258,11 @@ export function DashboardChart({
 }
 
 // Specialized chart components for premium dashboard
-export function RevenueChart({ data, title = "Revenue Trend" }: { data: any, title?: string }) {
+export function RevenueChart({ data, title = "Tren Pendapatan" }: { data: any, title?: string }) {
   const chartData = {
     labels: data?.labels || ['10.07', '11.07', '12.07', '13.07', '14.07', '15.07', '16.07'],
     datasets: [{
-      label: 'Revenue',
+      label: 'Pendapatan',
       data: data?.revenue || [9000, 6000, 8000, 14000, 13000, 18000, 14000],
       borderColor: '#3b82f6',
       backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -306,11 +306,11 @@ export function ProfitChart({ data, title = "Gross Profit" }: { data: any, title
   );
 }
 
-export function OrderTypesChart({ data, title = "Order Types" }: { data: any, title?: string }) {
+export function OrderTypesChart({ data, title = "Kategori Produk" }: { data: any, title?: string }) {
   const chartData = {
     labels: data?.labels || ['On-site', 'To-go', 'Delivery'],
     datasets: [{
-      label: 'Revenue',
+      label: 'Pendapatan',
       data: data?.values || [4200, 5500, 800],
       backgroundColor: [
         'rgba(245, 158, 11, 0.8)',
@@ -402,7 +402,7 @@ export function OrderTypesChart({ data, title = "Order Types" }: { data: any, ti
       <div className="flex items-center justify-between mb-8 relative z-10">
         <div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
-          <p className="text-sm text-gray-500 font-medium">Revenue by order type</p>
+          <p className="text-sm text-gray-500 font-medium">Pendapatan berdasarkan kategori produk</p>
         </div>
         <button className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-lg">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -418,11 +418,11 @@ export function OrderTypesChart({ data, title = "Order Types" }: { data: any, ti
   );
 }
 
-export function PaymentMethodsChart({ data, title = "Payment Methods" }: { data: any, title?: string }) {
+export function PaymentMethodsChart({ data, title = "Metode Pembayaran" }: { data: any, title?: string }) {
   const chartData = {
     labels: data?.labels || ['Card', 'Cash', 'Bonus System', 'On the House'],
     datasets: [{
-      label: 'Payment Methods',
+      label: 'Metode Pembayaran',
       data: data?.values || [35, 38, 22, 6],
       backgroundColor: [
         'rgba(147, 51, 234, 0.8)',
@@ -502,7 +502,7 @@ export function PaymentMethodsChart({ data, title = "Payment Methods" }: { data:
       <div className="flex items-center justify-between mb-8 relative z-10">
         <div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
-          <p className="text-sm text-gray-500 font-medium">Payment distribution</p>
+          <p className="text-sm text-gray-500 font-medium">Distribusi Pembayaran</p>
         </div>
         <button className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-lg">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
