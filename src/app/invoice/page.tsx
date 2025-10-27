@@ -260,7 +260,7 @@ export default function InvoicePage() {
           
           <div class="summary">
             <div class="summary-item">
-              <h3>Total ${invoiceType === 'customer' ? 'Amount' : 'Revenue'} (SGD)</h3>
+              <h3>Total ${invoiceType === 'customer' ? 'Amount' : 'Pendapatan'} (SGD)</h3>
               <p>$${Number(invoiceType === 'customer' ? invoiceData.totalAmount : (invoiceData.totalRevenue || 0)).toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
             </div>
             <div class="summary-item">
@@ -518,7 +518,7 @@ export default function InvoicePage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <div className="text-sm font-medium text-gray-600">
-                    Total {invoiceType === 'customer' ? 'Amount' : 'Revenue'} (SGD)
+                    Total {invoiceType === 'customer' ? 'Amount' : 'Pendapatan'} (SGD)
                   </div>
                   <div className="text-2xl font-bold text-gray-900">
                     {formatCurrency(invoiceType === 'customer' ? invoiceData.totalAmount : (invoiceData.totalRevenue || 0), 'SGD')}
