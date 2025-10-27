@@ -338,13 +338,15 @@ export default function HomePage() {
             </div>
           ) : chartData ? (
             <>
+              {/* Debug logging */}
+              {console.log('Chart Data:', chartData)}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 <DashboardChart
                   data={{
                     labels: chartData.labels,
                     datasets: [{
                       label: 'Proceeds (SGD)',
-                      data: chartData.revenue,
+                      data: chartData.revenue.length > 0 ? chartData.revenue : [0],
                       borderColor: '#3b82f6',
                       backgroundColor: 'rgba(59, 130, 246, 0.1)',
                       fill: true,
@@ -352,7 +354,7 @@ export default function HomePage() {
                     }]
                   }}
                   title="Proceeds"
-                  type="line"
+                  type={chartData.labels.length === 1 ? "bar" : "line"}
                   timeRange={chartTimeRange}
                 />
                 <DashboardChart
@@ -368,15 +370,15 @@ export default function HomePage() {
                     }]
                   }}
                   title="Gross profit"
-                  type="line"
+                  type={chartData.labels.length === 1 ? "bar" : "line"}
                   timeRange={chartTimeRange}
                 />
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <OrderTypesChart 
                   data={{
-                    labels: Object.keys(chartData.orderTypes),
-                    values: Object.values(chartData.orderTypes)
+                    labels: Object.keys(chartData.orderTypes).length > 0 ? Object.keys(chartData.orderTypes) : ['No Data'],
+                    values: Object.values(chartData.orderTypes).length > 0 ? Object.values(chartData.orderTypes) : [0]
                   }}
                   title="Product Categories"
                 />
