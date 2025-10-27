@@ -382,8 +382,8 @@ export default function HomePage() {
                   data={{
                     labels: Object.keys(chartData.paymentMethods),
                     values: (() => {
-                      const counts = Object.values(chartData.paymentMethods);
-                      const total = counts.reduce((sum, count) => sum + count, 0);
+                      const counts = Object.values(chartData.paymentMethods) as number[];
+                      const total = counts.reduce((sum: number, count: number) => sum + count, 0);
                       return counts.map(count => total > 0 ? Math.round((count / total) * 100) : 0);
                     })()
                   }}
