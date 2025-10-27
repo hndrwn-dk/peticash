@@ -22,6 +22,11 @@ export async function GET(request: NextRequest) {
       orderTypes: {} as Record<string, number>
     };
 
+    // Get products once outside the loop to avoid resetting categories
+    const products = await database.getProducts();
+    const productMap = new Map(products.map((p: any) => [p.sku, p]));
+    console.log('Products with categories:', products.map((p: any) => ({ sku: p.sku, kategori: p.kategori })));
+
     // Generate last N months
     for (let i = months - 1; i >= 0; i--) {
       const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -39,11 +44,6 @@ export async function GET(request: NextRequest) {
         console.log('Raw transactions for', periode, ':', JSON.stringify(transactions, null, 2));
         console.log('Transaction fields:', transactions.length > 0 ? Object.keys(transactions[0]) : 'No transactions');
         console.log('Pendapatan SGD values:', transactions.map((tx: any) => ({ sku: tx.sku, pendapatan_sgd: tx.pendapatan_sgd, type: typeof tx.pendapatan_sgd })));
-        
-        // Get products to get categories
-        const products = await database.getProducts();
-        const productMap = new Map(products.map((p: any) => [p.sku, p]));
-        console.log('Products with categories:', products.map((p: any) => ({ sku: p.sku, kategori: p.kategori })));
         
         // Calculate totals
         let monthlyRevenue = 0;

@@ -94,6 +94,7 @@ export default function NewTransactionPage() {
   };
 
   const selectProduct = (product: Product) => {
+    console.log('Selecting product:', product);
     setSelectedProduct(product);
     setSearchQuery(product.nama);
     setShowProductList(false);
@@ -105,13 +106,13 @@ export default function NewTransactionPage() {
       harga_jual_sgd: product.default_harga_jual_sgd?.toString() || ''
     }));
     
-    // Force focus back to input to prevent double-click issues
+    // Force blur to prevent focus issues
     setTimeout(() => {
-      const input = document.getElementById('product');
+      const input = document.getElementById('product') as HTMLInputElement;
       if (input) {
         input.blur();
       }
-    }, 100);
+    }, 50);
   };
 
   const handleProductSearch = (value: string) => {
@@ -285,13 +286,10 @@ export default function NewTransactionPage() {
                       {filteredProducts.map((product) => (
                         <div
                           key={product.sku}
-                          onClick={(e) => {
+                          onMouseDown={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
                             selectProduct(product);
-                          }}
-                          onMouseDown={(e) => {
-                            e.preventDefault();
                           }}
                           className="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
                         >
