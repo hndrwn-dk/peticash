@@ -677,7 +677,11 @@ export class PostgresDatabaseService {
     try {
       await this.ensureInitialized();
       const result = await sql`
-        SELECT i.*, p.nama as product_name 
+        SELECT 
+          i.*,
+          p.nama as product_name,
+          p.kategori,
+          p.default_modal_satuan_idr
         FROM inventory i 
         LEFT JOIN products p ON i.sku = p.sku 
         ORDER BY i.store_location, p.nama
@@ -722,11 +726,37 @@ export class PostgresDatabaseService {
     }
   }
 
+  async deleteInventory(id: number): Promise<ApiResponse> {
+    try {
+      await this.ensureInitialized();
+      
+      const result = await sql`
+        DELETE FROM inventory WHERE id = ${id}
+      `;
+      
+      if (result.rowCount && result.rowCount > 0) {
+        return { 
+          success: true, 
+          message: 'Stok berhasil dihapus'
+        };
+      } else {
+        return { success: false, error: 'Stok tidak ditemukan' };
+      }
+    } catch (error) {
+      console.error('Error deleting inventory:', error);
+      return { success: false, error: 'Gagal menghapus stok' };
+    }
+  }
+
   async getInventoryByLocation(storeLocation: string): Promise<any[]> {
     try {
       await this.ensureInitialized();
       const result = await sql`
-        SELECT i.*, p.nama as product_name 
+        SELECT 
+          i.*,
+          p.nama as product_name,
+          p.kategori,
+          p.default_modal_satuan_idr
         FROM inventory i 
         LEFT JOIN products p ON i.sku = p.sku 
         WHERE i.store_location = ${storeLocation}
