@@ -38,6 +38,8 @@ export default function InventoryPage() {
     notes: ''
   });
 
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
   const locations = ['All', 'Ane', 'Endah', 'Lina', 'Nisa', 'Rini'];
 
   useEffect(() => {
@@ -80,6 +82,17 @@ export default function InventoryPage() {
 
   const refreshProducts = () => {
     loadProducts();
+  };
+
+  const handleProductChange = (sku: string) => {
+    const product = products.find(p => p.sku === sku);
+    setSelectedProduct(product || null);
+    setFormData(prev => ({ ...prev, sku }));
+  };
+
+  const calculateTotalValue = () => {
+    if (!selectedProduct || !formData.current_stock) return 0;
+    return (selectedProduct.default_modal_satuan_idr || 0) * formData.current_stock;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -137,6 +150,8 @@ export default function InventoryPage() {
   };
 
   const handleEdit = (item: InventoryItem) => {
+    const product = products.find(p => p.sku === item.sku);
+    setSelectedProduct(product || null);
     setEditingItem(item);
     setFormData({
       sku: item.sku,
@@ -151,6 +166,7 @@ export default function InventoryPage() {
     setShowAddForm(false);
     setEditingItem(null);
     setFormData({ sku: '', store_location: '', current_stock: 0, notes: '' });
+    setSelectedProduct(null);
   };
 
   const formatCurrency = (amount: number) => {
@@ -247,7 +263,7 @@ export default function InventoryPage() {
                     <select
                       id="sku"
                       value={formData.sku}
-                      onChange={(e) => setFormData(prev => ({ ...prev, sku: e.target.value }))}
+                      onChange={(e) => handleProductChange(e.target.value)}
                       className="input-field flex-1"
                       required
                     >
@@ -329,6 +345,42 @@ export default function InventoryPage() {
                     min="0"
                     required
                   />
+                </div>
+
+                <div>
+                  <label htmlFor="modal_per_unit" className="block text-sm font-medium text-gray-700 mb-2">
+                    Modal per Unit (IDR)
+                  </label>
+                  <input
+                    type="text"
+                    id="modal_per_unit"
+                    value={selectedProduct ? formatCurrency(selectedProduct.default_modal_satuan_idr || 0) : 'Pilih produk terlebih dahulu'}
+                    className="input-field bg-gray-100 cursor-not-allowed"
+                    readOnly
+                    disabled
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Edit di <a href="/products/new" target="_blank" className="text-blue-600 hover:underline">Tambah Produk Baru</a> atau <a href={`/products/${selectedProduct?.sku}/edit`} target="_blank" className="text-blue-600 hover:underline">Edit Produk</a>
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="total_nilai" className="block text-sm font-medium text-gray-700 mb-2">
+                    Total Nilai (IDR)
+                  </label>
+                  <input
+                    type="text"
+                    id="total_nilai"
+                    value={formatCurrency(calculateTotalValue())}
+                    className="input-field bg-gray-100 cursor-not-allowed font-semibold text-lg"
+                    readOnly
+                    disabled
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Modal per Unit × Jumlah Stok
+                  </p>
                 </div>
 
                 <div>
