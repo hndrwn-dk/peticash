@@ -54,6 +54,7 @@ interface ChartProps {
   showLegend?: boolean;
   showTooltip?: boolean;
   gradient?: boolean;
+  timeRange?: number;
 }
 
 export function DashboardChart({ 
@@ -63,7 +64,8 @@ export function DashboardChart({
   height = 280, 
   showLegend = false,
   showTooltip = true,
-  gradient = false
+  gradient = false,
+  timeRange = 1
 }: ChartProps) {
   const options = {
     responsive: true,
@@ -223,7 +225,11 @@ export function DashboardChart({
       <div className="flex items-center justify-between mb-8 relative z-10">
         <div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
-          <p className="text-sm text-gray-500 font-medium">Last 6 months performance</p>
+          <p className="text-sm text-gray-500 font-medium">
+            {timeRange === 1 ? 'Last 1 month performance' : 
+             timeRange === 3 ? 'Last 3 months performance' : 
+             'Last 6 months performance'}
+          </p>
         </div>
         <div className="flex items-center space-x-4">
           {data.datasets.map((dataset, index) => (

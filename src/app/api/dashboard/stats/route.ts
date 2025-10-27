@@ -36,10 +36,12 @@ export async function GET(request: NextRequest) {
       try {
         // Get transactions for this month
         const transactions = await database.getTransactions(periode);
+        console.log('Transactions for', periode, ':', transactions.map((tx: any) => ({ sku: tx.sku, pendapatan_sgd: tx.pendapatan_sgd })));
         
         // Get products to get categories
         const products = await database.getProducts();
         const productMap = new Map(products.map((p: any) => [p.sku, p]));
+        console.log('Products with categories:', products.map((p: any) => ({ sku: p.sku, kategori: p.kategori })));
         
         // Calculate totals
         let monthlyRevenue = 0;
@@ -75,6 +77,7 @@ export async function GET(request: NextRequest) {
         
         // Debug logging
         console.log(`Month ${periode}: ${transactionCount} transactions, Revenue: ${monthlyRevenue}, Modal: ${monthlyModal}`);
+        console.log('Product Categories:', chartData.orderTypes);
       } catch (error) {
         console.error(`Error getting data for ${periode}:`, error);
         chartData.revenue.push(0);
