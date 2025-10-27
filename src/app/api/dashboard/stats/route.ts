@@ -52,11 +52,9 @@ export async function GET(request: NextRequest) {
         let transactionCount = transactions.length;
         
         transactions.forEach((tx: any) => {
-          // Fix revenue calculation - ensure we convert to number and handle null/undefined
-          const pendapatanSgd = Number(tx.pendapatan_sgd) || 0;
-          const hargaJualSgd = Number(tx.harga_jual_sgd) || 0;
-          const revenue = pendapatanSgd || hargaJualSgd;
-          console.log(`Transaction ${tx.sku}: pendapatan_sgd=${tx.pendapatan_sgd} (${typeof tx.pendapatan_sgd}), harga_jual_sgd=${tx.harga_jual_sgd} (${typeof tx.harga_jual_sgd}), calculated revenue=${revenue}`);
+          // Use same calculation as transactions page - only use pendapatan_sgd
+          const revenue = Number(tx.pendapatan_sgd) || 0;
+          console.log(`Transaction ${tx.sku}: pendapatan_sgd=${tx.pendapatan_sgd} (${typeof tx.pendapatan_sgd}), calculated revenue=${revenue}`);
           monthlyRevenue += revenue;
           
           if (tx.modal_total_IDR) monthlyModal += tx.modal_total_IDR;
