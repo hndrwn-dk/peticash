@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Force Node.js runtime for this API route
+export const runtime = 'nodejs';
+
 // POST /api/auth/logout - Logout user
 export async function POST(request: NextRequest) {
   try {

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 
+// Force Node.js runtime for this API route
+export const runtime = 'nodejs';
+
 // GET /api/auth/verify - Verify authentication token
 export async function GET(request: NextRequest) {
   try {

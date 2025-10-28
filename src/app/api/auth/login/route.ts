@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+// Force Node.js runtime for this API route
+export const runtime = 'nodejs';
+
 // Rate limiting store (in production, use Redis or database)
 const loginAttempts = new Map<string, { count: number; lastAttempt: number }>();
 const MAX_ATTEMPTS = 5;
@@ -55,21 +58,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get credentials from environment variables or use defaults
-    const expectedUsername = process.env.AUTH_USERNAME || 'peticash_manager_2024';
-    const expectedPasswordHash = process.env.AUTH_PASSWORD_HASH || '$2a$12$2SmcKY9k0V8JKje2DM6rGeA4b6IQy/VFDgrBKXfIM5BHoaOvEGRjC'; // 'PeticashSecure2024!'
-    const jwtSecret = process.env.JWT_SECRET || 'peticash-secret-key-2024';
+    // Get credentials from environment variables (mandatory for security)
+    const expectedUsername = process.env.AUTH_USERNAME;
+    const expectedPasswordHash = process.env.AUTH_PASSWORD_HASH;
+    const jwtSecret = process.env.JWT_SECRET;
 
-    // Debug logging (remove in production)
-    console.log('Login attempt:', { 
-      providedUsername: username, 
-      expectedUsername, 
-      hasEnvVars: {
-        AUTH_USERNAME: !!process.env.AUTH_USERNAME,
-        AUTH_PASSWORD_HASH: !!process.env.AUTH_PASSWORD_HASH,
-        JWT_SECRET: !!process.env.JWT_SECRET
-      }
-    });
+    // Validate that all required environment variables are set
+    if (!expectedUsername || !expectedPasswordHash || !jwtSecret) {
+      return NextResponse.json(
+        { success: false, error: 'Konfigurasi autentikasi tidak lengkap' },
+        { status: 500 }
+      );
+    }
 
     // Validate username
     if (username !== expectedUsername) {
