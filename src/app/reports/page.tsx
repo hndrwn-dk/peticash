@@ -56,6 +56,15 @@ export default function ReportsPage() {
             modalTotal = modalSatuan * qty;
           }
           
+          // If still 0, try to get from product's default modal value
+          if (modalTotal === 0) {
+            const product = products.find((p: any) => p.sku === t.sku);
+            if (product && product.default_modal_satuan_idr) {
+              const qty = Number(t.qty) || 0;
+              modalTotal = Number(product.default_modal_satuan_idr) * qty;
+            }
+          }
+          
           return sum + modalTotal;
         }, 0);
         
@@ -63,6 +72,14 @@ export default function ReportsPage() {
 
         // Debug: Log transaction data structure
         console.log('Sample transaction data:', transactions[0]);
+        console.log('All transaction fields:', Object.keys(transactions[0] || {}));
+        console.log('Modal fields check:', {
+          modal_total_IDR: transactions[0]?.modal_total_IDR,
+          modal_total_idr: transactions[0]?.modal_total_idr,
+          modal_satuan_IDR: transactions[0]?.modal_satuan_IDR,
+          modal_satuan_idr: transactions[0]?.modal_satuan_idr,
+          qty: transactions[0]?.qty
+        });
         console.log('Total capital calculated:', totalCapital);
 
         setReport({
@@ -214,6 +231,15 @@ export default function ReportsPage() {
                               const modalSatuan = Number(transaction.modal_satuan_IDR) || Number(transaction.modal_satuan_idr) || 0;
                               const qty = Number(transaction.qty) || 0;
                               modalTotal = modalSatuan * qty;
+                            }
+                            
+                            // If still 0, try to get from product's default modal value
+                            if (modalTotal === 0) {
+                              const product = report.products.find((p: any) => p.sku === transaction.sku);
+                              if (product && product.default_modal_satuan_idr) {
+                                const qty = Number(transaction.qty) || 0;
+                                modalTotal = Number(product.default_modal_satuan_idr) * qty;
+                              }
                             }
                             
                             return formatCurrency(modalTotal, 'IDR');
