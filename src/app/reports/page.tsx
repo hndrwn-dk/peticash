@@ -44,8 +44,26 @@ export default function ReportsPage() {
 
         // Calculate totals
         const totalRevenue = transactions.reduce((sum: number, t: any) => sum + (Number(t.pendapatan_sgd) || 0), 0);
-        const totalCapital = transactions.reduce((sum: number, t: any) => sum + (Number(t.modal_total_IDR) || 0), 0);
+        
+        // Calculate total capital - try different field names and fallback to calculation
+        const totalCapital = transactions.reduce((sum: number, t: any) => {
+          let modalTotal = Number(t.modal_total_IDR) || Number(t.modal_total_idr) || 0;
+          
+          // If modal_total is not available, calculate from modal_satuan * qty
+          if (modalTotal === 0) {
+            const modalSatuan = Number(t.modal_satuan_IDR) || Number(t.modal_satuan_idr) || 0;
+            const qty = Number(t.qty) || 0;
+            modalTotal = modalSatuan * qty;
+          }
+          
+          return sum + modalTotal;
+        }, 0);
+        
         const totalTransactions = transactions.length;
+
+        // Debug: Log transaction data structure
+        console.log('Sample transaction data:', transactions[0]);
+        console.log('Total capital calculated:', totalCapital);
 
         setReport({
           totalRevenue,
@@ -70,6 +88,12 @@ export default function ReportsPage() {
     } else {
       return `$${numAmount.toFixed(2)}`;
     }
+  };
+
+  const getProductName = (sku: string) => {
+    if (!report) return 'N/A';
+    const product = report.products.find(p => p.sku === sku);
+    return product ? product.nama : 'N/A';
   };
 
   const getProductStock = (sku: string) => {
@@ -170,10 +194,10 @@ export default function ReportsPage() {
                     {report.transactions.slice(0, 10).map((transaction, index) => (
                       <tr key={index}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {new Date(transaction.created_at).toLocaleDateString('id-ID')}
+                          {new Date(transaction.tanggal).toLocaleDateString('id-ID')}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {transaction.nama_produk || 'N/A'}
+                          {getProductName(transaction.sku)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {transaction.qty || 0}
@@ -182,7 +206,18 @@ export default function ReportsPage() {
                           {formatCurrency(Number(transaction.pendapatan_sgd) || 0, 'SGD')}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {formatCurrency(Number(transaction.modal_total_IDR) || 0, 'IDR')}
+                          {(() => {
+                            let modalTotal = Number(transaction.modal_total_IDR) || Number(transaction.modal_total_idr) || 0;
+                            
+                            // If modal_total is not available, calculate from modal_satuan * qty
+                            if (modalTotal === 0) {
+                              const modalSatuan = Number(transaction.modal_satuan_IDR) || Number(transaction.modal_satuan_idr) || 0;
+                              const qty = Number(transaction.qty) || 0;
+                              modalTotal = modalSatuan * qty;
+                            }
+                            
+                            return formatCurrency(modalTotal, 'IDR');
+                          })()}
                         </td>
                       </tr>
                     ))}
