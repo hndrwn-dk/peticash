@@ -13,18 +13,27 @@ export default function Navigation() {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Main navigation items (top row)
-  const mainNavItems = [
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const navItems = [
     { href: '/', label: 'Dashboard', icon: DashboardIcon },
     { href: '/products', label: 'Produk', icon: ProductIcon },
+    { 
+      label: 'Lainnya', 
+      icon: () => (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      ),
+      hasDropdown: true,
+      dropdownItems: [
+        { href: '/inventory', label: 'Stock Opname', icon: InventoryIcon },
+        { href: '/transactions', label: 'Transaksi', icon: TransactionIcon },
+        { href: '/invoice', label: 'Invoice', icon: InvoiceIcon },
+      ]
+    },
     { href: '/reports', label: 'Laporan', icon: ReportIcon },
-  ];
-
-  // Secondary navigation items (bottom row)
-  const secondaryNavItems = [
-    { href: '/inventory', label: 'Stock Opname', icon: InventoryIcon },
-    { href: '/transactions', label: 'Transaksi', icon: TransactionIcon },
-    { href: '/invoice', label: 'Invoice', icon: InvoiceIcon },
   ];
 
   // Utility items (right side)
@@ -41,6 +50,10 @@ export default function Navigation() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
@@ -55,26 +68,33 @@ export default function Navigation() {
     }
   };
 
-  // Close mobile menu when clicking outside
+  // Close mobile menu and dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
+      
+      // Close mobile menu
       if (mobileMenuRef.current && 
           !mobileMenuRef.current.contains(target) && 
           mobileMenuButtonRef.current && 
           !mobileMenuButtonRef.current.contains(target)) {
         setIsMobileMenuOpen(false);
       }
+      
+      // Close dropdown
+      if (dropdownRef.current && !dropdownRef.current.contains(target)) {
+        setIsDropdownOpen(false);
+      }
     };
 
-    if (isMobileMenuOpen) {
+    if (isMobileMenuOpen || isDropdownOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isMobileMenuOpen]);
+  }, [isMobileMenuOpen, isDropdownOpen]);
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
@@ -85,10 +105,53 @@ export default function Navigation() {
             <h1 className="text-xl font-semibold text-gray-900">Peti Cash</h1>
           </Link>
           
-          <div className="hidden md:flex flex-col space-y-2">
-            {/* Top row - Main navigation */}
-            <nav className="flex space-x-6">
-              {mainNavItems.map((item) => {
+          <nav className="hidden md:flex space-x-6">
+            {navItems.map((item) => {
+              if (item.hasDropdown) {
+                const isAnyDropdownActive = item.dropdownItems?.some(dropdownItem => 
+                  pathname === dropdownItem.href || 
+                  (dropdownItem.href !== '/' && pathname.startsWith(dropdownItem.href))
+                );
+                
+                return (
+                  <div key={item.label} className="relative" ref={dropdownRef}>
+                    <button
+                      onClick={toggleDropdown}
+                      className={`nav-link ${
+                        isAnyDropdownActive ? 'nav-link-active' : 'nav-link-inactive'
+                      }`}
+                    >
+                      <item.icon className="w-4 h-4" />
+                      <span>{item.label}</span>
+                    </button>
+                    
+                    {isDropdownOpen && (
+                      <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-50">
+                        <div className="py-1">
+                          {item.dropdownItems?.map((dropdownItem) => {
+                            const isActive = pathname === dropdownItem.href || 
+                              (dropdownItem.href !== '/' && pathname.startsWith(dropdownItem.href));
+                            
+                            return (
+                              <Link
+                                key={dropdownItem.href}
+                                href={dropdownItem.href}
+                                onClick={() => setIsDropdownOpen(false)}
+                                className={`flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
+                                  isActive ? 'bg-blue-50 text-blue-700' : ''
+                                }`}
+                              >
+                                <dropdownItem.icon className="w-4 h-4 mr-3" />
+                                <span>{dropdownItem.label}</span>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              } else {
                 const isActive = pathname === item.href || 
                   (item.href !== '/' && pathname.startsWith(item.href));
                 
@@ -104,30 +167,9 @@ export default function Navigation() {
                     <span>{item.label}</span>
                   </Link>
                 );
-              })}
-            </nav>
-            
-            {/* Bottom row - Secondary navigation */}
-            <nav className="flex space-x-6 ml-12">
-              {secondaryNavItems.map((item) => {
-                const isActive = pathname === item.href || 
-                  (item.href !== '/' && pathname.startsWith(item.href));
-                
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`nav-link ${
-                      isActive ? 'nav-link-active' : 'nav-link-inactive'
-                    }`}
-                  >
-                    <item.icon className="w-4 h-4" />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
-            </nav>
-          </div>
+              }
+            })}
+          </nav>
 
           {/* Utility items and Logout - Desktop */}
           <div className="hidden md:flex items-center space-x-4">
@@ -197,44 +239,52 @@ export default function Navigation() {
       {isMobileMenuOpen && (
         <div ref={mobileMenuRef} className="md:hidden border-t border-gray-200 bg-white">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {/* Main navigation items */}
-            {mainNavItems.map((item) => {
-              const isActive = pathname === item.href || 
-                (item.href !== '/' && pathname.startsWith(item.href));
-              
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`nav-link text-base ${
-                    isActive ? 'nav-link-active' : 'nav-link-inactive'
-                  }`}
-                >
-                  <item.icon className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-            
-            {/* Secondary navigation items */}
-            {secondaryNavItems.map((item) => {
-              const isActive = pathname === item.href || 
-                (item.href !== '/' && pathname.startsWith(item.href));
-              
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`nav-link text-base ${
-                    isActive ? 'nav-link-active' : 'nav-link-inactive'
-                  }`}
-                >
-                  <item.icon className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </Link>
-              );
+            {/* Navigation items */}
+            {navItems.map((item) => {
+              if (item.hasDropdown) {
+                return (
+                  <div key={item.label}>
+                    <div className="px-3 py-2 text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      {item.label}
+                    </div>
+                    {item.dropdownItems?.map((dropdownItem) => {
+                      const isActive = pathname === dropdownItem.href || 
+                        (dropdownItem.href !== '/' && pathname.startsWith(dropdownItem.href));
+                      
+                      return (
+                        <Link
+                          key={dropdownItem.href}
+                          href={dropdownItem.href}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className={`ml-4 flex items-center px-3 py-2 text-base ${
+                            isActive ? 'nav-link-active' : 'nav-link-inactive'
+                          }`}
+                        >
+                          <dropdownItem.icon className="w-4 h-4" />
+                          <span>{dropdownItem.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                );
+              } else {
+                const isActive = pathname === item.href || 
+                  (item.href !== '/' && pathname.startsWith(item.href));
+                
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`nav-link text-base ${
+                      isActive ? 'nav-link-active' : 'nav-link-inactive'
+                    }`}
+                  >
+                    <item.icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              }
             })}
             
             {/* Utility items */}
