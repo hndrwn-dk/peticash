@@ -73,7 +73,6 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Database status check error:', error);
     return NextResponse.json(
       { success: false, error: `Status check failed: ${error instanceof Error ? error.message : String(error)}` },
       { status: 500 }
