@@ -156,19 +156,19 @@ export default function Navigation() {
                             const isActive = pathname === dropdownItem.href || 
                               (dropdownItem.href !== '/' && pathname.startsWith(dropdownItem.href));
                             
-                              return (
-                                <Link
-                                  key={dropdownItem.href}
-                                  href={dropdownItem.href}
-                                  onClick={() => setOpenDropdown(null)}
-                                  className={`flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
-                                    isActive ? 'bg-blue-50 text-blue-700' : ''
-                                  }`}
-                                >
-                                  <dropdownItem.icon className="w-4 h-4 mr-3" />
-                                  <span>{dropdownItem.label}</span>
-                                </Link>
-                              );
+                            return (
+                              <Link
+                                key={dropdownItem.href}
+                                href={dropdownItem.href}
+                                onClick={() => setOpenDropdown(null)}
+                                className={`flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
+                                  isActive ? 'bg-blue-50 text-blue-700' : ''
+                                }`}
+                              >
+                                <dropdownItem.icon className="w-4 h-4 mr-3" />
+                                <span>{dropdownItem.label}</span>
+                              </Link>
+                            );
                           })}
                         </div>
                       </div>
