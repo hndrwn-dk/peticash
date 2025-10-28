@@ -13,13 +13,22 @@ export default function Navigation() {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
 
-  const navItems = [
+  // Main navigation items (top row)
+  const mainNavItems = [
     { href: '/', label: 'Dashboard', icon: DashboardIcon },
     { href: '/products', label: 'Produk', icon: ProductIcon },
-    { href: '/transactions', label: 'Transaksi', icon: TransactionIcon },
-    { href: '/inventory', label: 'Stock Opname', icon: InventoryIcon },
-    { href: '/invoice', label: 'Invoice', icon: InvoiceIcon },
     { href: '/reports', label: 'Laporan', icon: ReportIcon },
+  ];
+
+  // Secondary navigation items (bottom row)
+  const secondaryNavItems = [
+    { href: '/inventory', label: 'Stock Opname', icon: InventoryIcon },
+    { href: '/transactions', label: 'Transaksi', icon: TransactionIcon },
+    { href: '/invoice', label: 'Invoice', icon: InvoiceIcon },
+  ];
+
+  // Utility items (right side)
+  const utilityItems = [
     { href: '/settings', label: 'Pengaturan', icon: () => (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -76,28 +85,75 @@ export default function Navigation() {
             <h1 className="text-xl font-semibold text-gray-900">Peti Cash</h1>
           </Link>
           
-          <nav className="hidden md:flex space-x-8">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href || 
-                (item.href !== '/' && pathname.startsWith(item.href));
-              
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`nav-link ${
-                    isActive ? 'nav-link-active' : 'nav-link-inactive'
-                  }`}
-                >
-                  <item.icon className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
+          <div className="hidden md:flex flex-col space-y-2">
+            {/* Top row - Main navigation */}
+            <nav className="flex space-x-6">
+              {mainNavItems.map((item) => {
+                const isActive = pathname === item.href || 
+                  (item.href !== '/' && pathname.startsWith(item.href));
+                
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`nav-link ${
+                      isActive ? 'nav-link-active' : 'nav-link-inactive'
+                    }`}
+                  >
+                    <item.icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+            
+            {/* Bottom row - Secondary navigation */}
+            <nav className="flex space-x-6 ml-12">
+              {secondaryNavItems.map((item) => {
+                const isActive = pathname === item.href || 
+                  (item.href !== '/' && pathname.startsWith(item.href));
+                
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`nav-link ${
+                      isActive ? 'nav-link-active' : 'nav-link-inactive'
+                    }`}
+                  >
+                    <item.icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
 
-          {/* Logout button - Desktop */}
-          <div className="hidden md:flex items-center">
+          {/* Utility items and Logout - Desktop */}
+          <div className="hidden md:flex items-center space-x-4">
+            {/* Utility items */}
+            <div className="flex space-x-2">
+              {utilityItems.map((item) => {
+                const isActive = pathname === item.href;
+                
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                      isActive 
+                        ? 'bg-blue-100 text-blue-700' 
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    }`}
+                  >
+                    <item.icon className="w-4 h-4 mr-2" />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+            
+            {/* Logout button */}
             <button
               onClick={handleLogout}
               disabled={isLoggingOut}
@@ -141,9 +197,49 @@ export default function Navigation() {
       {isMobileMenuOpen && (
         <div ref={mobileMenuRef} className="md:hidden border-t border-gray-200 bg-white">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {navItems.map((item) => {
+            {/* Main navigation items */}
+            {mainNavItems.map((item) => {
               const isActive = pathname === item.href || 
                 (item.href !== '/' && pathname.startsWith(item.href));
+              
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`nav-link text-base ${
+                    isActive ? 'nav-link-active' : 'nav-link-inactive'
+                  }`}
+                >
+                  <item.icon className="w-4 h-4" />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+            
+            {/* Secondary navigation items */}
+            {secondaryNavItems.map((item) => {
+              const isActive = pathname === item.href || 
+                (item.href !== '/' && pathname.startsWith(item.href));
+              
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`nav-link text-base ${
+                    isActive ? 'nav-link-active' : 'nav-link-inactive'
+                  }`}
+                >
+                  <item.icon className="w-4 h-4" />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+            
+            {/* Utility items */}
+            {utilityItems.map((item) => {
+              const isActive = pathname === item.href;
               
               return (
                 <Link
