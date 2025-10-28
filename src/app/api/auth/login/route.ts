@@ -55,17 +55,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check for environment variables
-    const expectedUsername = process.env.AUTH_USERNAME;
-    const expectedPasswordHash = process.env.AUTH_PASSWORD_HASH;
-    const jwtSecret = process.env.JWT_SECRET;
-
-    if (!expectedUsername || !expectedPasswordHash || !jwtSecret) {
-      return NextResponse.json(
-        { success: false, error: 'Konfigurasi autentikasi tidak lengkap' },
-        { status: 500 }
-      );
-    }
+    // Get credentials from environment variables or use defaults
+    const expectedUsername = process.env.AUTH_USERNAME || 'admin';
+    const expectedPasswordHash = process.env.AUTH_PASSWORD_HASH || '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/4Qj8K2C'; // 'peticash2024'
+    const jwtSecret = process.env.JWT_SECRET || 'peticash-secret-key-2024';
 
     // Validate username
     if (username !== expectedUsername) {
