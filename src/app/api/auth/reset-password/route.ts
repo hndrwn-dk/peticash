@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
+
+// Force Node.js runtime for this API route
+export const runtime = 'nodejs';
 import jwt from 'jsonwebtoken';
 
 // POST /api/auth/reset-password - Reset password (requires current password)

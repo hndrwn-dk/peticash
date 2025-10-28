@@ -17,7 +17,10 @@ export function verifyToken(request: NextRequest): AuthUser | null {
       return null;
     }
 
-    const jwtSecret = process.env.JWT_SECRET || 'peticash-secret-key-2024';
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      return null;
+    }
 
     // Verify and decode the token
     const decoded = jwt.verify(token, jwtSecret, { algorithms: ['HS256'] }) as AuthUser;
