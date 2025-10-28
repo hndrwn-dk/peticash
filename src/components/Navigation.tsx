@@ -222,7 +222,7 @@ export default function Navigation() {
                     </button>
                     
                     {openDropdown === item.label && (
-                      <div className="absolute top-full right-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-50">
+                      <div className="absolute top-full right-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-[9999]">
                         <div className="py-1">
                           {item.dropdownItems?.map((dropdownItem) => {
                             if (dropdownItem.isAction) {
@@ -244,21 +244,20 @@ export default function Navigation() {
                               const isActive = pathname === dropdownItem.href;
                               
                               return (
-                                <Link
+                                <button
                                   key={dropdownItem.href}
-                                  href={dropdownItem.href!}
-                                  onClick={(e) => {
-                                    e.preventDefault();
+                                  onClick={() => {
+                                    console.log('Desktop dropdown clicked:', dropdownItem.label, dropdownItem.href);
                                     setOpenDropdown(null);
                                     router.push(dropdownItem.href!);
                                   }}
-                                  className={`flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer ${
+                                  className={`w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer text-left ${
                                     isActive ? 'bg-blue-50 text-blue-700' : ''
                                   }`}
                                 >
                                   <dropdownItem.icon className="w-4 h-4 mr-3" />
                                   <span>{dropdownItem.label}</span>
-                                </Link>
+                                </button>
                               );
                             }
                           })}
