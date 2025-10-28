@@ -92,39 +92,35 @@ export default function Navigation() {
     setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
   };
 
-  // Close mobile menu and dropdown when clicking outside
+  // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       
-      // Close mobile menu
+      // Close mobile menu only
       if (mobileMenuRef.current && 
           !mobileMenuRef.current.contains(target) && 
           mobileMenuButtonRef.current && 
           !mobileMenuButtonRef.current.contains(target)) {
         setIsMobileMenuOpen(false);
       }
-      
-      // Close dropdown - but only if clicking outside the entire dropdown container
-      if (dropdownRef.current && 
-          !dropdownRef.current.contains(target) &&
-          !(target as Element).closest('[data-dropdown-item]')) {
-        setOpenDropdown(null);
-      }
     };
 
-    if (isMobileMenuOpen || openDropdown) {
+    if (isMobileMenuOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isMobileMenuOpen, openDropdown]);
+  }, [isMobileMenuOpen]);
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div 
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        onClick={() => setOpenDropdown(null)}
+      >
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2">
             <CashIcon className="w-8 h-8 text-blue-600" />
@@ -224,7 +220,10 @@ export default function Navigation() {
                     </button>
                     
                     {openDropdown === item.label && (
-                      <div className="absolute top-full right-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-[9999]">
+                      <div 
+                        className="absolute top-full right-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-[9999]"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <div className="py-1">
                           {item.dropdownItems?.map((dropdownItem) => {
                             if (dropdownItem.isAction) {
@@ -251,6 +250,7 @@ export default function Navigation() {
                                   key={dropdownItem.href}
                                   data-dropdown-item
                                   onClick={() => {
+                                    alert(`Clicked: ${dropdownItem.label} -> ${dropdownItem.href}`);
                                     console.log('Desktop dropdown clicked:', dropdownItem.label, dropdownItem.href);
                                     setOpenDropdown(null);
                                     router.push(dropdownItem.href!);
