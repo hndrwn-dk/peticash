@@ -23,6 +23,7 @@ export default function Navigation() {
       icon: ({ className }: { className?: string }) => <ProductIcon className={className} />,
       hasDropdown: true,
       dropdownItems: [
+        { href: '/products', label: 'Daftar Produk', icon: ({ className }: { className?: string }) => <ProductIcon className={className} /> },
         { href: '/inventory', label: 'Stock Opname', icon: ({ className }: { className?: string }) => <InventoryIcon className={className} /> },
       ]
     },
@@ -31,6 +32,7 @@ export default function Navigation() {
       icon: ({ className }: { className?: string }) => <ReportIcon className={className} />,
       hasDropdown: true,
       dropdownItems: [
+        { href: '/reports', label: 'Laporan Keuangan', icon: ({ className }: { className?: string }) => <ReportIcon className={className} /> },
         { href: '/transactions', label: 'Transaksi', icon: ({ className }: { className?: string }) => <TransactionIcon className={className} /> },
         { href: '/invoice', label: 'Invoice', icon: ({ className }: { className?: string }) => <InvoiceIcon className={className} /> },
       ]
