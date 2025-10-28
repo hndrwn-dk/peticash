@@ -68,14 +68,6 @@ export default function Navigation() {
     },
   ];
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
@@ -88,6 +80,14 @@ export default function Navigation() {
     } finally {
       setIsLoggingOut(false);
     }
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   // Close mobile menu and dropdown when clicking outside
