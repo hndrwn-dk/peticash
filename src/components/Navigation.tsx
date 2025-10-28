@@ -174,13 +174,13 @@ export default function Navigation() {
                   </div>
                 );
               } else {
-                const isActive = pathname === item.href || 
-                  (item.href !== '/' && pathname.startsWith(item.href));
+                const isActive = item.href ? (pathname === item.href || 
+                  (item.href !== '/' && pathname.startsWith(item.href))) : false;
                 
                 return (
                   <Link
-                    key={item.href}
-                    href={item.href}
+                    key={item.href || item.label}
+                    href={item.href || '#'}
                     className={`nav-link ${
                       isActive ? 'nav-link-active' : 'nav-link-inactive'
                     }`}
@@ -258,22 +258,8 @@ export default function Navigation() {
                   </div>
                 );
               } else {
-                const isActive = pathname === item.href;
-                
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href!}
-                    className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                      isActive 
-                        ? 'bg-blue-100 text-blue-700' 
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                    }`}
-                  >
-                    <item.icon className="w-4 h-4 mr-2" />
-                    <span>{item.label}</span>
-                  </Link>
-                );
+                // This should not happen since all utility items have dropdowns
+                return null;
               }
             })}
           </div>
@@ -331,13 +317,13 @@ export default function Navigation() {
                   </div>
                 );
               } else {
-                const isActive = pathname === item.href || 
-                  (item.href !== '/' && pathname.startsWith(item.href));
+                const isActive = item.href ? (pathname === item.href || 
+                  (item.href !== '/' && pathname.startsWith(item.href))) : false;
                 
                 return (
                   <Link
-                    key={item.href}
-                    href={item.href}
+                    key={item.href || item.label}
+                    href={item.href || '#'}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={`nav-link text-base ${
                       isActive ? 'nav-link-active' : 'nav-link-inactive'
@@ -402,21 +388,8 @@ export default function Navigation() {
                   </div>
                 );
               } else {
-                const isActive = pathname === item.href;
-                
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href!}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`nav-link text-base ${
-                      isActive ? 'nav-link-active' : 'nav-link-inactive'
-                    }`}
-                  >
-                    <item.icon className="w-4 h-4" />
-                    <span>{item.label}</span>
-                  </Link>
-                );
+                // This should not happen since all utility items have dropdowns
+                return null;
               }
             })}
           </div>
