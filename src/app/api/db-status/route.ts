@@ -13,37 +13,62 @@ export async function GET(request: NextRequest) {
     const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     const transactions = await database.getTransactions(currentMonth);
 
-    // Check what database is actually being used
+    // Validate PostgreSQL environment variables
     const hasPostgresUrl = !!process.env.POSTGRES_URL;
     const hasPostgresPrismaUrl = !!process.env.POSTGRES_PRISMA_URL;
-    const usingPostgres = hasPostgresUrl || hasPostgresPrismaUrl;
+    const hasDatabaseUrl = !!process.env.DATABASE_URL;
+    const hasAnyPostgresUrl = hasPostgresUrl || hasPostgresPrismaUrl || hasDatabaseUrl;
+
+    if (!hasAnyPostgresUrl) {
+      return NextResponse.json({
+        success: false,
+        error: 'PostgreSQL environment variables not found. Please set POSTGRES_URL, POSTGRES_PRISMA_URL, or DATABASE_URL.',
+        data: {
+          environment: isProduction ? 'production' : 'development',
+          platform: isVercel ? 'vercel' : 'local',
+          database_type: 'none',
+          database_path: null,
+          is_ephemeral: false,
+          warning: 'PostgreSQL configuration required',
+          environment_variables: {
+            POSTGRES_URL: 'missing',
+            POSTGRES_PRISMA_URL: 'missing',
+            DATABASE_URL: 'missing'
+          },
+          stats: {
+            products_count: 0,
+            current_month_transactions: 0,
+            current_month: currentMonth
+          },
+          recommendations: [
+            'Set POSTGRES_URL environment variable',
+            'Or set POSTGRES_PRISMA_URL environment variable', 
+            'Or set DATABASE_URL environment variable'
+          ]
+        }
+      }, { status: 500 });
+    }
 
     return NextResponse.json({
       success: true,
       data: {
         environment: isProduction ? 'production' : 'development',
         platform: isVercel ? 'vercel' : 'local',
-        database_type: usingPostgres ? 'postgresql' : 'sqlite',
-        database_path: usingPostgres ? 
-          (process.env.POSTGRES_URL ? 'postgresql://***' : 'postgresql://***') : 
-          (isProduction ? '/tmp/bookkeeper.db' : './data/bookkeeper.db'),
-        is_ephemeral: !usingPostgres && isProduction && isVercel,
-        warning: !usingPostgres && isProduction && isVercel ? 
-          'Database is using ephemeral storage. Data will be lost on deployment/restart.' : null,
+        database_type: 'postgresql',
+        database_path: 'postgresql://***',
+        is_ephemeral: false,
+        warning: null,
         environment_variables: {
           POSTGRES_URL: hasPostgresUrl ? 'present' : 'missing',
-          POSTGRES_PRISMA_URL: hasPostgresPrismaUrl ? 'present' : 'missing'
+          POSTGRES_PRISMA_URL: hasPostgresPrismaUrl ? 'present' : 'missing',
+          DATABASE_URL: hasDatabaseUrl ? 'present' : 'missing'
         },
         stats: {
           products_count: products.length,
           current_month_transactions: transactions.length,
           current_month: currentMonth
         },
-        recommendations: !usingPostgres && isProduction && isVercel ? [
-          'Use Vercel Postgres for persistent storage',
-          'Consider PlanetScale or Supabase for production',
-          'Implement data backup/restore functionality'
-        ] : null
+        recommendations: null
       }
     });
 

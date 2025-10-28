@@ -153,20 +153,24 @@ Monthly Summary
 
 ### Data Storage
 
-Data is stored in a SQLite database:
+Data is stored in a PostgreSQL database:
 
 ```
-data/
-└── bookkeeper.db              # SQLite database file
-
 Database Tables:
 ├── products                   # Product catalog with indexes
 └── transactions              # All transactions with relationships
 ```
 
+### Environment Variables
+
+Required PostgreSQL environment variables:
+- `POSTGRES_URL` - PostgreSQL connection string
+- `POSTGRES_PRISMA_URL` - Prisma-compatible connection string  
+- `DATABASE_URL` - Alternative database connection string
+
 ### Vercel Considerations
 
-- File Storage: Vercel's filesystem is read-only in production except for /tmp
+- Database: Uses Vercel Postgres for persistent storage
 - Persistence: For production use, consider external storage (AWS S3, Database)
 - Serverless Functions: API routes run as serverless functions with 30s timeout
 
