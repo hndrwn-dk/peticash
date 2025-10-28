@@ -33,10 +33,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get current credentials
-    const expectedUsername = process.env.AUTH_USERNAME || 'peticash_manager_2024';
-    const currentPasswordHash = process.env.AUTH_PASSWORD_HASH || '$2a$12$K8v3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/4Qj8K2C';
-    const jwtSecret = process.env.JWT_SECRET || 'peticash-secret-key-2024';
+    // Get current credentials from environment variables (mandatory for security)
+    const expectedUsername = process.env.AUTH_USERNAME;
+    const currentPasswordHash = process.env.AUTH_PASSWORD_HASH;
+    const jwtSecret = process.env.JWT_SECRET;
+
+    // Validate that all required environment variables are set
+    if (!expectedUsername || !currentPasswordHash || !jwtSecret) {
+      return NextResponse.json(
+        { success: false, error: 'Konfigurasi autentikasi tidak lengkap' },
+        { status: 500 }
+      );
+    }
 
     // Verify current password
     const isCurrentPasswordValid = await bcrypt.compare(currentPassword, currentPasswordHash);
