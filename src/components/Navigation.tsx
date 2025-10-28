@@ -13,7 +13,7 @@ export default function Navigation() {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const navItems = [
@@ -86,8 +86,8 @@ export default function Navigation() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  const toggleDropdown = (dropdownName: string) => {
+    setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
   };
 
   // Close mobile menu and dropdown when clicking outside
@@ -105,18 +105,18 @@ export default function Navigation() {
       
       // Close dropdown
       if (dropdownRef.current && !dropdownRef.current.contains(target)) {
-        setIsDropdownOpen(false);
+        setOpenDropdown(null);
       }
     };
 
-    if (isMobileMenuOpen || isDropdownOpen) {
+    if (isMobileMenuOpen || openDropdown) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isMobileMenuOpen, isDropdownOpen]);
+  }, [isMobileMenuOpen, openDropdown]);
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
@@ -138,7 +138,7 @@ export default function Navigation() {
                 return (
                   <div key={item.label} className="relative" ref={dropdownRef}>
                     <button
-                      onClick={toggleDropdown}
+                      onClick={() => toggleDropdown(item.label)}
                       className={`nav-link ${
                         isAnyDropdownActive ? 'nav-link-active' : 'nav-link-inactive'
                       }`}
@@ -147,26 +147,26 @@ export default function Navigation() {
                       <span>{item.label}</span>
                     </button>
                     
-                    {isDropdownOpen && (
+                    {openDropdown === item.label && (
                       <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-50">
                         <div className="py-1">
                           {item.dropdownItems?.map((dropdownItem) => {
                             const isActive = pathname === dropdownItem.href || 
                               (dropdownItem.href !== '/' && pathname.startsWith(dropdownItem.href));
                             
-                            return (
-                              <Link
-                                key={dropdownItem.href}
-                                href={dropdownItem.href}
-                                onClick={() => setIsDropdownOpen(false)}
-                                className={`flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
-                                  isActive ? 'bg-blue-50 text-blue-700' : ''
-                                }`}
-                              >
-                                <dropdownItem.icon className="w-4 h-4 mr-3" />
-                                <span>{dropdownItem.label}</span>
-                              </Link>
-                            );
+                              return (
+                                <Link
+                                  key={dropdownItem.href}
+                                  href={dropdownItem.href}
+                                  onClick={() => setOpenDropdown(null)}
+                                  className={`flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
+                                    isActive ? 'bg-blue-50 text-blue-700' : ''
+                                  }`}
+                                >
+                                  <dropdownItem.icon className="w-4 h-4 mr-3" />
+                                  <span>{dropdownItem.label}</span>
+                                </Link>
+                              );
                           })}
                         </div>
                       </div>
@@ -204,7 +204,7 @@ export default function Navigation() {
                 return (
                   <div key={item.label} className="relative" ref={dropdownRef}>
                     <button
-                      onClick={toggleDropdown}
+                      onClick={() => toggleDropdown(item.label)}
                       className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                         isAnyDropdownActive 
                           ? 'bg-blue-100 text-blue-700' 
@@ -215,7 +215,7 @@ export default function Navigation() {
                       <span>{item.label}</span>
                     </button>
                     
-                    {isDropdownOpen && (
+                    {openDropdown === item.label && (
                       <div className="absolute top-full right-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-50">
                         <div className="py-1">
                           {item.dropdownItems?.map((dropdownItem) => {
@@ -224,7 +224,7 @@ export default function Navigation() {
                                 <button
                                   key={dropdownItem.label}
                                   onClick={() => {
-                                    setIsDropdownOpen(false);
+                                    setOpenDropdown(null);
                                     dropdownItem.action?.();
                                   }}
                                   disabled={isLoggingOut}
@@ -241,7 +241,7 @@ export default function Navigation() {
                                 <Link
                                   key={dropdownItem.href}
                                   href={dropdownItem.href!}
-                                  onClick={() => setIsDropdownOpen(false)}
+                                  onClick={() => setOpenDropdown(null)}
                                   className={`flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
                                     isActive ? 'bg-blue-50 text-blue-700' : ''
                                   }`}
