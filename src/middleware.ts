@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { isAuthenticated } from '@/lib/auth';
 
 // Define public routes that don't require authentication
 const publicRoutes = ['/login', '/api/auth/login', '/api/auth/verify'];
@@ -13,8 +12,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check authentication for all other routes
-  if (!isAuthenticated(request)) {
+  // Simple cookie check for authentication (Edge Runtime compatible)
+  const authToken = request.cookies.get('auth-token')?.value;
+  
+  if (!authToken) {
     // Redirect to login page
     const loginUrl = new URL('/login', request.url);
     return NextResponse.redirect(loginUrl);
