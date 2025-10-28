@@ -160,8 +160,12 @@ export default function Navigation() {
                               <Link
                                 key={dropdownItem.href}
                                 href={dropdownItem.href}
-                                onClick={() => setOpenDropdown(null)}
-                                className={`flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setOpenDropdown(null);
+                                  router.push(dropdownItem.href);
+                                }}
+                                className={`flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer ${
                                   isActive ? 'bg-blue-50 text-blue-700' : ''
                                 }`}
                               >
