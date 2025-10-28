@@ -21,7 +21,6 @@ export default function Navigation() {
   ];
 
   const toggleMobileMenu = () => {
-    console.log('Toggle mobile menu clicked, current state:', isMobileMenuOpen);
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 

@@ -183,33 +183,6 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Header */}
-      <header className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <div className="flex items-center space-x-2">
-                <CashIcon className="w-8 h-8 text-blue-600" />
-                <h1 className="text-2xl font-bold text-gray-900">Peti Cash</h1>
-              </div>
-            </div>
-            <nav className="hidden md:flex space-x-1">
-              <Link href="/products" className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
-                <ProductIcon className="w-4 h-4" />
-                <span>Produk</span>
-              </Link>
-              <Link href="/transactions" className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
-                <TransactionIcon className="w-4 h-4" />
-                <span>Transaksi</span>
-              </Link>
-              <Link href="/reports" className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
-                <ReportIcon className="w-4 h-4" />
-                <span>Laporan</span>
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
