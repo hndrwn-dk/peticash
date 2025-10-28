@@ -5,16 +5,7 @@ export class PostgresDatabaseService {
   private initialized = false;
 
   constructor() {
-    console.log('🐘 PostgreSQL service constructor called');
-    console.log('🔍 Environment check:', {
-      POSTGRES_URL: process.env.POSTGRES_URL ? 'present' : 'missing',
-      POSTGRES_PRISMA_URL: process.env.POSTGRES_PRISMA_URL ? 'present' : 'missing',
-      NODE_ENV: process.env.NODE_ENV,
-      VERCEL: process.env.VERCEL ? 'present' : 'missing'
-    });
-    
     // Don't validate anything during constructor - do it all lazily
-    console.log('🐘 PostgreSQL database service created (fully lazy initialization)');
   }
 
   private async ensureInitialized(): Promise<void> {
@@ -23,7 +14,7 @@ export class PostgresDatabaseService {
       if (!process.env.POSTGRES_URL && !process.env.POSTGRES_PRISMA_URL) {
         // During build time, environment variables might not be available
         // This is expected and will be handled at runtime
-        console.log('⚠️ PostgreSQL connection string not available during build - this is expected');
+        // PostgreSQL connection string not available during build - this is expected
         throw new Error('No PostgreSQL connection string found. Please set POSTGRES_URL or POSTGRES_PRISMA_URL environment variable.');
       }
       
@@ -34,7 +25,6 @@ export class PostgresDatabaseService {
 
   private async initializeDatabase(): Promise<void> {
     try {
-      console.log('🐘 Initializing PostgreSQL database...');
       
       // Create products table
       await sql`
@@ -101,11 +91,9 @@ export class PostgresDatabaseService {
       // Remove the problematic DATE_TRUNC index - we'll use a simpler approach
 
       await this.seedSampleData();
-      console.log('✅ PostgreSQL database initialized successfully');
       this.initialized = true;
       
     } catch (error) {
-      console.error('❌ PostgreSQL initialization error:', error);
       throw error;
     }
   }
@@ -115,11 +103,8 @@ export class PostgresDatabaseService {
       // Check if products already exist
       const existingProducts = await sql`SELECT COUNT(*) as count FROM products`;
       if (existingProducts.rows[0].count > 0) {
-        console.log('📦 Sample products already exist, skipping seed');
         return;
       }
-
-      console.log('🌱 Seeding sample products...');
       
       // Insert sample products
       await sql`
@@ -131,9 +116,8 @@ export class PostgresDatabaseService {
         ('TEH-EARL-GREY-100G', 'Earl Grey Tea 100g', 25000, 5.90, 'Minuman')
       `;
 
-      console.log('✅ Sample products seeded successfully');
     } catch (error) {
-      console.error('❌ Error seeding sample data:', error);
+      // Silently fail seeding - not critical for operation
     }
   }
 
@@ -157,7 +141,6 @@ export class PostgresDatabaseService {
   async getProducts(q?: string, barcode?: string): Promise<Product[]> {
     try {
       await this.ensureInitialized();
-      console.log('🔍 Getting products with query:', q, 'barcode:', barcode);
       let query;
       
       if (barcode) {
@@ -172,10 +155,8 @@ export class PostgresDatabaseService {
       const result = await query;
       return result.rows as Product[];
     } catch (error) {
-      console.error('Error getting products:', error);
       // During build time, return empty array instead of throwing
       if (error instanceof Error && error.message.includes('No PostgreSQL connection string found')) {
-        console.log('📦 Build time - returning empty products array');
         return [];
       }
       return [];
@@ -199,7 +180,6 @@ export class PostgresDatabaseService {
         data: product
       };
     } catch (error: any) {
-      console.error('Error adding product:', error);
       if (error.code === '23505') { // Unique constraint violation
         return { success: false, error: 'SKU sudah ada' };
       }
@@ -234,7 +214,6 @@ export class PostgresDatabaseService {
         data: { sku, ...product }
       };
     } catch (error) {
-      console.error('Error updating product:', error);
       return { success: false, error: 'Gagal memperbarui produk' };
     }
   }
@@ -273,15 +252,12 @@ export class PostgresDatabaseService {
         return { success: false, error: 'Gagal menghapus produk' };
       }
     } catch (error) {
-      console.error('Error deleting product:', error);
       return { success: false, error: 'Gagal menghapus produk' };
     }
   }
 
   async upsertProduct(product: Product): Promise<ApiResponse> {
     try {
-      console.log('🔍 Upserting product:', JSON.stringify(product, null, 2));
-      
       if (!product.sku || !product.nama) {
         return { success: false, error: 'SKU dan nama wajib diisi' };
       }
@@ -304,7 +280,6 @@ export class PostgresDatabaseService {
         data: product
       };
     } catch (error: any) {
-      console.error('Error upserting product:', error);
       return { success: false, error: 'Gagal menyimpan produk' };
     }
   }
@@ -357,7 +332,6 @@ export class PostgresDatabaseService {
         data: { imported, errors }
       };
     } catch (error) {
-      console.error('Error bulk importing:', error);
       return { success: false, error: 'Gagal memproses CSV' };
     }
   }
@@ -366,16 +340,12 @@ export class PostgresDatabaseService {
   async addTransaction(transaction: Transaction): Promise<ApiResponse> {
     try {
       await this.ensureInitialized();
-      console.log('🔍 Adding transaction:', JSON.stringify(transaction, null, 2));
-      
       // Validate required fields
       if (!transaction.tanggal || !this.validateDate(transaction.tanggal)) {
-        console.error('❌ Invalid date:', transaction.tanggal);
         return { success: false, error: 'Format tanggal harus YYYY-MM-DD' };
       }
 
       if (!transaction.sku) {
-        console.error('❌ Missing SKU');
         return { success: false, error: 'SKU wajib diisi' };
       }
 
@@ -392,17 +362,12 @@ export class PostgresDatabaseService {
       }
 
       if (!transaction.qty || transaction.qty <= 0) {
-        console.error('❌ Invalid quantity:', transaction.qty);
         return { success: false, error: 'Qty harus > 0', data: { status: 'invalid' } };
       }
 
       if (!transaction.harga_jual_sgd || transaction.harga_jual_sgd <= 0) {
-        console.error('❌ Invalid price:', transaction.harga_jual_sgd);
         return { success: false, error: 'Harga jual SGD wajib diisi dan > 0' };
       }
-
-      console.log('✅ Basic validation passed');
-
       // Calculate derived fields
       let status: 'complete' | 'incomplete' | 'invalid' = 'complete';
       
@@ -413,9 +378,7 @@ export class PostgresDatabaseService {
       // If no modal_satuan_idr provided, try to use product's default cost
       if (!modalSatuanIDR && existingProduct.rows.length > 0 && existingProduct.rows[0].default_modal_satuan_idr) {
         modalSatuanIDR = existingProduct.rows[0].default_modal_satuan_idr;
-        console.log('🔍 Using product default cost:', modalSatuanIDR);
       } else if (!modalSatuanIDR) {
-        console.log('⚠️ No modal_satuan_idr provided and no product default cost found for SKU:', transaction.sku);
       }
       
       // Calculate modal_total_idr
@@ -439,9 +402,6 @@ export class PostgresDatabaseService {
       const applyGST = transaction.apply_gst || false;
       const gstRate = transaction.gst_rate || 0.09;
       const gstSGD = applyGST ? this.roundSGD(pendapatanSGD * gstRate) : 0;
-
-      console.log('💾 Executing database insert...');
-
       const result = await sql`
         INSERT INTO transactions (
           tanggal, sku, qty, modal_satuan_IDR, modal_total_IDR,
@@ -459,9 +419,6 @@ export class PostgresDatabaseService {
         )
         RETURNING id
       `;
-
-      console.log('✅ Transaction inserted successfully, ID:', result.rows[0].id);
-
       const ym = transaction.tanggal.substring(0, 7); // YYYY-MM
 
       return { 
@@ -471,8 +428,6 @@ export class PostgresDatabaseService {
       };
 
     } catch (error) {
-      console.error('❌ Error adding transaction:', error);
-      console.error('Transaction data was:', JSON.stringify(transaction, null, 2));
       return { success: false, error: `Gagal menyimpan transaksi: ${error instanceof Error ? error.message : String(error)}` };
     }
   }
@@ -500,10 +455,8 @@ export class PostgresDatabaseService {
       const result = await query;
       return result.rows as Transaction[];
     } catch (error) {
-      console.error('Error getting transactions:', error);
       // During build time, return empty array instead of throwing
       if (error instanceof Error && error.message.includes('No PostgreSQL connection string found')) {
-        console.log('📦 Build time - returning empty transactions array');
         return [];
       }
       return [];
@@ -519,10 +472,8 @@ export class PostgresDatabaseService {
       `;
       return result.rows as Transaction[];
     } catch (error) {
-      console.error('Error getting all transactions:', error);
       // During build time, return empty array instead of throwing
       if (error instanceof Error && error.message.includes('No PostgreSQL connection string found')) {
-        console.log('📦 Build time - returning empty transactions array');
         return [];
       }
       return [];
@@ -536,7 +487,6 @@ export class PostgresDatabaseService {
       
       return result.rows.length > 0 ? result.rows[0] as Transaction : null;
     } catch (error) {
-      console.error('Error getting transaction by ID:', error);
       return null;
     }
   }
@@ -600,7 +550,6 @@ export class PostgresDatabaseService {
       };
 
     } catch (error) {
-      console.error('Error updating transaction:', error);
       return { success: false, error: 'Failed to update transaction' };
     }
   }
@@ -623,7 +572,6 @@ export class PostgresDatabaseService {
       };
 
     } catch (error) {
-      console.error('Error deleting transaction:', error);
       return { success: false, error: 'Failed to delete transaction' };
     }
   }
@@ -678,7 +626,6 @@ export class PostgresDatabaseService {
 
       return { success: true, data: report };
     } catch (error) {
-      console.error('Error generating monthly report:', error);
       return { success: false, error: 'Gagal membuat laporan bulanan' };
     }
   }
@@ -699,7 +646,6 @@ export class PostgresDatabaseService {
       `;
       return result.rows;
     } catch (error) {
-      console.error('Error getting inventory:', error);
       return [];
     }
   }
@@ -732,7 +678,6 @@ export class PostgresDatabaseService {
         data: { sku, store_location: storeLocation, current_stock: currentStock }
       };
     } catch (error) {
-      console.error('Error updating inventory:', error);
       return { success: false, error: 'Failed to update inventory' };
     }
   }
@@ -754,7 +699,6 @@ export class PostgresDatabaseService {
         return { success: false, error: 'Stok tidak ditemukan' };
       }
     } catch (error) {
-      console.error('Error deleting inventory:', error);
       return { success: false, error: 'Gagal menghapus stok' };
     }
   }
@@ -775,7 +719,6 @@ export class PostgresDatabaseService {
       `;
       return result.rows;
     } catch (error) {
-      console.error('Error getting inventory by location:', error);
       return [];
     }
   }
@@ -792,7 +735,6 @@ export class PostgresDatabaseService {
       `;
       return result.rows as Transaction[];
     } catch (error) {
-      console.error('Error getting transactions by customer:', error);
       return [];
     }
   }
