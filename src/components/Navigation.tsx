@@ -93,33 +93,28 @@ export default function Navigation() {
     setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
   };
 
-  // Close mobile menu and dropdowns when clicking outside
+  // Close mobile menu when clicking outside (temporarily disable dropdown close)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       
-      // Close mobile menu
+      // Close mobile menu only
       if (mobileMenuRef.current && 
           !mobileMenuRef.current.contains(target) && 
           mobileMenuButtonRef.current && 
           !mobileMenuButtonRef.current.contains(target)) {
         setIsMobileMenuOpen(false);
       }
-      
-      // Close dropdowns when clicking outside
-      if (dropdownRef.current && !dropdownRef.current.contains(target)) {
-        setOpenDropdown(null);
-      }
     };
 
-    if (isMobileMenuOpen || openDropdown) {
+    if (isMobileMenuOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isMobileMenuOpen, openDropdown]);
+  }, [isMobileMenuOpen]);
 
   // Debug dropdown state changes
   useEffect(() => {
