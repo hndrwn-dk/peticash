@@ -37,6 +37,20 @@ export default function Navigation() {
     },
   ];
 
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      router.push('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Still redirect to login even if logout fails
+      router.push('/login');
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
   // Utility items (right side) - with dropdown
   const utilityItems = [
     { 
@@ -67,20 +81,6 @@ export default function Navigation() {
       ]
     },
   ];
-
-  const handleLogout = async () => {
-    setIsLoggingOut(true);
-    try {
-      await fetch('/api/auth/logout', { method: 'POST' });
-      router.push('/login');
-    } catch (error) {
-      console.error('Logout error:', error);
-      // Still redirect to login even if logout fails
-      router.push('/login');
-    } finally {
-      setIsLoggingOut(false);
-    }
-  };
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
