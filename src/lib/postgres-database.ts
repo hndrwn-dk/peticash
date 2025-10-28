@@ -380,7 +380,7 @@ export class PostgresDatabaseService {
       }
 
       // Check if product exists, create if it doesn't
-      const existingProduct = await sql`SELECT sku FROM products WHERE sku = ${transaction.sku}`;
+      const existingProduct = await sql`SELECT sku, default_modal_satuan_idr FROM products WHERE sku = ${transaction.sku}`;
       
       if (existingProduct.rows.length === 0) {
         // Create a basic product entry for this SKU
@@ -408,13 +408,24 @@ export class PostgresDatabaseService {
       
       // Calculate modal_total_idr if not provided
       let modalTotalIDR = transaction.modal_total_IDR;
-      if (!modalTotalIDR && transaction.modal_satuan_IDR) {
-        modalTotalIDR = this.roundIDR(transaction.qty * transaction.modal_satuan_IDR);
+      let modalSatuanIDR = transaction.modal_satuan_IDR;
+      
+      // If no modal_satuan_idr provided, try to use product's default cost
+      if (!modalSatuanIDR && existingProduct.rows.length > 0 && existingProduct.rows[0].default_modal_satuan_idr) {
+        modalSatuanIDR = existingProduct.rows[0].default_modal_satuan_idr;
+        console.log('🔍 Using product default cost:', modalSatuanIDR);
+      } else if (!modalSatuanIDR) {
+        console.log('⚠️ No modal_satuan_idr provided and no product default cost found for SKU:', transaction.sku);
+      }
+      
+      // Calculate modal_total_idr
+      if (!modalTotalIDR && modalSatuanIDR) {
+        modalTotalIDR = this.roundIDR(transaction.qty * modalSatuanIDR);
       } else if (modalTotalIDR) {
         modalTotalIDR = this.roundIDR(modalTotalIDR);
       }
 
-      const modalSatuanIDR = transaction.modal_satuan_IDR ? this.roundIDR(transaction.modal_satuan_IDR) : null;
+      const finalModalSatuanIDR = modalSatuanIDR ? this.roundIDR(modalSatuanIDR) : null;
 
       // Calculate pendapatan_sgd
       const pendapatanSGD = this.roundSGD(transaction.qty * transaction.harga_jual_sgd);
@@ -439,7 +450,7 @@ export class PostgresDatabaseService {
           GST_SGD, pelanggan, metode_bayar, catatan, status
         ) VALUES (
           ${transaction.tanggal}, ${transaction.sku}, ${transaction.qty}, 
-          ${modalSatuanIDR}, ${modalTotalIDR}, ${this.roundSGD(transaction.harga_jual_sgd)}, 
+          ${finalModalSatuanIDR}, ${modalTotalIDR}, ${this.roundSGD(transaction.harga_jual_sgd)}, 
           ${pendapatanSGD}, ${transaction.fee_rate || 0}, ${feeFlatSGD || 0},
           ${biayaTransaksiSGD || 0}, ${this.roundSGD(transaction.biaya_lain_sgd || 0)}, 
           ${applyGST}, ${gstRate || 0}, ${gstSGD || 0}, 
