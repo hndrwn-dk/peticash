@@ -60,6 +60,17 @@ export async function POST(request: NextRequest) {
     const expectedPasswordHash = process.env.AUTH_PASSWORD_HASH || '$2a$12$2SmcKY9k0V8JKje2DM6rGeA4b6IQy/VFDgrBKXfIM5BHoaOvEGRjC'; // 'PeticashSecure2024!'
     const jwtSecret = process.env.JWT_SECRET || 'peticash-secret-key-2024';
 
+    // Debug logging (remove in production)
+    console.log('Login attempt:', { 
+      providedUsername: username, 
+      expectedUsername, 
+      hasEnvVars: {
+        AUTH_USERNAME: !!process.env.AUTH_USERNAME,
+        AUTH_PASSWORD_HASH: !!process.env.AUTH_PASSWORD_HASH,
+        JWT_SECRET: !!process.env.JWT_SECRET
+      }
+    });
+
     // Validate username
     if (username !== expectedUsername) {
       // Record failed attempt
