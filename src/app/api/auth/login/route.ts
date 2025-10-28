@@ -56,8 +56,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Get credentials from environment variables or use defaults
-    const expectedUsername = process.env.AUTH_USERNAME || 'admin';
-    const expectedPasswordHash = process.env.AUTH_PASSWORD_HASH || '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/4Qj8K2C'; // 'peticash2024'
+    const expectedUsername = process.env.AUTH_USERNAME || 'peticash_manager_2024';
+    const expectedPasswordHash = process.env.AUTH_PASSWORD_HASH || '$2a$12$2SmcKY9k0V8JKje2DM6rGeA4b6IQy/VFDgrBKXfIM5BHoaOvEGRjC'; // 'PeticashSecure2024!'
     const jwtSecret = process.env.JWT_SECRET || 'peticash-secret-key-2024';
 
     // Validate username
