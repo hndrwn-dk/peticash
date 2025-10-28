@@ -10,15 +10,12 @@
     "db:init": "node -r ts-node/register -e \"require('./src/lib/init-db').seedDatabase()\""
   },
   "dependencies": {
-    "@types/better-sqlite3": "^7.6.13",
     "@vercel/postgres": "^0.10.0",
-    "better-sqlite3": "^12.4.1",
     "chart.js": "^4.5.1",
     "next": "^14.0.0",
     "react": "^18",
     "react-chartjs-2": "^5.3.0",
-    "react-dom": "^18",
-    "sqlite3": "^5.1.7"
+    "react-dom": "^18"
   },
   "devDependencies": {
     "@types/node": "^20",
