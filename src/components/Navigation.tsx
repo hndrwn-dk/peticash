@@ -92,35 +92,37 @@ export default function Navigation() {
     setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
   };
 
-  // Close mobile menu when clicking outside
+  // Close mobile menu and dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       
-      // Close mobile menu only
+      // Close mobile menu
       if (mobileMenuRef.current && 
           !mobileMenuRef.current.contains(target) && 
           mobileMenuButtonRef.current && 
           !mobileMenuButtonRef.current.contains(target)) {
         setIsMobileMenuOpen(false);
       }
+      
+      // Close dropdowns when clicking outside
+      if (dropdownRef.current && !dropdownRef.current.contains(target)) {
+        setOpenDropdown(null);
+      }
     };
 
-    if (isMobileMenuOpen) {
+    if (isMobileMenuOpen || openDropdown) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isMobileMenuOpen]);
+  }, [isMobileMenuOpen, openDropdown]);
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
-      <div 
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-        onClick={() => setOpenDropdown(null)}
-      >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2">
             <CashIcon className="w-8 h-8 text-blue-600" />
@@ -208,7 +210,10 @@ export default function Navigation() {
                 return (
                   <div key={item.label} className="relative" ref={dropdownRef}>
                     <button
-                      onClick={() => toggleDropdown(item.label)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleDropdown(item.label);
+                      }}
                       className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                         isAnyDropdownActive 
                           ? 'bg-blue-100 text-blue-700' 
@@ -231,7 +236,8 @@ export default function Navigation() {
                                 <button
                                   key={dropdownItem.label}
                                   data-dropdown-item
-                                  onClick={() => {
+                                  onClick={(e) => {
+                                    e.stopPropagation();
                                     setOpenDropdown(null);
                                     dropdownItem.action?.();
                                   }}
@@ -249,7 +255,8 @@ export default function Navigation() {
                                 <button
                                   key={dropdownItem.href}
                                   data-dropdown-item
-                                  onClick={() => {
+                                  onClick={(e) => {
+                                    e.stopPropagation();
                                     alert(`Clicked: ${dropdownItem.label} -> ${dropdownItem.href}`);
                                     console.log('Desktop dropdown clicked:', dropdownItem.label, dropdownItem.href);
                                     setOpenDropdown(null);
