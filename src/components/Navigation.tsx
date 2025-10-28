@@ -105,8 +105,10 @@ export default function Navigation() {
         setIsMobileMenuOpen(false);
       }
       
-      // Close dropdown
-      if (dropdownRef.current && !dropdownRef.current.contains(target)) {
+      // Close dropdown - but only if clicking outside the entire dropdown container
+      if (dropdownRef.current && 
+          !dropdownRef.current.contains(target) &&
+          !(target as Element).closest('[data-dropdown-item]')) {
         setOpenDropdown(null);
       }
     };
@@ -229,6 +231,7 @@ export default function Navigation() {
                               return (
                                 <button
                                   key={dropdownItem.label}
+                                  data-dropdown-item
                                   onClick={() => {
                                     setOpenDropdown(null);
                                     dropdownItem.action?.();
@@ -246,6 +249,7 @@ export default function Navigation() {
                               return (
                                 <button
                                   key={dropdownItem.href}
+                                  data-dropdown-item
                                   onClick={() => {
                                     console.log('Desktop dropdown clicked:', dropdownItem.label, dropdownItem.href);
                                     setOpenDropdown(null);
